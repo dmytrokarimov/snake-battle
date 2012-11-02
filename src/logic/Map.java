@@ -1,12 +1,13 @@
 package logic;
 
 //import gui.Graph;
-import gui.Graph;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import GUI.Graph;
 
 
 public class Map implements Iterable<Graph> {

@@ -1,6 +1,6 @@
 package logic;
 
-import gui.Element;
+import GUI.Element;
 
 public class Mind {
 	private MindMap mm;

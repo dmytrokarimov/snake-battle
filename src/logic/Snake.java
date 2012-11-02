@@ -1,8 +1,9 @@
 package logic;
 
-import gui.*;
 
 import java.awt.Point;
+
+import GUI.*;
 
 public class Snake {
 	private Point p;
