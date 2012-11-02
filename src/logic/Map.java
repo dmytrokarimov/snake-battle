@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import GUI.Graph;
+import gui.Graph;
 
 
 public class Map implements Iterable<Graph> {
