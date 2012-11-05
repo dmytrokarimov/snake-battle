@@ -15,6 +15,12 @@ import gui.*;
  */
 public class Snake {
 	private List<Element> elements;
+	public List<Element> getElements() {
+		return elements;
+	}
+	public void setElements(List<Element> elements) {
+		this.elements = elements;
+	}
 	private Mind mind;
 	private boolean snakeInMap = false;
 	
@@ -48,7 +54,7 @@ public class Snake {
 			}
 	}
 	
-	public Iterator<Element> getElements() {
+	public Iterator<Element> iterator() {
 		return elements.iterator();
 	}
 

@@ -61,7 +61,7 @@ public class Map<E extends Drawable> implements Iterable<E> {
 	 *             если хотя бы один элемент змейки конфликтует с "миром"
 	 */
 	public void putSnake(Snake obj) throws ObjectAlreadyAddedException {
-		Iterator<Element> it = obj.getElements();
+		Iterator<Element> it = obj.iterator();
 		while (it.hasNext())
 			put((E) it.next());
 	}
@@ -74,11 +74,11 @@ public class Map<E extends Drawable> implements Iterable<E> {
 	 *             если хотя бы один элемент змейки конфликтует с "миром"
 	 */
 	public void putSnakeTransactional(Snake obj) throws ObjectAlreadyAddedException {
-		Iterator<Element> it1 = obj.getElements();
+		Iterator<Element> it1 = obj.iterator();
 		while (it1.hasNext())
 			if (getObject(it1.next().getCoord()) != null)
 				throw new ObjectAlreadyAddedException();
-		Iterator<Element> it = obj.getElements();
+		Iterator<Element> it = obj.iterator();
 		while (it.hasNext())
 			put((E) it.next());
 	}
