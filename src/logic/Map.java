@@ -119,4 +119,11 @@ public class Map<E extends Drawable> implements Iterable<E> {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 *  Удаление объекта
+	 * @param object
+	 */
+	public void remove (Graph object) {
+	}	
 }
