@@ -1,32 +1,58 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import logic.Snake;
 
 public class Element extends Graph {
-
-	private ElementFactory.PARTS part;
+	public enum PARTS {
+		BODY, HEAD, TAIL;
+	}
+	
+	private PARTS part;
 	private Snake snake;
 
-	protected Element(ElementFactory.PARTS part, Point coord, int width, int height, Snake snake) {
+	/**
+	 * Возвращает тип части тела
+	 */
+	public PARTS getPart() {
+		return part;
+	}
+
+	public Snake getSnake() {
+		return snake;
+	}
+
+	public Element(PARTS part, Point coord, int width,
+			int height, Snake snake) {
 		super(coord, width, height);
 		this.part = part;
 		this.snake = snake;
 	}
 
 	public void draw() {
+		Screen sc = Screen.instance;
 		switch (part) {
 		case BODY:
+			sc.draw(new Rectangle(getCoord().x, getCoord().y, width, height),
+					Color.GRAY);
 			break;
 		case HEAD:
+			sc.draw(new Rectangle(getCoord().x, getCoord().y, width, height),
+					Color.red);
 			break;
 		case TAIL:
+			sc.draw(new Rectangle(getCoord().x, getCoord().y, width, height),
+					Color.DARK_GRAY);
 			break;
 		}
 	}
 
-	void onCollision(Graph obj) {
+
+	public boolean onCollision(Graph obj) {
+		return true;
 	}
 
 	public String getName() {
@@ -64,7 +90,7 @@ public class Element extends Graph {
 	public Snake getOwner() {
 		return snake;
 	}
-	
+
 	public String toString() {
 		return getName() + ": " + getDescription();
 	}

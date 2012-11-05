@@ -1,10 +1,19 @@
 package logic;
 
 import gui.Element;
-
+/**
+ * ќписывает класс дл€ прин€ти€ решени€ о принимаемых действи€х
+ * @author Karimov
+ *
+ */
 public class Mind {
 	private MindMap mm;
 
+	/**
+	 * " арта мозга" - массив Element
+	 * @author Karimov
+	 *
+	 */
 	public class MindMap {
 		private Element[][] mindmap;
 
@@ -33,10 +42,21 @@ public class Mind {
 		}
 	}
 
+	/**
+	 * ѕо карте определ€ет действие, которое змейка "хочет" выполнить
+	 * @param map карта дл€ определени€ действи€
+	 * @param snake змейка, дл€ которой проводить расчет
+	 * @return действие
+	 */
 	public static Action getAction(Map map, Snake snake) {
 		return null;
 	}
-
+	
+	/**
+	 * ѕо карте определ€ет действие, которое змейка "хочет" выполнить
+	 * @param map карта дл€ определени€ действи€
+	 * @return действие
+	 */
 	public Action getAction(Map map) {
 		return null;
 	}

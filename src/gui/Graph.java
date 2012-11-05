@@ -6,10 +6,10 @@ import java.awt.Point;
  * Основной класс для вывода графики
  * @author Karimov
  */
-public abstract class Graph {
-	private Point coord;
-	private int width;
-	private int height;
+public abstract class Graph implements Drawable{
+	protected Point coord;
+	protected int width;
+	protected int height;
 	
 	/**
 	 * Пока будут только квадратные модели
@@ -23,11 +23,7 @@ public abstract class Graph {
 		this.height = height;
 	}
 	
-	/**
-	 *  вывод элемента на экран
-	 * @return 
-	 */
-	public abstract void draw();
+
 	
 	/**
 	 * проверка на то, находится ли точки внутри объекта
@@ -35,14 +31,15 @@ public abstract class Graph {
 	 * @return <b>true</b> если есть объект 
 	 */
 	public boolean pointAt(Point p){
-		return (p.x >= coord.x && p.x <= coord.x + width) && (p.y >= coord.y && p.y <= coord.y + height);
+		return (p.x > coord.x && p.x < coord.x + width) && (p.y > coord.y && p.y < coord.y + height);
 	} 
 	
 	/**
 	 * вызывается при коллизии с др. объектом
 	 * @param obj с каким объектом произошла коллизия
+	 * @return возвращает true если движение разрешено
 	 */
-	abstract void onCollision(Graph obj);
+	public abstract boolean onCollision(Graph obj);
 
 	/**
 	 * Точка, в которой данный элемент находится
