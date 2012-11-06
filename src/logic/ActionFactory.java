@@ -18,7 +18,7 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
-				/*
+				/**/
 				// Передвижение змейки на 1 клетку вверх
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
@@ -28,28 +28,33 @@ public class ActionFactory {
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x,
 								  snake[0].getElements().get(0).getCoord().y - snake[0].getElements().get(0).getHeight()));
-				*/
-				/* Альтернативный вариант */
+				/*
+				/* Альтернативный вариант /
 				// Изменение координат хвоста
 				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
 						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
 								  snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().y));
 				// Удаление предхвостового элемента
 				snake[0].getElements().remove(snake[0].getElements().size() - 2);
-				
+
 				// Создание нового элемента
 				Element el = new Element(PARTS.BODY, 
-						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y),
+						new Point(),
 								  snake[0].getElements().get(1).getWidth(),
 								  snake[0].getElements().get(1).getHeight(),
 								  snake[0]);
+				el.setCoord(new Point(snake[0].getElements().get(0).getCoord().x,
+								  snake[0].getElements().get(0).getCoord().y));
 				// Добавление нового послеголовного элемента
 				snake[0].getElements().add(1, el);
-				// Изменение координт головы
+				// Изменение координат головы
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x,
 								  snake[0].getElements().get(0).getCoord().y - snake[0].getElements().get(0).getHeight()));
+				
+				/*for (int i = 0; i < snake[0].getElements().size(); i++)
+					snake[0].getElements().get(i).setCoord(
+							snake[0].getElements().get(i).getCoord());*/
 			}
 		};
 	}
@@ -63,7 +68,7 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
-				/*
+				/**/
 				// Передвижение змейки на 1 клетку вниз
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
@@ -73,9 +78,9 @@ public class ActionFactory {
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x,
 								  snake[0].getElements().get(0).getCoord().y + snake[0].getElements().get(0).getHeight()));
-				*/
+				/*
 				
-				/* Альтернативный вариант */
+				/* Альтернативный вариант /
 				// Изменение координат хвоста
 				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
 						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
@@ -92,10 +97,11 @@ public class ActionFactory {
 								  snake[0]);
 				// Добавление нового послеголовного элемента
 				snake[0].getElements().add(1, el);
-				// Изменение координт головы
+				// Изменение координат головы
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x,
 								  snake[0].getElements().get(0).getCoord().y + snake[0].getElements().get(0).getHeight()));
+				*/
 			}
 		};
 	}
@@ -109,7 +115,7 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
-				/*
+				/**/
 				// Передвижение змейки на 1 клетку влево
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
@@ -119,9 +125,9 @@ public class ActionFactory {
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x - snake[0].getElements().get(0).getWidth(),
 								  snake[0].getElements().get(0).getCoord().y));
-				*/
+				/*
 				
-				/* Альтернативный вариант */
+				/* Альтернативный вариант /
 				// Изменение координат хвоста
 				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
 						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
@@ -138,10 +144,11 @@ public class ActionFactory {
 								  snake[0]);
 				// Добавление нового послеголовного элемента
 				snake[0].getElements().add(1, el);
-				// Изменение координт головы
+				// Изменение координат головы
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x - snake[0].getElements().get(0).getWidth(),
 								  snake[0].getElements().get(0).getCoord().y));
+				*/
 			}
 		};
 	}
@@ -155,7 +162,7 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {	
-				/*
+				/**/
 				// Передвижение змейки на 1 клетку вправо
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
@@ -165,9 +172,9 @@ public class ActionFactory {
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x + snake[0].getElements().get(0).getWidth(),
 								  snake[0].getElements().get(0).getCoord().y));
-				*/
+				/*
 				
-				/* Альтернативный вариант */
+				/* Альтернативный вариант /
 				// Изменение координат хвоста
 				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
 						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
@@ -184,10 +191,11 @@ public class ActionFactory {
 								  snake[0]);
 				// Добавление нового послеголовного элемента
 				snake[0].getElements().add(1, el);
-				// Изменение координт головы
+				// Изменение координат головы
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x + snake[0].getElements().get(0).getWidth(),
 								  snake[0].getElements().get(0).getCoord().y));
+				*/
 			}
 		};
 	}
