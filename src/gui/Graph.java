@@ -18,6 +18,7 @@ public abstract class Graph implements Drawable{
 	 * @param height высота
 	 */
 	public Graph(Point coord, int width, int height){
+		if(coord == null) coord = new Point(0,0);
 		this.coord = coord;
 		this.width = width;
 		this.height = height;
@@ -49,7 +50,10 @@ public abstract class Graph implements Drawable{
 	}
 
 	public void setCoord(Point coord) {
+		if(coord == null) return;
+		Screen.instance.clear(getCoord(), getWidth(), getHeight());
 		this.coord = coord;
+		draw();
 	}
 
 	public int getWidth() {
@@ -57,6 +61,7 @@ public abstract class Graph implements Drawable{
 	}
 
 	public void setWidth(int width) {
+		Screen.instance.clear(getCoord(), getWidth(), getHeight());
 		this.width = width;
 	}
 
@@ -65,6 +70,7 @@ public abstract class Graph implements Drawable{
 	}
 
 	public void setHeight(int height) {
+		Screen.instance.clear(getCoord(), getWidth(), getHeight());
 		this.height = height;
 	} 
 	

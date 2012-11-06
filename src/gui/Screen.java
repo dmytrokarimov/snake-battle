@@ -14,6 +14,7 @@ public class Screen {
 	public static Screen instance = null;
 	/** Image used to make changes. */
 	private BufferedImage canvasImage;
+	private BufferedImage bufferImage;
 	/** The main GUI that might be added to a frame or applet. */
 	private JPanel gui;
 	/**
@@ -35,6 +36,8 @@ public class Screen {
 	private RenderingHints renderingHints;
 
 	private boolean ready = false;
+	
+	public boolean repaintOnEveryDraw = false;
 	/**
 	 * Создает объект экрана и отображает его на экране
 	 * Внимание! Это хоть и singleton, но предыдущие окна не закрываются
@@ -76,14 +79,19 @@ public class Screen {
 	 * Рисует точку на экране 
 	 */
 	public void draw(Point point, Color color) {
-		Graphics2D g = this.canvasImage.createGraphics();
+		Graphics2D g;
+		if (repaintOnEveryDraw)
+			g = this.canvasImage.createGraphics();
+		else
+			g = this.bufferImage.createGraphics();
 		g.setRenderingHints(renderingHints);
 		g.setColor(color);
 		g.setStroke(stroke);
 		int n = 0;
 		g.drawLine(point.x, point.y, point.x + n, point.y + n);
 		g.dispose();
-		this.imageLabel.repaint();
+		if (repaintOnEveryDraw)
+			this.imageLabel.repaint();
 	}
 
 	/**
@@ -97,13 +105,18 @@ public class Screen {
 	 * Рисует прямоугольник
 	 */
 	public void draw(Rectangle r, Color color) {
-		Graphics2D g = this.canvasImage.createGraphics();
+		Graphics2D g;
+		if (repaintOnEveryDraw)
+			g = this.canvasImage.createGraphics();
+		else
+			g = this.bufferImage.createGraphics();
 		g.setRenderingHints(renderingHints);
 		g.setColor(color);
 		g.setStroke(stroke);
 		g.drawRect(r.x, r.y, r.width, r.height);
 		g.dispose();
-		this.imageLabel.repaint();
+		if (repaintOnEveryDraw)
+			this.imageLabel.repaint();
 	}
 
 	/**
@@ -117,13 +130,18 @@ public class Screen {
 	 * Выводит текст на экран
 	 */
 	public void draw(Point p, String text, Color color) {
-		Graphics2D g = this.canvasImage.createGraphics();
+		Graphics2D g;
+		if (repaintOnEveryDraw)
+			g = this.canvasImage.createGraphics();
+		else
+			g = this.bufferImage.createGraphics();
 		g.setRenderingHints(renderingHints);
 		g.setColor(color);
 		g.setStroke(stroke);
 		g.drawString(text, p.x, p.y);
 		g.dispose();
-		this.imageLabel.repaint();
+		if (repaintOnEveryDraw)
+			this.imageLabel.repaint();
 	}
 
 	/**
@@ -131,7 +149,11 @@ public class Screen {
 	 */
 	public void draw(Point p, BufferedImage image) {
 		// BufferedImage img = ImageIO.read(imageSrc);
-		Graphics2D g = this.canvasImage.createGraphics();
+		Graphics2D g;
+		if (repaintOnEveryDraw)
+			g = this.canvasImage.createGraphics();
+		else
+			g = this.bufferImage.createGraphics();
 		g.setRenderingHints(renderingHints);
 		g.setStroke(stroke);
 		float[] scales = { 1f, 1f, 1f, 0.5f };
@@ -139,20 +161,39 @@ public class Screen {
 		RescaleOp rop = new RescaleOp(scales, offsets, null);
 		g.drawImage(image, rop, p.x, p.y);
 		g.dispose();
-		this.imageLabel.repaint();
+		if (repaintOnEveryDraw)
+			this.imageLabel.repaint();
 	}
+	
+	public void repaint(){
+		if (repaintOnEveryDraw)
+			this.imageLabel.repaint();
+		else{
+			imageLabel.setIcon(new ImageIcon(bufferImage));
+			this.imageLabel.repaint();
+			BufferedImage temp = canvasImage;
+			canvasImage = bufferImage;
+			bufferImage = temp;
+		}
+	}
+
 
 	public void setImage(BufferedImage image) {
 		int w = image.getWidth();
 		int h = image.getHeight();
 		canvasImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
+		bufferImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = this.canvasImage.createGraphics();
 		g.setRenderingHints(renderingHints);
 		g.drawImage(image, 0, 0, gui);
 		g.dispose();
 
-		new Rectangle(0, 0, w, h);
+		g = bufferImage.createGraphics();
+		//g.setRenderingHints(renderingHints);
+		g.drawImage(image, 0, 0, gui);
+		g.dispose();
+
+		//new Rectangle(0, 0, w, h);
 		if (this.imageLabel != null) {
 			imageLabel.setIcon(new ImageIcon(canvasImage));
 			this.imageLabel.repaint();
@@ -171,6 +212,20 @@ public class Screen {
 
 		g.dispose();
 		imageLabel.repaint();
+	}
+
+	public void clear(Point p, int width, int height) {
+		Graphics2D g = this.canvasImage.createGraphics();
+		g.setRenderingHints(renderingHints);
+		g.setColor(color);
+		g.setStroke(stroke);
+		g.drawRect(p.x, p.y, width, height);
+		g.dispose();
+		this.imageLabel.repaint();
+	}
+
+	public void clear(Rectangle r) {
+		clear(new Point(r.x, r.y), r.width, r.height);
 	}
 
 	public void setScreen(String name) {
@@ -220,6 +275,7 @@ public class Screen {
 			gui.add(output, BorderLayout.PAGE_END);
 			clear(colorSample);
 			clear(canvasImage);
+			clear(bufferImage);
 			ready = true;
 		}
 

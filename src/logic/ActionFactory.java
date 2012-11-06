@@ -18,7 +18,7 @@ public class ActionFactory {
 	 * @return
 	 * Action
 	 */
-	public Action getUp() {
+	public static Action getUp() {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
@@ -30,7 +30,7 @@ public class ActionFactory {
 				// Меняем координату головы змеи
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y - 1));
+								  snake[0].getElements().get(0).getCoord().y - snake[0].getElements().get(0).getHeight()));
 			}
 		};
 	}
@@ -40,7 +40,7 @@ public class ActionFactory {
 	 * @return
 	 * Action
 	 */
-	public Action getDown() {
+	public static Action getDown() {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
@@ -52,7 +52,7 @@ public class ActionFactory {
 				// Меняем координату головы змеи
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y + 1));
+								  snake[0].getElements().get(0).getCoord().y + snake[0].getElements().get(0).getHeight()));
 			}
 		};
 	}
@@ -62,7 +62,7 @@ public class ActionFactory {
 	 * @return
 	 * Action
 	 */
-	public Action getLeft() {
+	public static Action getLeft() {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
@@ -73,7 +73,7 @@ public class ActionFactory {
 				
 				// Меняем координату головы змеи
 				snake[0].getElements().get(0).setCoord(
-						new Point(snake[0].getElements().get(0).getCoord().x - 1,
+						new Point(snake[0].getElements().get(0).getCoord().x - snake[0].getElements().get(0).getWidth(),
 								  snake[0].getElements().get(0).getCoord().y));
 			}
 		};
@@ -84,7 +84,7 @@ public class ActionFactory {
 	 * @return
 	 * Action
 	 */
-	public Action getRight() {
+	public static Action getRight() {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {				
@@ -95,7 +95,7 @@ public class ActionFactory {
 				
 				// Меняем координату головы змеи
 				snake[0].getElements().get(0).setCoord(
-						new Point(snake[0].getElements().get(0).getCoord().x + 1,
+						new Point(snake[0].getElements().get(0).getCoord().x + snake[0].getElements().get(0).getWidth(),
 								  snake[0].getElements().get(0).getCoord().y));;
 			}
 		};
@@ -106,7 +106,7 @@ public class ActionFactory {
 	 * @return
 	 * Action
 	 */
-	public Action getEatTail() {
+	public static Action getEatTail() {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {				
@@ -140,7 +140,7 @@ public class ActionFactory {
 	 * @return
 	 * Action
 	 */
-	public Action getInDeadlock() {
+	public static Action getInDeadlock() {
 		// Генерация случайного события
 		Random r = new Random();
 		

@@ -9,5 +9,5 @@ public abstract class Action extends ActionFactory {
 	 *  Метод вызывается при каком-либо действии
 	 * @param snake
 	 */
-	abstract void doAction(Snake... snake);
+	public abstract void doAction(Snake... snake);
 }

@@ -107,9 +107,13 @@ public class Map<E extends Drawable> implements Iterable<E> {
 	 * Вызывает у всех объектов на карте метод draw
 	 */
 	public void drawAll() {
+		//Screen.instance.repaintOnEveryDraw = false;
 		Iterator<E> it = iterator();
-		while (it.hasNext())
+		while (it.hasNext()){
 			it.next().draw();
+		}
+		Screen.instance.repaint();
+		//Screen.instance.repaintOnEveryDraw = true;
 	}
 
 	public String getName() {
