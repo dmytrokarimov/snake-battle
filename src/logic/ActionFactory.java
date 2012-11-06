@@ -4,10 +4,6 @@ import java.awt.Point;
 import gui.Element;
 import gui.Element.PARTS;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 /**
  * Реализует функции передвижения/действия змейки
  * @author RED Developer
@@ -22,12 +18,35 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
+				/*
 				// Передвижение змейки на 1 клетку вверх
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
 					snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
 				
 				// Меняем координату головы змеи
+				snake[0].getElements().get(0).setCoord(
+						new Point(snake[0].getElements().get(0).getCoord().x,
+								  snake[0].getElements().get(0).getCoord().y - snake[0].getElements().get(0).getHeight()));
+				*/
+				/* Альтернативный вариант */
+				// Изменение координат хвоста
+				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
+						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
+								  snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().y));
+				// Удаление предхвостового элемента
+				snake[0].getElements().remove(snake[0].getElements().size() - 2);
+				
+				// Создание нового элемента
+				Element el = new Element(PARTS.BODY, 
+						new Point(snake[0].getElements().get(0).getCoord().x,
+								  snake[0].getElements().get(0).getCoord().y),
+								  snake[0].getElements().get(1).getWidth(),
+								  snake[0].getElements().get(1).getHeight(),
+								  snake[0]);
+				// Добавление нового послеголовного элемента
+				snake[0].getElements().add(1, el);
+				// Изменение координт головы
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x,
 								  snake[0].getElements().get(0).getCoord().y - snake[0].getElements().get(0).getHeight()));
@@ -44,12 +63,36 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
+				/*
 				// Передвижение змейки на 1 клетку вниз
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
 					snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
 				
 				// Меняем координату головы змеи
+				snake[0].getElements().get(0).setCoord(
+						new Point(snake[0].getElements().get(0).getCoord().x,
+								  snake[0].getElements().get(0).getCoord().y + snake[0].getElements().get(0).getHeight()));
+				*/
+				
+				/* Альтернативный вариант */
+				// Изменение координат хвоста
+				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
+						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
+								  snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().y));
+				// Удаление предхвостового элемента
+				snake[0].getElements().remove(snake[0].getElements().size() - 2);
+				
+				// Создание нового элемента
+				Element el = new Element(PARTS.BODY, 
+						new Point(snake[0].getElements().get(0).getCoord().x,
+								  snake[0].getElements().get(0).getCoord().y),
+								  snake[0].getElements().get(1).getWidth(),
+								  snake[0].getElements().get(1).getHeight(),
+								  snake[0]);
+				// Добавление нового послеголовного элемента
+				snake[0].getElements().add(1, el);
+				// Изменение координт головы
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x,
 								  snake[0].getElements().get(0).getCoord().y + snake[0].getElements().get(0).getHeight()));
@@ -66,12 +109,36 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
+				/*
 				// Передвижение змейки на 1 клетку влево
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
 					snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
 				
 				// Меняем координату головы змеи
+				snake[0].getElements().get(0).setCoord(
+						new Point(snake[0].getElements().get(0).getCoord().x - snake[0].getElements().get(0).getWidth(),
+								  snake[0].getElements().get(0).getCoord().y));
+				*/
+				
+				/* Альтернативный вариант */
+				// Изменение координат хвоста
+				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
+						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
+								  snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().y));
+				// Удаление предхвостового элемента
+				snake[0].getElements().remove(snake[0].getElements().size() - 2);
+				
+				// Создание нового элемента
+				Element el = new Element(PARTS.BODY, 
+						new Point(snake[0].getElements().get(0).getCoord().x,
+								  snake[0].getElements().get(0).getCoord().y),
+								  snake[0].getElements().get(1).getWidth(),
+								  snake[0].getElements().get(1).getHeight(),
+								  snake[0]);
+				// Добавление нового послеголовного элемента
+				snake[0].getElements().add(1, el);
+				// Изменение координт головы
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x - snake[0].getElements().get(0).getWidth(),
 								  snake[0].getElements().get(0).getCoord().y));
@@ -87,7 +154,8 @@ public class ActionFactory {
 	public static Action getRight() {
 		return new Action() {
 			@Override
-			public void doAction(Snake... snake) {				
+			public void doAction(Snake... snake) {	
+				/*
 				// Передвижение змейки на 1 клетку вправо
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
@@ -96,7 +164,30 @@ public class ActionFactory {
 				// Меняем координату головы змеи
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x + snake[0].getElements().get(0).getWidth(),
-								  snake[0].getElements().get(0).getCoord().y));;
+								  snake[0].getElements().get(0).getCoord().y));
+				*/
+				
+				/* Альтернативный вариант */
+				// Изменение координат хвоста
+				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
+						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
+								  snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().y));
+				// Удаление предхвостового элемента
+				snake[0].getElements().remove(snake[0].getElements().size() - 2);
+				
+				// Создание нового элемента
+				Element el = new Element(PARTS.BODY, 
+						new Point(snake[0].getElements().get(0).getCoord().x,
+								  snake[0].getElements().get(0).getCoord().y),
+								  snake[0].getElements().get(1).getWidth(),
+								  snake[0].getElements().get(1).getHeight(),
+								  snake[0]);
+				// Добавление нового послеголовного элемента
+				snake[0].getElements().add(1, el);
+				// Изменение координт головы
+				snake[0].getElements().get(0).setCoord(
+						new Point(snake[0].getElements().get(0).getCoord().x + snake[0].getElements().get(0).getWidth(),
+								  snake[0].getElements().get(0).getCoord().y));
 			}
 		};
 	}
@@ -134,23 +225,17 @@ public class ActionFactory {
 				}
 		};
 	}
-	// Тестовый вариант... Выбор действия надо перенести в class Mind
+	
 	/**
 	 * Описывает действие змейки - простой (ход невозможен) 
 	 * @return
 	 * Action
 	 */
 	public static Action getInDeadlock() {
-		// Генерация случайного события
-		Random r = new Random();
-		
-		// Выбор события
-		switch (r.nextInt(4)){
-			case 0: return getUp();
-			case 1: return getDown();
-			case 2: return getLeft();
-			case 3: return getRight();
-			default: return getInDeadlock();
-		}
+		return new Action() {
+			@Override
+			public void doAction(Snake... snake) {
+			}
+		};
 	}
 }
