@@ -1,21 +1,40 @@
 package logic;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import gui.Dummy;
 import gui.Element;
+import gui.Element.PARTS;
+
 /**
  * Описывает класс для принятия решения о принимаемых действиях
+ * 
  * @author Karimov
- *
+ * 
  */
 public class Mind {
-	private MindMap mm;
+	private MindMap[] mm;
+	private Snake sn;
 
 	/**
 	 * "Карта мозга" - массив Element
+	 * 
 	 * @author Karimov
-	 *
+	 * @param <mindmap>
+	 * 
 	 */
 	public class MindMap {
 		private Element[][] mindmap;
+
+		public MindMap(int w, int h) {
+			mindmap = new Element[w][];
+			for (int i = 0; i < w; i++) {
+				mindmap[i] = new Element[h];
+			}
+		}
 
 		public Element[] getLine(int i) {
 			return mindmap[i];
@@ -40,28 +59,105 @@ public class Mind {
 		public void set(Element[][] m) {
 			mindmap = m;
 		}
+
+		/**
+		 * Разворачивает карту до тех пор, пока не повернет её 4 раза, или не
+		 * найдет соответствие
+		 * 
+		 * @param coord
+		 *            координата, в которой проводить поиск
+		 * @param map
+		 *            реальная карта
+		 * @return возвращает номер поворота, при котором карта мозга совпала с
+		 *         реальной картой или -1, если не совпала
+		 */
+		public int check(Map map, Point coord) {
+			return -1;
+		}
+	}
+
+	public Mind(Snake snake) {
+		sn = snake;
+		mm = new MindMap[9];
+		for (int i = 0; i < 9; i++) {
+			mm[i] = new MindMap(9, 9);
+		}
 	}
 
 	/**
 	 * По карте определяет действие, которое змейка "хочет" выполнить
-	 * @param map карта для определения действия
-	 * @param snake змейка, для которой проводить расчет
+	 * 
+	 * @param map
+	 *            карта для определения действия
+	 * @param snake
+	 *            змейка, для которой проводить расчет
 	 * @return действие
 	 */
 	public static Action getAction(Map map, Snake snake) {
-		return null;
+		Element head = snake.getElements().get(0);
+		if (head.getPart() != PARTS.HEAD)
+			throw new HeadNoFirstException();
+		int w = head.getWidth();
+		int h = head.getHeight();
+		int x = snake.getCoord().x;// + w / 2;
+		int y = snake.getCoord().y;// + h / 2;
+		Dummy headL = new Dummy(new Point(x-w,y), w, h);
+		Dummy headR = new Dummy(new Point(x+w,y), w, h);
+		Dummy headU = new Dummy(new Point(x,y-h), w, h);
+		Dummy headD = new Dummy(new Point(x,y+h), w, h);
+		if (map.checkExist(headL))
+			if (map.checkExist(headR))
+				if (map.checkExist(headU))
+					if (map.checkExist(headD))
+						return ActionFactory.getInDeadlock();
+
+		for (int i = 0; i < snake.getMind().getMindMap().length; i++)
+			if (snake.getMind().getMindMap(i).check(map, head.getCoord()) != -1) {
+				return ActionFactory.getInDeadlock();
+			}
+
+		List<Action> a = new ArrayList<Action>();
+
+		if (!map.checkExist(headD))
+			a.add(ActionFactory.getDown());
+
+		if (!map.checkExist(headU))
+			a.add(ActionFactory.getUp());
+
+		if (!map.checkExist(headL))
+			a.add(ActionFactory.getLeft());
+
+		if (!map.checkExist(headR))
+			a.add(ActionFactory.getRight());
+
+		if (a.size() > 0){
+		int i;
+		i = new Random(System.currentTimeMillis()).nextInt(a.size());
+		return a.get(i);
+		}
+		return ActionFactory.getInDeadlock();
 	}
-	
+
 	/**
 	 * По карте определяет действие, которое змейка "хочет" выполнить
-	 * @param map карта для определения действия
+	 * 
+	 * @param map
+	 *            карта для определения действия
 	 * @return действие
 	 */
 	public Action getAction(Map map) {
-		return null;
+		return getAction(map, sn);
 	}
 
-	public MindMap getMindMap() {
+	public MindMap getMindMap(int i) {
+		return mm[i];
+	}
+
+	public MindMap[] getMindMap() {
 		return mm;
+	}
+
+	public Snake getSnake() {
+		return sn;
 	}
 }

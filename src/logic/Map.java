@@ -14,7 +14,7 @@ import gui.*;
  * 
  * @author Karimov
  */
-public class Map<E extends Drawable> implements Iterable<E> {
+public class Map implements Iterable<Drawable> {
 	private String name;
 	private List<Object> list;
 
@@ -31,12 +31,23 @@ public class Map<E extends Drawable> implements Iterable<E> {
 	 * @return null если объекта нет или объект, если объект по заданным
 	 *         координатам есть
 	 */
-	public E getObject(Point coord) {
-		Iterator<E> it = iterator();
-		while (it.hasNext())
-			if (((Drawable) it.next()).pointAt(coord))
+	public Drawable getObject(Point coord) {
+		Iterator<Drawable> it = iterator();
+		while (it.hasNext()) {
+			Drawable d = it.next();
+			if (d.pointAt(coord))
 				return it.next();
+			if (d.getCoord().x == coord.x && d.getCoord().y == coord.y)
+				return it.next();
+		}
 		return null;
+	}
+
+	public boolean checkExist(Drawable obj) {
+		if (getObject(new Point(obj.getCoord().x + obj.getWidth() / 2,
+				obj.getCoord().y + obj.getHeight() / 2)) != null)
+			return true;
+		return false;
 	}
 
 	/**
@@ -46,8 +57,8 @@ public class Map<E extends Drawable> implements Iterable<E> {
 	 *             генерируется если по координатам объекта obj в массиве уже
 	 *             есть объект
 	 */
-	public void put(E obj) throws ObjectAlreadyAddedException {
-		if (getObject(obj.getCoord()) == null)
+	public void put(Drawable obj) throws ObjectAlreadyAddedException {
+		if (!checkExist(obj))
 			list.add(obj);
 		else
 			throw new ObjectAlreadyAddedException();
@@ -63,7 +74,7 @@ public class Map<E extends Drawable> implements Iterable<E> {
 	public void putSnake(Snake obj) throws ObjectAlreadyAddedException {
 		Iterator<Element> it = obj.iterator();
 		while (it.hasNext())
-			put((E) it.next());
+			put((Drawable) it.next());
 	}
 
 	/**
@@ -73,28 +84,29 @@ public class Map<E extends Drawable> implements Iterable<E> {
 	 * @throws ObjectAlreadyAddedException
 	 *             если хотя бы один элемент змейки конфликтует с "миром"
 	 */
-	public void putSnakeTransactional(Snake obj) throws ObjectAlreadyAddedException {
+	public void putSnakeTransactional(Snake obj)
+			throws ObjectAlreadyAddedException {
 		Iterator<Element> it1 = obj.iterator();
 		while (it1.hasNext())
-			if (getObject(it1.next().getCoord()) != null)
+			if (checkExist(it1.next()))
 				throw new ObjectAlreadyAddedException();
 		Iterator<Element> it = obj.iterator();
 		while (it.hasNext())
-			put((E) it.next());
+			put((Drawable) it.next());
 	}
 
-	public Iterator<E> iterator() {
-		return new Iterator<E>() {
+	public Iterator<Drawable> iterator() {
+		return new Iterator<Drawable>() {
 			private int pos = -1;
 
 			public void remove() {
 				list.remove(list.size() - 1);
 			}
 
-			public E next() {
+			public Drawable next() {
 				if (pos >= list.size())
 					throw new ArrayIndexOutOfBoundsException();
-				return (E) list.get(pos);
+				return (Drawable) list.get(pos);
 			}
 
 			public boolean hasNext() {
@@ -107,13 +119,13 @@ public class Map<E extends Drawable> implements Iterable<E> {
 	 * Вызывает у всех объектов на карте метод draw
 	 */
 	public void drawAll() {
-		//Screen.instance.repaintOnEveryDraw = false;
-		Iterator<E> it = iterator();
-		while (it.hasNext()){
+		// Screen.instance.repaintOnEveryDraw = false;
+		Iterator<Drawable> it = iterator();
+		while (it.hasNext()) {
 			it.next().draw();
 		}
 		Screen.instance.repaint();
-		//Screen.instance.repaintOnEveryDraw = true;
+		// Screen.instance.repaintOnEveryDraw = true;
 	}
 
 	public String getName() {
@@ -123,11 +135,12 @@ public class Map<E extends Drawable> implements Iterable<E> {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
-	 *  Удаление объекта
+	 * Удаление объекта
+	 * 
 	 * @param object
 	 */
-	public void remove (Graph object) {
-	}	
+	public void remove(Graph object) {
+	}
 }

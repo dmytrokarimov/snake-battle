@@ -53,7 +53,7 @@ public abstract class Graph implements Drawable{
 		if(coord == null) return;
 		Screen.instance.clear(getCoord(), getWidth(), getHeight());
 		this.coord = coord;
-		draw();
+		//draw();
 	}
 
 	public int getWidth() {

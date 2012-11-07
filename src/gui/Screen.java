@@ -171,9 +171,9 @@ public class Screen {
 		else{
 			imageLabel.setIcon(new ImageIcon(bufferImage));
 			this.imageLabel.repaint();
-			BufferedImage temp = canvasImage;
 			canvasImage = bufferImage;
-			bufferImage = temp;
+			bufferImage = new BufferedImage(canvasImage.getWidth(), canvasImage.getHeight(), BufferedImage.TYPE_INT_ARGB);;
+			clear(bufferImage);
 		}
 	}
 
@@ -211,17 +211,23 @@ public class Screen {
 		g.fillRect(0, 0, bi.getWidth(), bi.getHeight());
 
 		g.dispose();
-		imageLabel.repaint();
+		if (repaintOnEveryDraw)
+			imageLabel.repaint();	
 	}
 
 	public void clear(Point p, int width, int height) {
-		Graphics2D g = this.canvasImage.createGraphics();
+		Graphics2D g;
+		if (repaintOnEveryDraw)
+			g = this.canvasImage.createGraphics();
+		else
+			g = this.bufferImage.createGraphics();
+		//Graphics2D g = this.canvasImage.createGraphics();
 		g.setRenderingHints(renderingHints);
 		g.setColor(color);
-		g.setStroke(stroke);
-		g.drawRect(p.x, p.y, width, height);
+		g.fillRect(p.x-1, p.y-1, width+3, height+3);
 		g.dispose();
-		this.imageLabel.repaint();
+		if (repaintOnEveryDraw)
+			this.imageLabel.repaint();
 	}
 
 	public void clear(Rectangle r) {

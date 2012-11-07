@@ -26,7 +26,7 @@ public class Snake {
 	
 	public Snake() {
 		elements = new ArrayList<Element>();
-		mind = new Mind();
+		mind = new Mind(this);
 	}
 	/**
 	 * Возвращает координату головы
