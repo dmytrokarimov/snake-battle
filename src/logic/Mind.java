@@ -72,6 +72,24 @@ public class Mind {
 		 *         реальной картой или -1, если не совпала
 		 */
 		public int check(Map map, Point coord) {
+			// Карта, повёрнутая на 90 градусов
+			Element[][] map90 = new Element[mindmap.length][mindmap.length];
+			// Карта, повёрнутая на 180 градусов
+			Element[][] map180 = new Element[mindmap.length][mindmap.length];
+			// Карта, повёрнутая на 270 градусов
+			Element[][] map270 = new Element[mindmap.length][mindmap.length];
+			
+			// Расчёт поворотов
+			for (int i = 0; i < mindmap.length; i++)
+				for (int j = 0; j < mindmap.length; j++)
+					map90[i][j] = mindmap[j][mindmap.length - 1 - i];
+			for (int i = 0; i < mindmap.length; i++)
+				for (int j = 0; j < mindmap.length; j++)
+					map180[i][j] = mindmap[mindmap.length - 1 - i][mindmap.length - 1 - j];
+			for (int i = 0; i < mindmap.length; i++)
+				for (int j = 0; j < mindmap.length; j++)
+					map270[i][j] = map90[map90.length - 1 - i][map90.length - 1 - j];
+			
 			return -1;
 		}
 	}

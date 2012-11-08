@@ -18,8 +18,16 @@ public class Snake {
 	public List<Element> getElements() {
 		return elements;
 	}
+	/**
+	 * Задаёт составные элементы змейки 
+	 ***изменено Олегом, т.к. необходимо фактически изменять состав элементов, а не получать ссылку на них
+	 * @param elements
+	 */
 	public void setElements(List<Element> elements) {
-		this.elements = elements;
+		//this.elements = elements;
+		this.elements.clear();
+		for(int i = 0; i < elements.size(); i++)
+			this.elements.add(elements.get(i));
 	}
 	private Mind mind;
 	private boolean snakeInMap = false;

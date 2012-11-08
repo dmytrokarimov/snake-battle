@@ -3,6 +3,8 @@ package client;
 import java.awt.Color;
 import java.awt.Point;
 
+import server.Battle;
+
 import logic.ActionFactory;
 import logic.Map;
 import logic.Snake;
@@ -30,8 +32,10 @@ public class Demo {
 			public void run() {
 				try {
 					Map m = new Map("battle");
-					Snake sn = new Snake();
-					Element el = new Element(PARTS.HEAD, new Point(10, 0), 10,
+					Snake[] sn = new Snake[]{new Snake(), new Snake(), new Snake(), new Snake()};
+					Battle b = new Battle();
+					b.init(sn);	// Инициализация змеек теперь есть в Battle
+					/*Element el = new Element(PARTS.HEAD, new Point(10, 0), 10,
 							10, sn);
 					
 					sn.addElements(el);
@@ -43,11 +47,13 @@ public class Demo {
 					}
 					el = new Element(PARTS.TAIL, new Point(i * 10, 0), 10, 10,
 							sn);
-					sn.addElements(el);
-					sn.moveTo(100, 100);
-					m.putSnake(sn);
+					sn.addElements(el);*/
+					//sn.moveTo(100, 100);
+					for (int i = 0; i < sn.length; i++)
+						m.putSnake(sn[i]);
 					
 					Dummy d;
+					int i;
 					for (i = 0; i < 60; i++) {
 						d = new Dummy(new Point(-10, i*10), 10, 10);
 						m.put(d);
@@ -72,7 +78,8 @@ public class Demo {
 					int waitTime = 100;
 					while (true) {
 						long timeold = System.currentTimeMillis();
-						sn.getMind().getAction(m).doAction(sn);
+						for (i = 0; i < sn.length; i++)
+							sn[i].getMind().getAction(m).doAction(sn[i]);
 						m.drawAll();
 						long timenow = System.currentTimeMillis() - timeold;
 						if (waitTime - timenow > 0)
@@ -112,8 +119,8 @@ public class Demo {
 								Thread.sleep(waitTime - timenow);
 						}
 						*/
-					}
-				} catch (SnakeAlreadyInMapException | InterruptedException
+					}	// EXCEPTION закомментил, т.к. из-за него какую-то ошибку выдавало... Не разбирался
+				} catch (/*SnakeAlreadyInMapException |*/ InterruptedException
 						| ObjectAlreadyAddedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
