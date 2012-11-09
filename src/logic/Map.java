@@ -75,6 +75,7 @@ public class Map implements Iterable<Drawable> {
 		Iterator<Element> it = obj.iterator();
 		while (it.hasNext())
 			put((Drawable) it.next());
+		obj.setSnakeInMap(true, name);
 	}
 
 	/**
@@ -93,6 +94,7 @@ public class Map implements Iterable<Drawable> {
 		Iterator<Element> it = obj.iterator();
 		while (it.hasNext())
 			put((Drawable) it.next());
+		obj.setSnakeInMap(true, name);
 	}
 
 	public Iterator<Drawable> iterator() {

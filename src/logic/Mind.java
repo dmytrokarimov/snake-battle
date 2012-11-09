@@ -193,7 +193,7 @@ public class Mind {
 				if (map.checkExist(headR))
 					if (map.checkExist(headU))
 						if (map.checkExist(headD))
-							return ActionFactory.getInDeadlock();
+							;//return ActionFactory.getInDeadlock();
 
 		for (int i = 0; i < snake.getMind().getMindMap().length; i++)
 			if (snake.getMind().getMindMap(i).check(map, head.getCoord()) != -1) {

@@ -1,13 +1,10 @@
 package client;
 
-import java.awt.Color;
 import java.awt.Point;
-
 import server.Battle;
 
 import logic.Action;
-import logic.Action.ACTION_TYPE;
-import logic.ActionFactory;
+import logic.Action.TYPE;
 import logic.HeadNoFirstException;
 import logic.Map;
 import logic.Snake;
@@ -47,10 +44,10 @@ public class Demo {
 					 * Element el = new Element(PARTS.HEAD, new Point(10, 0),
 					 * 10, 10, sn);
 					 * 
-					 * sn.addElements(el); int i; for (i = 2; i < 39; i++) { el
+					 * sn.addElement(el); int i; for (i = 2; i < 39; i++) { el
 					 * = new Element(PARTS.BODY, new Point(i * 10, 0), 10, 10,
-					 * sn); sn.addElements(el); } el = new Element(PARTS.TAIL,
-					 * new Point(i * 10, 0), 10, 10, sn); sn.addElements(el);
+					 * sn); sn.addElement(el); } el = new Element(PARTS.TAIL,
+					 * new Point(i * 10, 0), 10, 10, sn); sn.addElement(el);
 					 */
 					// sn.moveTo(100, 100);
 					for (int i = 0; i < sn.length; i++)
@@ -81,105 +78,105 @@ public class Demo {
 					Snake snake = new Snake();
 					Element el = new Element(PARTS.HEAD, new Point(10, 0), 10,
 							10, snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					for (i = 2; i < 16; i++) {
 						el = new Element(PARTS.BODY, new Point(i * 10, 0), 10,
 								10, snake);
-						snake.addElements(el);
+						snake.addElement(el);
 					}
 					el = new Element(PARTS.TAIL, new Point(i * 10, 0), 10, 10,
 							snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					snake.moveTo(350, 310);
 					m.putSnake(snake);
 
 					snake = new Snake();
 					el = new Element(PARTS.HEAD, new Point(10, 0), 10,
 							10, snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					for (i = 2; i < 16; i++) {
 						el = new Element(PARTS.BODY, new Point(i * 10, 0), 10,
 								10, snake);
-						snake.addElements(el);
+						snake.addElement(el);
 					}
 					el = new Element(PARTS.TAIL, new Point(i * 10, 0), 10, 10,
 							snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					snake.moveTo(350, 290);
 					m.putSnake(snake);
 
 					snake = new Snake();
 					el = new Element(PARTS.HEAD, new Point(10, 0), 10,
 							10, snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					for (i = 2; i < 5; i++) {
 						el = new Element(PARTS.BODY, new Point(i * 10, 0), 10,
 								10, snake);
-						snake.addElements(el);
+						snake.addElement(el);
 					}
 					el = new Element(PARTS.TAIL, new Point(i * 10, 0), 10, 10,
 							snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					snake.moveTo(350, 300);
 					m.putSnake(snake);
 
 					snake = new Snake();
 					el = new Element(PARTS.HEAD, new Point(10, 0), 10,
 							10, snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					for (i = 2; i < 16; i++) {
 						el = new Element(PARTS.BODY, new Point(i * 10, 0), 10,
 								10, snake);
-						snake.addElements(el);
+						snake.addElement(el);
 					}
 					el = new Element(PARTS.TAIL, new Point(i * 10, 0), 10, 10,
 							snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					snake.moveTo(350, 230);
 					m.putSnake(snake);
 					
 					snake = new Snake();
 					el = new Element(PARTS.HEAD, new Point(10, 0), 10,
 							10, snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					for (i = 2; i < 16; i++) {
 						el = new Element(PARTS.BODY, new Point(i * 10, 0), 10,
 								10, snake);
-						snake.addElements(el);
+						snake.addElement(el);
 					}
 					el = new Element(PARTS.TAIL, new Point(i * 10, 0), 10, 10,
 							snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					snake.moveTo(350, 210);
 					m.putSnake(snake);
 					
 					snake = new Snake();
 					el = new Element(PARTS.HEAD, new Point(10, 0), 10,
 							10, snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					for (i = 2; i < 16; i++) {
 						el = new Element(PARTS.BODY, new Point(i * 10, 0), 10,
 								10, snake);
-						snake.addElements(el);
+						snake.addElement(el);
 					}
 					el = new Element(PARTS.TAIL, new Point(i * 10, 0), 10, 10,
 							snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					snake.moveTo(280, 220);
 					m.putSnake(snake);
 					
 					snake = new Snake();
 					el = new Element(PARTS.HEAD, new Point(10, 0), 10,
 							10, snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					for (i = 2; i < 16; i++) {
 						el = new Element(PARTS.BODY, new Point(i * 10, 0), 10,
 								10, snake);
-						snake.addElements(el);
+						snake.addElement(el);
 					}
 					el = new Element(PARTS.TAIL, new Point(i * 10, 0), 10, 10,
 							snake);
-					snake.addElements(el);
+					snake.addElement(el);
 					snake.moveTo(350 + 16*10, 210);
 					m.putSnake(snake);
 					
@@ -190,7 +187,7 @@ public class Demo {
 						long timeold = System.currentTimeMillis();
 						for (i = 0; i < sn.length; i++) {
 							Action a = sn[i].getMind().getAction(m);
-							if (a.getType() == ACTION_TYPE.EAT_TAIL) {
+							if (a.getType() == TYPE.EAT_TAIL) {
 								Element head = sn[i].getElements().get(0);
 								if (head.getPart() != PARTS.HEAD)
 									throw new HeadNoFirstException();
