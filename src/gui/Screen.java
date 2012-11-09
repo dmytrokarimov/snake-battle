@@ -38,6 +38,8 @@ public class Screen {
 	private boolean ready = false;
 	
 	public boolean repaintOnEveryDraw = false;
+	
+	private static final boolean GRAPHICS_ON = true;
 	/**
 	 * Создает объект экрана и отображает его на экране
 	 * Внимание! Это хоть и singleton, но предыдущие окна не закрываются
@@ -72,6 +74,8 @@ public class Screen {
 	 * Рисует точку на экране цветом по-умолчанию
 	 */
 	public void draw(Point point) {
+		if (!GRAPHICS_ON)
+			return;
 		draw(point, color);
 	}
 
@@ -79,6 +83,8 @@ public class Screen {
 	 * Рисует точку на экране 
 	 */
 	public void draw(Point point, Color color) {
+		if (!GRAPHICS_ON)
+			return;
 		Graphics2D g;
 		if (repaintOnEveryDraw)
 			g = this.canvasImage.createGraphics();
@@ -98,6 +104,8 @@ public class Screen {
 	 * Рисует прямоугольник на экране цветом по-умолчанию
 	 */
 	public void draw(Rectangle r) {
+		if (!GRAPHICS_ON)
+			return;
 		draw(r, color);
 	}
 
@@ -105,6 +113,8 @@ public class Screen {
 	 * Рисует прямоугольник
 	 */
 	public void draw(Rectangle r, Color color) {
+		if (!GRAPHICS_ON)
+			return;
 		Graphics2D g;
 		if (repaintOnEveryDraw)
 			g = this.canvasImage.createGraphics();
@@ -123,6 +133,8 @@ public class Screen {
 	 * Выводит текст на экран цветом по-умолчанию
 	 */
 	public void draw(Point p, String text) {
+		if (!GRAPHICS_ON)
+			return;
 		draw(p, text, color);
 	}
 	
@@ -130,6 +142,8 @@ public class Screen {
 	 * Выводит текст на экран
 	 */
 	public void draw(Point p, String text, Color color) {
+		if (!GRAPHICS_ON)
+			return;
 		Graphics2D g;
 		if (repaintOnEveryDraw)
 			g = this.canvasImage.createGraphics();
@@ -148,6 +162,8 @@ public class Screen {
 	 * Выводит image на экран в точке p
 	 */
 	public void draw(Point p, BufferedImage image) {
+		if (!GRAPHICS_ON)
+			return;
 		// BufferedImage img = ImageIO.read(imageSrc);
 		Graphics2D g;
 		if (repaintOnEveryDraw)
@@ -166,6 +182,8 @@ public class Screen {
 	}
 	
 	public void repaint(){
+		if (!GRAPHICS_ON)
+			return;
 		if (repaintOnEveryDraw)
 			this.imageLabel.repaint();
 		else{
@@ -179,6 +197,8 @@ public class Screen {
 
 
 	public void setImage(BufferedImage image) {
+		if (!GRAPHICS_ON)
+			return;
 		int w = image.getWidth();
 		int h = image.getHeight();
 		canvasImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -205,6 +225,8 @@ public class Screen {
 
 	/** Clears the entire image area by painting it with the current color. */
 	public void clear(BufferedImage bi) {
+		if (!GRAPHICS_ON)
+			return;
 		Graphics2D g = bi.createGraphics();
 		g.setRenderingHints(renderingHints);
 		g.setColor(color);
@@ -216,6 +238,8 @@ public class Screen {
 	}
 
 	public void clear(Point p, int width, int height) {
+		if (!GRAPHICS_ON)
+			return;
 		Graphics2D g;
 		if (repaintOnEveryDraw)
 			g = this.canvasImage.createGraphics();
@@ -231,6 +255,8 @@ public class Screen {
 	}
 
 	public void clear(Rectangle r) {
+		if (!GRAPHICS_ON)
+			return;
 		clear(new Point(r.x, r.y), r.width, r.height);
 	}
 
