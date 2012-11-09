@@ -1,6 +1,9 @@
 package logic;
 
 import java.awt.Point;
+
+import javax.swing.JOptionPane;
+
 import gui.Element;
 import gui.Element.PARTS;
 
@@ -18,7 +21,6 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
-				/**/
 				// Передвижение змейки на 1 клетку вверх
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
@@ -28,33 +30,11 @@ public class ActionFactory {
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x,
 								  snake[0].getElements().get(0).getCoord().y - snake[0].getElements().get(0).getHeight()));
-				/*
-				/* Альтернативный вариант /
-				// Изменение координат хвоста
-				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
-						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
-								  snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().y));
-				// Удаление предхвостового элемента
-				snake[0].getElements().remove(snake[0].getElements().size() - 2);
+			}
 
-				// Создание нового элемента
-				Element el = new Element(PARTS.BODY, 
-						new Point(),
-								  snake[0].getElements().get(1).getWidth(),
-								  snake[0].getElements().get(1).getHeight(),
-								  snake[0]);
-				el.setCoord(new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y));
-				// Добавление нового послеголовного элемента
-				snake[0].getElements().add(1, el);
-				// Изменение координат головы
-				snake[0].getElements().get(0).setCoord(
-						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y - snake[0].getElements().get(0).getHeight()));
-				
-				/*for (int i = 0; i < snake[0].getElements().size(); i++)
-					snake[0].getElements().get(i).setCoord(
-							snake[0].getElements().get(i).getCoord());*/
+			@Override
+			public TYPE getType(Action action) {
+				return TYPE.UP;
 			}
 		};
 	}
@@ -68,7 +48,6 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
-				/**/
 				// Передвижение змейки на 1 клетку вниз
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
@@ -78,30 +57,11 @@ public class ActionFactory {
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x,
 								  snake[0].getElements().get(0).getCoord().y + snake[0].getElements().get(0).getHeight()));
-				/*
-				
-				/* Альтернативный вариант /
-				// Изменение координат хвоста
-				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
-						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
-								  snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().y));
-				// Удаление предхвостового элемента
-				snake[0].getElements().remove(snake[0].getElements().size() - 2);
-				
-				// Создание нового элемента
-				Element el = new Element(PARTS.BODY, 
-						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y),
-								  snake[0].getElements().get(1).getWidth(),
-								  snake[0].getElements().get(1).getHeight(),
-								  snake[0]);
-				// Добавление нового послеголовного элемента
-				snake[0].getElements().add(1, el);
-				// Изменение координат головы
-				snake[0].getElements().get(0).setCoord(
-						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y + snake[0].getElements().get(0).getHeight()));
-				*/
+			}
+
+			@Override
+			public TYPE getType(Action action) {
+				return TYPE.DOWN;
 			}
 		};
 	}
@@ -115,7 +75,6 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
-				/**/
 				// Передвижение змейки на 1 клетку влево
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
@@ -125,30 +84,11 @@ public class ActionFactory {
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x - snake[0].getElements().get(0).getWidth(),
 								  snake[0].getElements().get(0).getCoord().y));
-				/*
-				
-				/* Альтернативный вариант /
-				// Изменение координат хвоста
-				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
-						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
-								  snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().y));
-				// Удаление предхвостового элемента
-				snake[0].getElements().remove(snake[0].getElements().size() - 2);
-				
-				// Создание нового элемента
-				Element el = new Element(PARTS.BODY, 
-						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y),
-								  snake[0].getElements().get(1).getWidth(),
-								  snake[0].getElements().get(1).getHeight(),
-								  snake[0]);
-				// Добавление нового послеголовного элемента
-				snake[0].getElements().add(1, el);
-				// Изменение координат головы
-				snake[0].getElements().get(0).setCoord(
-						new Point(snake[0].getElements().get(0).getCoord().x - snake[0].getElements().get(0).getWidth(),
-								  snake[0].getElements().get(0).getCoord().y));
-				*/
+			}
+
+			@Override
+			public TYPE getType(Action action) {
+				return TYPE.LEFT;
 			}
 		};
 	}
@@ -162,7 +102,6 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {	
-				/**/
 				// Передвижение змейки на 1 клетку вправо
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
@@ -172,30 +111,11 @@ public class ActionFactory {
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[0].getElements().get(0).getCoord().x + snake[0].getElements().get(0).getWidth(),
 								  snake[0].getElements().get(0).getCoord().y));
-				/*
-				
-				/* Альтернативный вариант /
-				// Изменение координат хвоста
-				snake[0].getElements().get(snake[0].getElements().size() - 1).setCoord(
-						new Point(snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().x,
-								  snake[0].getElements().get(snake[0].getElements().size() - 2).getCoord().y));
-				// Удаление предхвостового элемента
-				snake[0].getElements().remove(snake[0].getElements().size() - 2);
-				
-				// Создание нового элемента
-				Element el = new Element(PARTS.BODY, 
-						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y),
-								  snake[0].getElements().get(1).getWidth(),
-								  snake[0].getElements().get(1).getHeight(),
-								  snake[0]);
-				// Добавление нового послеголовного элемента
-				snake[0].getElements().add(1, el);
-				// Изменение координат головы
-				snake[0].getElements().get(0).setCoord(
-						new Point(snake[0].getElements().get(0).getCoord().x + snake[0].getElements().get(0).getWidth(),
-								  snake[0].getElements().get(0).getCoord().y));
-				*/
+			}
+
+			@Override
+			public TYPE getType(Action action) {
+				return TYPE.RIGHT;
 			}
 		};
 	}
@@ -231,6 +151,11 @@ public class ActionFactory {
 				// Уменьшение количества элементов змейки
 				snake[1].getElements().remove(snake[1].getElements().size() - 2);
 				}
+
+			@Override
+			public TYPE getType(Action action) {
+				return TYPE.EAT_TAIL;
+			}
 		};
 	}
 	
@@ -243,6 +168,30 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
+			}
+
+			@Override
+			public TYPE getType(Action action) {
+				return TYPE.IN_DEAD_LOCK;
+			}
+		};
+	}
+	
+	/**
+	 * Описывает действие змейки - побег с поля боя
+	 * @return
+	 * Action
+	 */
+	public static Action getLeaveBattle() {
+		return new Action() {
+			@Override
+			public void doAction(Snake... snake) {
+				JOptionPane.showMessageDialog(null, "Вы сбежали боя! Бог змей покарает Вас!!!");
+			}
+
+			@Override
+			public TYPE getType(Action action) {
+				return TYPE.LEAVE_BATTLE;
 			}
 		};
 	}
