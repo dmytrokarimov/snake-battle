@@ -138,8 +138,7 @@ public class ActionFactory {
 				// Явно задаёт необходимые координаты для нового элемента змейки
 				el.setCoord(new Point(snake[0].getElements().get(0).getCoord().x,
 								  	  snake[0].getElements().get(0).getCoord().y));
-				// Добавляет новый элемент в змейку
-				snake[0].getElements().add(1, el);
+
 				// Задание нового положения головы = хвост поедаемой змейки
 				snake[0].getElements().get(0).setCoord(
 						new Point(snake[1].getElements().get(snake[1].getElements().size() - 1).getCoord().x,
@@ -150,8 +149,11 @@ public class ActionFactory {
 				snake[1].getElements().get(snake[1].getElements().size() - 1).setCoord(
 						new Point(snake[1].getElements().get(snake[1].getElements().size() - 2).getCoord().x,
 								  snake[1].getElements().get(snake[1].getElements().size() - 2).getCoord().y));
-				// Уменьшение количества элементов змейки
+
+				// Уменьшение количества элементов змейки 1
 				snake[1].getElements().remove(snake[1].getElements().size() - 2);
+				// Добавляет новый элемент в змейку 0
+				snake[0].getElements().add(1, el);
 				
 				// Если остался всего 1 элемент - доъесть полностью
 				if (snake[1].getElements().size() == 1)
