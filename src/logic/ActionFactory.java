@@ -131,12 +131,14 @@ public class ActionFactory {
 			public void doAction(Snake... snake) {				
 				/* Рост размеров 0-ой змейки */
 				// Увеличение количества элементов змейки
-				Element el = new Element(PARTS.BODY, 
-						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y),
+				Element el = new Element(PARTS.BODY, null,
 								  snake[0].getElements().get(1).getWidth(),
 								  snake[0].getElements().get(1).getHeight(),
 								  snake[0]);
+				// Явно задаёт необходимые координаты для нового элемента змейки
+				el.setCoord(new Point(snake[0].getElements().get(0).getCoord().x,
+								  	  snake[0].getElements().get(0).getCoord().y));
+				// Добавляет новый элемент в змейку
 				snake[0].getElements().add(1, el);
 				// Задание нового положения головы = хвост поедаемой змейки
 				snake[0].getElements().get(0).setCoord(
