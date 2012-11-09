@@ -31,7 +31,7 @@ public class Screen {
 	public static final int DRAW_TOOL = 1;
 	public static final int TEXT_TOOL = 2;
 
-	private Stroke stroke = new BasicStroke(3, BasicStroke.CAP_ROUND,
+	private Stroke stroke = new BasicStroke(6, BasicStroke.CAP_ROUND,
 			BasicStroke.JOIN_ROUND, 1.7f);
 	private RenderingHints renderingHints;
 
@@ -348,5 +348,21 @@ public class Screen {
 	
 	public boolean canDraw(){
 		return ready;
+	}
+	
+	/**
+	 * This method calc screen size
+	 */
+	public int getWidth(){
+		//TODO нужно каким-то образом вычислять это значение!
+		return 800;
+	}
+	
+	/**
+	 * This method calc screen size
+	 */
+	public int getHeight(){
+		//TODO нужно каким-то образом вычислять это значение!
+		return 600;
 	}
 }

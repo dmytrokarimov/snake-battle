@@ -78,18 +78,19 @@ public class Mind {
 			Element[][] map180 = new Element[mindmap.length][mindmap.length];
 			// Карта, повёрнутая на 270 градусов
 			Element[][] map270 = new Element[mindmap.length][mindmap.length];
-			
+
 			// Расчёт поворотов
 			for (int i = 0; i < mindmap.length; i++)
 				for (int j = 0; j < mindmap.length; j++)
 					map90[i][j] = mindmap[j][mindmap.length - 1 - i];
 			for (int i = 0; i < mindmap.length; i++)
 				for (int j = 0; j < mindmap.length; j++)
-					map180[i][j] = mindmap[mindmap.length - 1 - i][mindmap.length - 1 - j];
+					map180[i][j] = mindmap[mindmap.length - 1 - i][mindmap.length
+							- 1 - j];
 			for (int i = 0; i < mindmap.length; i++)
 				for (int j = 0; j < mindmap.length; j++)
-					map270[i][j] = map90[map90.length - 1 - i][map90.length - 1 - j];
-			
+					map270[i][j] = map90[map90.length - 1 - i][map90.length - 1
+							- j];
 			return -1;
 		}
 	}
@@ -119,21 +120,10 @@ public class Mind {
 		int h = head.getHeight();
 		int x = snake.getCoord().x;// + w / 2;
 		int y = snake.getCoord().y;// + h / 2;
-		Dummy headL = new Dummy(new Point(x-w,y), w, h);
-		Dummy headR = new Dummy(new Point(x+w,y), w, h);
-		Dummy headU = new Dummy(new Point(x,y-h), w, h);
-		Dummy headD = new Dummy(new Point(x,y+h), w, h);
-		if (map.checkExist(headL))
-			if (map.checkExist(headR))
-				if (map.checkExist(headU))
-					if (map.checkExist(headD))
-						return ActionFactory.getInDeadlock();
-
-		for (int i = 0; i < snake.getMind().getMindMap().length; i++)
-			if (snake.getMind().getMindMap(i).check(map, head.getCoord()) != -1) {
-				return ActionFactory.getInDeadlock();
-			}
-
+		Dummy headL = new Dummy(new Point(x - w, y), w, h);
+		Dummy headR = new Dummy(new Point(x + w, y), w, h);
+		Dummy headU = new Dummy(new Point(x, y - h), w, h);
+		Dummy headD = new Dummy(new Point(x, y + h), w, h);
 		List<Action> a = new ArrayList<Action>();
 
 		if (!map.checkExist(headD))
@@ -148,10 +138,74 @@ public class Mind {
 		if (!map.checkExist(headR))
 			a.add(ActionFactory.getRight());
 
-		if (a.size() > 0){
-		int i;
-		i = new Random(System.currentTimeMillis()).nextInt(a.size());
-		return a.get(i);
+		// leave battle
+		if (map.getObject(headD.getCoord()) instanceof Element) {
+			Element e = (Element) map.getObject(headD.getCoord());
+			if (e.getPart() == PARTS.THIS_IS_BAD_IDEA)
+				a.add(ActionFactory.getLeaveBattle());
+		}
+
+		if (map.getObject(headL.getCoord()) instanceof Element) {
+			Element e = (Element) map.getObject(headL.getCoord());
+			if (e.getPart() == PARTS.THIS_IS_BAD_IDEA)
+				a.add(ActionFactory.getLeaveBattle());
+		}
+
+		if (map.getObject(headU.getCoord()) instanceof Element) {
+			Element e = (Element) map.getObject(headU.getCoord());
+			if (e.getPart() == PARTS.THIS_IS_BAD_IDEA)
+				a.add(ActionFactory.getLeaveBattle());
+		}
+
+		if (map.getObject(headR.getCoord()) instanceof Element) {
+			Element e = (Element) map.getObject(headR.getCoord());
+			if (e.getPart() == PARTS.THIS_IS_BAD_IDEA)
+				a.add(ActionFactory.getLeaveBattle());
+		}
+
+		// eat tail
+		if (map.getObject(headD.getCoord()) instanceof Element) {
+			Element e = (Element) map.getObject(headD.getCoord());
+			if (e.getPart() == PARTS.TAIL && e.getSnake() != snake)
+				a.add(ActionFactory.getEatTail());
+		}
+
+		if (map.getObject(headL.getCoord()) instanceof Element) {
+			Element e = (Element) map.getObject(headL.getCoord());
+			if (e.getPart() == PARTS.TAIL && e.getSnake() != snake)
+				a.add(ActionFactory.getEatTail());
+		}
+
+		if (map.getObject(headU.getCoord()) instanceof Element) {
+			Element e = (Element) map.getObject(headU.getCoord());
+			if (e.getPart() == PARTS.TAIL && e.getSnake() != snake)
+				a.add(ActionFactory.getEatTail());
+		}
+
+		if (map.getObject(headR.getCoord()) instanceof Element) {
+			Element e = (Element) map.getObject(headR.getCoord());
+			if (e.getPart() == PARTS.TAIL && e.getSnake() != snake)
+				a.add(ActionFactory.getEatTail());
+		}
+		
+		if (a.size() == 0)
+			if (map.checkExist(headL))
+				if (map.checkExist(headR))
+					if (map.checkExist(headU))
+						if (map.checkExist(headD))
+							return ActionFactory.getInDeadlock();
+
+		for (int i = 0; i < snake.getMind().getMindMap().length; i++)
+			if (snake.getMind().getMindMap(i).check(map, head.getCoord()) != -1) {
+				return ActionFactory.getInDeadlock();
+			}
+
+		if (a.size() > 0) {
+			int i;
+			i = new Random(System.currentTimeMillis()
+					+ new Random(System.currentTimeMillis()).nextInt(1000000))
+					.nextInt(a.size() * 100000);
+			return a.get(i % a.size());
 		}
 		return ActionFactory.getInDeadlock();
 	}

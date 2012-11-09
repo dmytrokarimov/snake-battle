@@ -8,7 +8,7 @@ import logic.Snake;
 
 public class Element extends Graph {
 	public enum PARTS {
-		BODY, HEAD, TAIL;
+		BODY, HEAD, TAIL, THIS_IS_BAD_IDEA;
 	}
 	
 	private PARTS part;

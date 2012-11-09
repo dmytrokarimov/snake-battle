@@ -61,7 +61,7 @@ public class Map implements Iterable<Drawable> {
 		if (!checkExist(obj))
 			list.add(obj);
 		else
-			throw new ObjectAlreadyAddedException();
+			throw new ObjectAlreadyAddedException("Coord:" + obj.getCoord());
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class Map implements Iterable<Drawable> {
 		Iterator<Element> it1 = obj.iterator();
 		while (it1.hasNext())
 			if (checkExist(it1.next()))
-				throw new ObjectAlreadyAddedException();
+				throw new ObjectAlreadyAddedException("Coord:" + it1.next().getCoord());
 		Iterator<Element> it = obj.iterator();
 		while (it.hasNext())
 			put((Drawable) it.next());
