@@ -33,13 +33,14 @@ public class Demo {
 		Thread th = new Thread() {
 			public void run() {
 				try {
-					Common.registerMap(new Map("battle"));
-					Map m = Common.selectMap("battle");
+					//Common.registerMap(new Map("battle"));
+					
 
 					Snake[] sn = new Snake[] { new Snake(), new Snake(),
 							new Snake(), new Snake() };
 					Battle b = new Battle();
 					b.init(sn); // Инициализация змеек теперь есть в Battle
+					Map m = Common.selectMap("battle");
 					/*
 					 * Element el = new Element(PARTS.HEAD, new Point(10, 0),
 					 * 10, 10, sn);
@@ -106,18 +107,16 @@ public class Demo {
 					m.putSnake(snake);
 
 					snake = new Snake();
-					el = new Element(PARTS.HEAD, new Point(10, 0), 10,
+					el = new Element(PARTS.HEAD, new Point(0, 0), 10,
 							10, snake);
 					snake.addElement(el);
-					for (i = 2; i < 5; i++) {
-						el = new Element(PARTS.BODY, new Point(i * 10, 0), 10,
-								10, snake);
-						snake.addElement(el);
-					}
-					el = new Element(PARTS.TAIL, new Point(i * 10, 0), 10, 10,
+					el = new Element(PARTS.BODY, new Point(0, 10), 10,
+							10, snake);
+					snake.addElement(el);
+					el = new Element(PARTS.TAIL, new Point(0, 20), 10, 10,
 							snake);
 					snake.addElement(el);
-					snake.moveTo(350, 300);
+					snake.moveTo(350, 280);
 					m.putSnake(snake);
 
 					snake = new Snake();
@@ -182,62 +181,10 @@ public class Demo {
 					
 					
 					m.drawAll();
-					int waitTime = 100;
+					int waitTime = 50;
 					while (true) {
 						long timeold = System.currentTimeMillis();
-						for (i = 0; i < sn.length; i++) {
-							Action a = sn[i].getMind().getAction(m);
-							if (a.getType() == ACTION_TYPE.EAT_TAIL) {
-								Element head = sn[i].getElements().get(0);
-								if (head.getPart() != PARTS.HEAD)
-									throw new HeadNoFirstException();
-								int w = head.getWidth();
-								int h = head.getHeight();
-								int x = sn[i].getCoord().x;// + w / 2;
-								int y = sn[i].getCoord().y;// + h / 2;
-								Dummy headL = new Dummy(new Point(x - w, y), w,
-										h);
-								Dummy headR = new Dummy(new Point(x + w, y), w,
-										h);
-								Dummy headU = new Dummy(new Point(x, y - h), w,
-										h);
-								Dummy headD = new Dummy(new Point(x, y + h), w,
-										h);
-
-								if (m.getObject(headD.getCoord()) instanceof Element) {
-									Element e = (Element) m.getObject(headD
-											.getCoord());
-									if (e.getPart() == PARTS.TAIL
-											&& e.getSnake() != sn[i])
-										a.doAction(sn[i], e.getSnake());
-								}
-
-								if (m.getObject(headL.getCoord()) instanceof Element) {
-									Element e = (Element) m.getObject(headL
-											.getCoord());
-									if (e.getPart() == PARTS.TAIL
-											&& e.getSnake() != sn[i])
-										a.doAction(sn[i], e.getSnake());
-								}
-
-								if (m.getObject(headU.getCoord()) instanceof Element) {
-									Element e = (Element) m.getObject(headU
-											.getCoord());
-									if (e.getPart() == PARTS.TAIL
-											&& e.getSnake() != sn[i])
-										a.doAction(sn[i], e.getSnake());
-								}
-
-								if (m.getObject(headR.getCoord()) instanceof Element) {
-									Element e = (Element) m.getObject(headR
-											.getCoord());
-									if (e.getPart() == PARTS.TAIL
-											&& e.getSnake() != sn[i])
-										a.doAction(sn[i], e.getSnake());
-								}
-							} else
-								a.doAction(sn[i]);
-						}
+						Common.doStep(sn);
 						m.drawAll();
 						long timenow = System.currentTimeMillis() - timeold;
 						if (waitTime - timenow > 0)
