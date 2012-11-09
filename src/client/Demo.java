@@ -4,7 +4,7 @@ import java.awt.Point;
 import server.Battle;
 
 import logic.Action;
-import logic.Action.TYPE;
+import logic.Action.ACTION_TYPE;
 import logic.HeadNoFirstException;
 import logic.Map;
 import logic.Snake;
@@ -187,7 +187,7 @@ public class Demo {
 						long timeold = System.currentTimeMillis();
 						for (i = 0; i < sn.length; i++) {
 							Action a = sn[i].getMind().getAction(m);
-							if (a.getType() == TYPE.EAT_TAIL) {
+							if (a.getType() == ACTION_TYPE.EAT_TAIL) {
 								Element head = sn[i].getElements().get(0);
 								if (head.getPart() != PARTS.HEAD)
 									throw new HeadNoFirstException();
