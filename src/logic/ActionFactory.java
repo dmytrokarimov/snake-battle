@@ -33,8 +33,8 @@ public class ActionFactory {
 			}
 
 			@Override
-			public TYPE getType(Action action) {
-				return TYPE.UP;
+			public ACTION_TYPE getType() {
+				return ACTION_TYPE.UP;
 			}
 		};
 	}
@@ -60,8 +60,8 @@ public class ActionFactory {
 			}
 
 			@Override
-			public TYPE getType(Action action) {
-				return TYPE.DOWN;
+			public ACTION_TYPE getType() {
+				return ACTION_TYPE.DOWN;
 			}
 		};
 	}
@@ -87,8 +87,8 @@ public class ActionFactory {
 			}
 
 			@Override
-			public TYPE getType(Action action) {
-				return TYPE.LEFT;
+			public ACTION_TYPE getType() {
+				return ACTION_TYPE.LEFT;
 			}
 		};
 	}
@@ -101,7 +101,7 @@ public class ActionFactory {
 	public static Action getRight() {
 		return new Action() {
 			@Override
-			public void doAction(Snake... snake) {	
+			public void doAction(Snake... snake) {
 				// Передвижение змейки на 1 клетку вправо
 				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
 					// Координата текущего элемента змейки равна координате предыдущего
@@ -114,8 +114,8 @@ public class ActionFactory {
 			}
 
 			@Override
-			public TYPE getType(Action action) {
-				return TYPE.RIGHT;
+			public ACTION_TYPE getType() {
+				return ACTION_TYPE.RIGHT;
 			}
 		};
 	}
@@ -152,11 +152,16 @@ public class ActionFactory {
 								  snake[1].getElements().get(snake[1].getElements().size() - 2).getCoord().y));
 				// Уменьшение количества элементов змейки
 				snake[1].getElements().remove(snake[1].getElements().size() - 2);
+				
+				// Если остался всего 1 элемент - доъесть полностью
+				if (snake[1].getElements().size() == 1)
+					snake[1].getElements().remove(0);
 				}
 
+
 			@Override
-			public TYPE getType(Action action) {
-				return TYPE.EAT_TAIL;
+			public ACTION_TYPE getType() {
+				return ACTION_TYPE.EAT_TAIL;
 			}
 		};
 	}
@@ -173,8 +178,8 @@ public class ActionFactory {
 			}
 
 			@Override
-			public TYPE getType(Action action) {
-				return TYPE.IN_DEAD_LOCK;
+			public ACTION_TYPE getType() {
+				return ACTION_TYPE.IN_DEAD_LOCK;
 			}
 		};
 	}
@@ -192,8 +197,8 @@ public class ActionFactory {
 			}
 
 			@Override
-			public TYPE getType(Action action) {
-				return TYPE.LEAVE_BATTLE;
+			public ACTION_TYPE getType() {
+				return ACTION_TYPE.LEAVE_BATTLE;
 			}
 		};
 	}

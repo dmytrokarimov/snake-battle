@@ -2,12 +2,16 @@ package server;
 
 import gui.Element;
 import gui.Element.PARTS;
+import gui.Screen;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import logic.Action;
+import logic.Action.ACTION_TYPE;
+import logic.Map;
 import logic.Snake;
 
 /**
@@ -16,11 +20,16 @@ import logic.Snake;
  */
 public class Battle {
 	// Центр экрана !!!!!Размеры экрана (необходимо как-то получать)!!!!!!
-	private int centerX = (int) 400;
-	private int centerY = (int) 300;
+	private int centerX = Screen.instance.getWidth() / 2;
+	private int centerY = Screen.instance.getHeight() / 2;
+	// Множитель отступа змеек от центра поля битвы (множится на  размеры 1 элемента змейки)
+	private int deltaX = 10;
+	private int deltaY = 10;
 	
 	// В битве принимают участие до snakeLimit змеек
 	private final byte snakeLimit = 4;
+	// Выделенное время на битву (при его истечении бой заканчивается по тайм-ауту)
+	private final int timeLimit = 60000;	// 60c
 	// Количество змеек в заявке
 	private byte snakeCount = 0;
 	// Начальная длина каждой змейки
@@ -65,7 +74,7 @@ public class Battle {
 	{
 		if (coord.x != 0) headX *= -1;
 		if (coord.y != 0) headY *= -1;
-		Point p = new Point (coord.x + headX * 10 * snakeSize.x, coord.y + headY * 10 * snakeSize.y);
+		Point p = new Point (coord.x + headX * deltaX * snakeSize.x, coord.y + headY * deltaY * snakeSize.y);
 		
 		return p;
 	}
@@ -139,14 +148,40 @@ public class Battle {
 	}
 	
 	/**
+	 * Проверка на окончание боя
+	 * @param snake
+	 * @param time
+	 * @return
+	 */
+	private boolean Stop(Snake[] snake, int time){
+		// Если всем змейкам есть куда ходить
+		for (int i = 0; i < snake.length; i++)
+			if (snake[i].getMind().getAction(new Map(null)).getType() != ACTION_TYPE.IN_DEAD_LOCK)
+				return false;
+		
+		// Если время ещё есть
+		if (time < timeLimit)
+			return false;
+		
+		return true;
+	}
+	/**
 	 * Инициализирует начало битвы и записывает ёё результаты
 	 * @param snake
 	 * @return List of Actions
 	 */
 	protected List<Action> Start(Snake[] snake){
+		// Лог событий битвы (действия змеек)
+		List<Action> actions = new ArrayList<Action>();
+		Timer t = new Timer();
 		
+		// Пока битва идёт - писать лог действий
+		while(!Stop(snake, 0))
+		{
+			actions.add(snake[0].getMind().getAction(new Map(null)));
+		}
 		
-		return new ArrayList<Action>();
+		return actions;
 	}
 	// =====================================================================
 	// ===========================Для тестирования==========================

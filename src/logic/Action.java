@@ -9,7 +9,7 @@ public abstract class Action extends ActionFactory {
 	 * Перечисление типов действий, которые могут происходить со змейкой
 	 * @author RED Developer
 	 */
-	public enum TYPE {
+	public enum ACTION_TYPE {
 		UP, DOWN, LEFT, RIGHT, EAT_TAIL, LEAVE_BATTLE, IN_DEAD_LOCK;
 	}
 	/**
@@ -20,8 +20,7 @@ public abstract class Action extends ActionFactory {
 	
 	/**
 	 * Возвращает тип действия, вызванного для змейки 
-	 * @param action
 	 * @return TYPE
 	 */
-	public abstract TYPE getType(Action action);
+	public abstract ACTION_TYPE getType();
 }
