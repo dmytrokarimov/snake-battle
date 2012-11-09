@@ -152,14 +152,13 @@ public class ActionFactory {
 
 				// Уменьшение количества элементов змейки 1
 				snake[1].getElements().remove(snake[1].getElements().size() - 2);
-				// Добавляет новый элемент в змейку 0
-				snake[0].getElements().add(1, el);
-				
 				// Если остался всего 1 элемент - доъесть полностью
 				if (snake[1].getElements().size() == 1)
 					snake[1].getElements().remove(0);
+				
+				// Добавляет новый элемент в змейку 0
+				snake[0].getElements().add(1, el);
 				}
-
 
 			@Override
 			public ACTION_TYPE getType() {

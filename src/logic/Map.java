@@ -144,5 +144,6 @@ public class Map implements Iterable<Drawable> {
 	 * @param object
 	 */
 	public void remove(Graph object) {
+		list.remove(object);
 	}
 }

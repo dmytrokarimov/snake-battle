@@ -1,5 +1,8 @@
 package server;
 
+import gui.Common;
+import gui.Common.MapAlreadyExistException;
+import gui.Common.MapNotExistException;
 import gui.Element;
 import gui.Element.PARTS;
 import gui.Screen;
@@ -7,7 +10,8 @@ import gui.Screen;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
+
+import client.Demo;
 
 import logic.Action;
 import logic.Action.ACTION_TYPE;
@@ -20,8 +24,8 @@ import logic.Snake;
  */
 public class Battle {
 	// Центр экрана !!!!!Размеры экрана (необходимо как-то получать)!!!!!!
-	private int centerX = Screen.instance.getWidth() / 2;
-	private int centerY = Screen.instance.getHeight() / 2;
+	private int centerX = 400;//Screen.instance.getWidth() / 2;
+	private int centerY = 300;//Screen.instance.getHeight() / 2;
 	// Множитель отступа змеек от центра поля битвы (множится на  размеры 1 элемента змейки)
 	private int deltaX = 10;
 	private int deltaY = 10;
@@ -30,6 +34,8 @@ public class Battle {
 	private final byte snakeLimit = 4;
 	// Выделенное время на битву (при его истечении бой заканчивается по тайм-ауту)
 	private final int timeLimit = 60000;	// 60c
+	// Выделенное количество шагов на битву
+	private final int stepsLimit = 1000;
 	// Количество змеек в заявке
 	private byte snakeCount = 0;
 	// Начальная длина каждой змейки
@@ -42,6 +48,8 @@ public class Battle {
 	private int headX = -1, headY = -1;
 	// Множтели поправок для координат змеиных элементов тела (и хвоста)
 	private int bodyX = 0, bodyY = 0;
+	// Карта, на которой проводится битва
+	private static Map m;
 	
 	/**
 	 * Проводит нормализацию координаты относительно центра экрана
@@ -83,8 +91,14 @@ public class Battle {
 	 * Инициализирует змейки
 	 * @param snake
 	 * 				- змейки, заявленные на бой
+	 * @throws MapAlreadyExistException 
+	 * @throws MapNotExistException 
 	 */
-	public void init(Snake[] snake){
+	public void init(Snake[] snake) throws MapAlreadyExistException, MapNotExistException{
+		// Выбор карты для боя
+		Common.registerMap(new Map("battle"));
+		m = Common.selectMap("battle");
+		
 		// Количество змеек, заявленных на бой 
 		byte snakes = (byte) snake.length;
 		// Реальное количество змеек в заявке
@@ -148,20 +162,19 @@ public class Battle {
 	}
 	
 	/**
-	 * Проверка на окончание боя
+	 * Проверка на признак окончания боя
 	 * @param snake
 	 * @param time
+	 * @param steps
 	 * @return
 	 */
-	private boolean Stop(Snake[] snake, int time){
-		// Если всем змейкам есть куда ходить
-		for (int i = 0; i < snake.length; i++)
-			if (snake[i].getMind().getAction(new Map(null)).getType() != ACTION_TYPE.IN_DEAD_LOCK)
-				return false;
-		
-		// Если время ещё есть
-		if (time < timeLimit)
-			return false;
+	private boolean Stop(Snake[] snake, int time, int steps){
+		// Если время ещё есть && Если действий ещё не больше допустимого количества
+		if (time < timeLimit && steps < stepsLimit)
+			// Если всем змейкам есть куда ходить
+			for (int i = 0; i < snake.length; i++)
+				if (snake[i].getMind().getAction(m).getType() != ACTION_TYPE.IN_DEAD_LOCK)
+					return false;
 		
 		return true;
 	}
@@ -173,12 +186,26 @@ public class Battle {
 	protected List<Action> Start(Snake[] snake){
 		// Лог событий битвы (действия змеек)
 		List<Action> actions = new ArrayList<Action>();
-		Timer t = new Timer();
+		// Сколько времени уже прошло
+		int timeElapsed = 0;
+		// Сколько шагов сделано
+		int stepsPassed = 0;
+		// Временная переменная для просмотра Action
+		Action a;
 		
 		// Пока битва идёт - писать лог действий
-		while(!Stop(snake, 0))
+		while(!Stop(snake, timeElapsed, stepsPassed))
 		{
-			actions.add(snake[0].getMind().getAction(new Map(null)));
+			// Добавление в список действий
+			for(int i = 0; i < snakeCount; i++)
+			{
+				a = snake[i].getMind().getAction(m);
+				if (a != null)
+					actions.add(a);
+				System.out.print(" " + a.getType() + " ");
+			}
+			// Наращивание счётчика шагов
+			System.out.println(stepsPassed++);
 		}
 		
 		return actions;
@@ -186,7 +213,7 @@ public class Battle {
 	// =====================================================================
 	// ===========================Для тестирования==========================
 	// =====================================================================
-	/*
+	
 	public static void main(String[] args){
 		Battle b = new Battle();
 		
@@ -195,10 +222,18 @@ public class Battle {
 		Snake snake2 = new Snake();
 		Snake snake3 = new Snake();
 		
-		b.init(new Snake[]{snake0, snake1, snake2, snake3});
+		try {
+			b.init(new Snake[]{snake0, snake1, snake2, snake3});
+		} catch (MapAlreadyExistException e) {
+			e.printStackTrace();
+		} catch (MapNotExistException e) {
+			e.printStackTrace();
+		}
 		System.out.println(snake0.getElements().get(0).getCoord().x + "; " + snake0.getElements().get(0).getCoord().y);
 		System.out.println(snake1.getElements().get(0).getCoord().x + "; " + snake1.getElements().get(0).getCoord().y);
-		if (snake2 != null) System.out.println(snake2.getElements().get(0).getCoord().x + "; " + snake2.getElements().get(0).getCoord().y);
+		System.out.println(snake2.getElements().get(0).getCoord().x + "; " + snake2.getElements().get(0).getCoord().y);
 		System.out.println(snake3.getElements().get(0).getCoord().x + "; " + snake3.getElements().get(0).getCoord().y);
-	}*/
+		
+		b.Start(new Snake[]{snake0, snake1, snake2, snake3});
+	}
 }
