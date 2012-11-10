@@ -1,6 +1,9 @@
 package server;
 
 import gui.Common;
+import gui.Dummy;
+import gui.ObjectAlreadyAddedException;
+import gui.Common.ActionList;
 import gui.Common.MapAlreadyExistException;
 import gui.Common.MapNotExistException;
 import gui.Element;
@@ -11,12 +14,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import client.Demo;
-
-import logic.Action;
 import logic.Action.ACTION_TYPE;
 import logic.Map;
 import logic.Snake;
+import logic.SnakeAlreadyInMapException;
 
 /**
  * Класс для инициализации битвы и расчёта её исхода
@@ -49,13 +50,13 @@ public class Battle {
 	// Множтели поправок для координат змеиных элементов тела (и хвоста)
 	private int bodyX = 0, bodyY = 0;
 	// Карта, на которой проводится битва
-	private static Map m;
+	private static Map map;
 	
 	/**
 	 * Проводит нормализацию координаты относительно центра экрана
 	 * @param x
 	 * @param y
-	 * @return
+	 * @return Point
 	 */
 	private Point normal(int x, int y)
 	{
@@ -76,7 +77,7 @@ public class Battle {
 	/**
 	 * Осуществляет поворот координаты на 90 градусов
 	 * @param coord
-	 * @return
+	 * @return Point
 	 */
 	private Point coordCorrect(Point coord)
 	{
@@ -89,37 +90,38 @@ public class Battle {
 	
 	/**
 	 * Инициализирует змейки
-	 * @param snake
+	 * @param map
+	 * 				- карта, на которо будет происходить битва
+	 * @param snakes
 	 * 				- змейки, заявленные на бой
 	 * @throws MapAlreadyExistException 
 	 * @throws MapNotExistException 
 	 */
-	public void init(Snake[] snake) throws MapAlreadyExistException, MapNotExistException{
-		// Выбор карты для боя
-		Common.registerMap(new Map("battle"));
-		m = Common.selectMap("battle");
-		
+	public void init(Map map, Snake[] snakes) throws MapAlreadyExistException, MapNotExistException{	
+		this.map = map;
 		// Количество змеек, заявленных на бой 
-		byte snakes = (byte) snake.length;
+		byte snakesCount = (byte) snakes.length;
 		// Реальное количество змеек в заявке
-		for (byte i = 0; i < snakes; i++)
-			if (snake[i] != null) snakeCount++;
+		for (byte i = 0; i < snakesCount; i++)
+			if (snakes[i] != null) snakeCount++;
 		// Счётчик змеек
 		byte iSnake = 0;
 		// Для создания элементов змеек
 		List<Element> el = new ArrayList<Element>();;
 		
 		// Инициализация змеек
-		while (iSnake < snakeLimit && iSnake < snakes)
+		while (iSnake < snakeLimit && iSnake < snakesCount)
 		{
 			snakeStart = coordCorrect(snakeStart);
 			// Если змей 2 - поставить друг напротив друга 
 			if (snakeCount == 2) snakeStart = coordCorrect(snakeStart);
 			
-			if (snake[iSnake] != null) {
+			if (snakes[iSnake] != null) {
+				// Перестраиваем змею, если она была уже готовой
+				snakes[iSnake].getElements().clear();
 				// Новая голова для змейки iSnake. "head? * snakeSize.?" - поправочный коэффициент
 				el.add(new Element(PARTS.HEAD, normal(snakeStart.x,
-						snakeStart.y), snakeSize.x, snakeSize.y, snake[iSnake]));
+						snakeStart.y), snakeSize.x, snakeSize.y, snakes[iSnake]));
 
 				// В какую сторону отстраивать тело
 				if (snakeStart.x < 0 && snakeStart.y == 0) {
@@ -144,15 +146,15 @@ public class Battle {
 					el.add(new Element(PARTS.BODY, new Point(
 							el.get(i - 1).getCoord().x + snakeSize.x * bodyX, 
 							el.get(i - 1).getCoord().y + snakeSize.y * bodyY), 
-							snakeSize.x, snakeSize.y, snake[iSnake]));
+							snakeSize.x, snakeSize.y, snakes[iSnake]));
 				}
 				el.add(new Element(PARTS.TAIL, new Point(
 						el.get(snakeLength - 2).getCoord().x + snakeSize.x * bodyX, 
 						el.get(snakeLength - 2).getCoord().y + snakeSize.y * bodyY), 
-						snakeSize.x, snakeSize.y, snake[iSnake]));
+						snakeSize.x, snakeSize.y, snakes[iSnake]));
 
 				// Добавление элементов в змейку
-				snake[iSnake].setElements(el);
+				snakes[iSnake].setElements(el);
 				// Для новой змейки будет новый список элементов
 				el.clear();
 			}
@@ -173,37 +175,29 @@ public class Battle {
 		if (time < timeLimit && steps < stepsLimit)
 			// Если всем змейкам есть куда ходить
 			for (int i = 0; i < snake.length; i++)
-				if (snake[i].getMind().getAction(m).getType() != ACTION_TYPE.IN_DEAD_LOCK)
+				if (snake[i].getMind().getAction(map).getType() != ACTION_TYPE.IN_DEAD_LOCK)
 					return false;
 		
 		return true;
 	}
 	/**
-	 * Инициализирует начало битвы и записывает ёё результаты
+	 * Проводит рассчёт битвы и записывает ёё ход
 	 * @param snake
 	 * @return List of Actions
 	 */
-	protected List<Action> Start(Snake[] snake){
+	/*protected*/public List<ActionList> battleCalc(Snake[] snakes){
 		// Лог событий битвы (действия змеек)
-		List<Action> actions = new ArrayList<Action>();
+		List<ActionList> actions = new ArrayList<ActionList>();
 		// Сколько времени уже прошло
 		int timeElapsed = 0;
 		// Сколько шагов сделано
 		int stepsPassed = 0;
-		// Временная переменная для просмотра Action
-		Action a;
 		
 		// Пока битва идёт - писать лог действий
-		while(!Stop(snake, timeElapsed, stepsPassed))
+		while(!Stop(snakes, timeElapsed, stepsPassed))
 		{
-			// Добавление в список действий
-			for(int i = 0; i < snakeCount; i++)
-			{
-				a = snake[i].getMind().getAction(m);
-				if (a != null)
-					actions.add(a);
-				System.out.print(" " + a.getType() + " ");
-			}
+			for (ActionList al : Common.doStep(snakes))
+				actions.add(al);
 			// Наращивание счётчика шагов
 			System.out.println(stepsPassed++);
 		}
@@ -213,27 +207,71 @@ public class Battle {
 	// =====================================================================
 	// ===========================Для тестирования==========================
 	// =====================================================================
-	
-	public static void main(String[] args){
-		Battle b = new Battle();
+	public static void main(String[] args) throws ObjectAlreadyAddedException,
+			InterruptedException, SnakeAlreadyInMapException {
+		new Screen();
 		
-		Snake snake0 = new Snake();
-		Snake snake1 = new Snake();
-		Snake snake2 = new Snake();
-		Snake snake3 = new Snake();
+		while (!Screen.instance.canDraw())
+			Thread.sleep(100);
 		
-		try {
-			b.init(new Snake[]{snake0, snake1, snake2, snake3});
-		} catch (MapAlreadyExistException e) {
-			e.printStackTrace();
-		} catch (MapNotExistException e) {
-			e.printStackTrace();
-		}
-		System.out.println(snake0.getElements().get(0).getCoord().x + "; " + snake0.getElements().get(0).getCoord().y);
-		System.out.println(snake1.getElements().get(0).getCoord().x + "; " + snake1.getElements().get(0).getCoord().y);
-		System.out.println(snake2.getElements().get(0).getCoord().x + "; " + snake2.getElements().get(0).getCoord().y);
-		System.out.println(snake3.getElements().get(0).getCoord().x + "; " + snake3.getElements().get(0).getCoord().y);
-		
-		b.Start(new Snake[]{snake0, snake1, snake2, snake3});
+		Thread th = new Thread() {
+			public void run() {
+				try {
+					Battle b = new Battle();
+					Snake snake0 = new Snake();
+					Snake snake1 = new Snake();
+					Snake snake2 = new Snake();
+					Snake snake3 = new Snake();
+					
+					try{
+						b.init(new Map("battle"), new Snake[] { snake0, snake1, snake2, snake3 });
+					} 
+					catch (MapAlreadyExistException | MapNotExistException e){
+						e.printStackTrace();
+					}
+					
+					Dummy d;
+					int i;
+					for (i = 0; i < 60; i++) {
+						d = new Dummy(new Point(-10, i * 10), 10, 10);
+						map.put(d);
+					}
+
+					for (i = 0; i < 60; i++) {
+						d = new Dummy(new Point(810, i * 10), 10, 10);
+						map.put(d);
+					}
+
+					for (i = 0; i < 80; i++) {
+						d = new Dummy(new Point(i * 10, -10), 10, 10);
+						map.put(d);
+					}
+
+					for (i = 0; i < 80; i++) {
+						d = new Dummy(new Point(i * 10, 610), 10, 10);
+						map.put(d);
+					}
+
+					for (i = 0; i < 60; i++) {
+						d = new Dummy(new Point(10, i * 10), 10, 10);
+						map.put(d);
+					}			
+					
+					map.putSnake(snake0);
+					map.putSnake(snake1);
+					map.putSnake(snake2);
+					map.putSnake(snake3);
+
+					b.battleCalc(new Snake[] { snake0, snake1, snake2, snake3 });
+
+					map.drawAll();
+					
+				} catch (ObjectAlreadyAddedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		th.setDaemon(true);
+		th.start();
 	}
 }

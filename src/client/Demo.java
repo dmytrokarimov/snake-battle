@@ -33,14 +33,14 @@ public class Demo {
 		Thread th = new Thread() {
 			public void run() {
 				try {
-					//Common.registerMap(new Map("battle"));
-					
+					Common.registerMap(new Map("battle"));
+					Map m = Common.selectMap("battle");
 
 					Snake[] sn = new Snake[] { new Snake(), new Snake(),
 							new Snake(), new Snake() };
 					Battle b = new Battle();
-					b.init(sn); // Инициализация змеек теперь есть в Battle
-					Map m = Common.selectMap("battle");
+					b.init(m, sn);
+					
 					/*
 					 * Element el = new Element(PARTS.HEAD, new Point(10, 0),
 					 * 10, 10, sn);
@@ -213,11 +213,9 @@ public class Demo {
 						 * if (waitTime - timenow > 0) Thread.sleep(waitTime -
 						 * timenow); }
 						 */
-					} // EXCEPTION закомментил, т.к. из-за него какую-то ошибку
-						// выдавало... Не разбирался
+					} 
 				} catch (InterruptedException | ObjectAlreadyAddedException
 						| MapAlreadyExistException | MapNotExistException | SnakeAlreadyInMapException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
