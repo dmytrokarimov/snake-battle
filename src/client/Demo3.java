@@ -89,6 +89,46 @@ public class Demo3 {
 					map.putSnake(snake3);
 
 					List<ActionList> calcBattle = b.battleCalc(new Snake[] { snake0, snake1, snake2, snake3 });
+					
+					Common.removeMap(map);
+					Common.removeMap(map_show);
+					
+					Common.registerMap(new Map("battle"));
+					map = Common.selectMap("battle");
+					
+					Common.registerMap(new Map("battle_show"));
+					map_show = Common.selectMap("battle_show");
+					
+					for (i = 0; i < 60; i++) {
+						d = new Dummy(new Point(-10, i * 10), 10, 10);
+						map.put(d);
+						map_show.put(d);
+					}
+
+					for (i = 0; i < 60; i++) {
+						d = new Dummy(new Point(810, i * 10), 10, 10);
+						map.put(d);
+						map_show.put(d);
+					}
+
+					for (i = 0; i < 80; i++) {
+						d = new Dummy(new Point(i * 10, -10), 10, 10);
+						map.put(d);
+						map_show.put(d);
+					}
+
+					for (i = 0; i < 80; i++) {
+						d = new Dummy(new Point(i * 10, 610), 10, 10);
+						map.put(d);
+						map_show.put(d);
+					}
+
+					for (i = 0; i < 60; i++) {
+						d = new Dummy(new Point(10, i * 10), 10, 10);
+						map.put(d);
+						map_show.put(d);
+					}	
+					
 					int waitTime = 5;
 					try {
 						b.init(map, snakes);
