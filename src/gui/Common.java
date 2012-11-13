@@ -21,7 +21,7 @@ import logic.Action.ACTION_TYPE;
  * 
  */
 public class Common {
-	public static Map std_map;
+	//public static Map std_map = new Map("Battle_map");
 	private static List<Map> registeredMaps = new ArrayList<Map>();
 
 	/**
@@ -33,8 +33,8 @@ public class Common {
 	 * @throws MapNotExistException
 	 *             если карты нет в списке зарегестрированных
 	 */
-	public static Map selectMap(String name) throws MapNotExistException {
-		std_map = null;
+	public synchronized static Map selectMap(String name) throws MapNotExistException {
+		Map std_map = null;
 		for (int i = 0; i < registeredMaps.size(); i++)
 			if (registeredMaps.get(i).getName().equals(name)) {
 				std_map = registeredMaps.get(i);
@@ -69,7 +69,7 @@ public class Common {
 	 * @throws MapAlreadyExistException
 	 *             if map exist this exception will be throwen
 	 */
-	public static Map registerMap(Map map) throws MapAlreadyExistException {
+	public synchronized static Map registerMap(Map map) throws MapAlreadyExistException {
 		for (int i = 0; i < registeredMaps.size(); i++)
 			if (registeredMaps.get(i).getName().equals(map.getName())) {
 				throw new MapAlreadyExistException("Map " + map.getName()
@@ -87,7 +87,7 @@ public class Common {
 	 * @throws MapNotExistException
 	 *             if map not exist this exception will be throwen
 	 */
-	public static void removeMap(Map map) throws MapNotExistException {
+	public synchronized  static void removeMap(Map map) throws MapNotExistException {
 		removeMap(map.getName());
 	}
 
@@ -99,7 +99,7 @@ public class Common {
 	 * @throws MapNotExistException
 	 *             if map exist this exception will be throwen
 	 */
-	public static void removeMap(String name) throws MapNotExistException {
+	public synchronized static void removeMap(String name) throws MapNotExistException {
 		boolean deleted = false;
 		for (int i = 0; i < registeredMaps.size(); i++)
 			if (registeredMaps.get(i).getName().equals(name)) {
@@ -120,54 +120,21 @@ public class Common {
 	}
 
 	/**
-	 * This method use "battle" map
+	 * This method use map
 	 * Calc next step and return step result
 	 */
-	public static List<ActionList> doStep(Snake... sn) {
+	public synchronized static List<ActionList> doStep(String mapName, Snake... sn) {
 		List<ActionList> al = new ArrayList<ActionList>(); 
 		try {
-			Map m = Common.selectMap("battle");
+			Map m = Common.selectMap(mapName);
 			for (int i = 0; i < sn.length; i++) {
 				if (sn[i].getElements().size() < 2)
 					continue;
-				Action a = sn[i].getMind().getAction(m);
-				if (a.getType() == ACTION_TYPE.EAT_TAIL) {
-					Element head = sn[i].getElements().get(0);
-					if (head.getPart() != PARTS.HEAD)
-						throw new HeadNoFirstException();
-					int w = head.getWidth();
-					int h = head.getHeight();
-					int x = sn[i].getCoord().x;// + w / 2;
-					int y = sn[i].getCoord().y;// + h / 2;
-					Dummy headL = new Dummy(new Point(x - w, y), w, h);
-					Dummy headR = new Dummy(new Point(x + w, y), w, h);
-					Dummy headU = new Dummy(new Point(x, y - h), w, h);
-					Dummy headD = new Dummy(new Point(x, y + h), w, h);
-					Element e = null;
-
-					if (m.getObject(headD.getCoord()) instanceof Element) {
-						e = (Element) m.getObject(headD.getCoord());
-					}
-					if (e != null && e.getPart() != PARTS.TAIL && m.getObject(headL.getCoord()) instanceof Element) {
-						e = (Element) m.getObject(headL.getCoord());
-					}
-					if (e != null && e.getPart() != PARTS.TAIL && m.getObject(headU.getCoord()) instanceof Element) {
-						e = (Element) m.getObject(headU.getCoord());
-					}
-					if (e != null && e.getPart() != PARTS.TAIL && m.getObject(headR.getCoord()) instanceof Element) {
-						e = (Element) m.getObject(headR.getCoord());
-					}
-
-					if (e != null) {
-						if (e.getPart() == PARTS.TAIL && e.getSnake() != sn[i]){
-							a.doAction(sn[i], e.getSnake());
-							al.add(new ActionList(a, sn[i], e.getSnake()));
-						}
-					}
-				} else {
-					a.doAction(sn[i]);
-					al.add(new ActionList(a, sn[i]));
-				}
+				ActionList a = sn[i].getMind().getAction(m);
+				if (a == null)
+					continue;
+				a.action.doAction(a.param);
+				al.add(a);
 			}
 		} catch (MapNotExistException e) {
 			e.printStackTrace();

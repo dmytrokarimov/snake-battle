@@ -33,6 +33,8 @@ public class Element extends Graph {
 	}
 
 	public void draw() {
+		if (!graph_on)
+			return;
 		Screen sc = Screen.instance;
 		switch (part) {
 		case BODY:
@@ -47,12 +49,14 @@ public class Element extends Graph {
 			sc.draw(new Rectangle(getCoord().x, getCoord().y, width, height),
 					Color.DARK_GRAY);
 			break;
+		default:
+			break;
 		}
 	}
 
 
 	public boolean onCollision(Graph obj) {
-		return true;
+		return false;
 	}
 
 	public String getName() {
@@ -66,6 +70,8 @@ public class Element extends Graph {
 			break;
 		case TAIL:
 			name = "tail";
+			break;
+		default:
 			break;
 		}
 		return name;
@@ -83,6 +89,8 @@ public class Element extends Graph {
 		case TAIL:
 			description = "";
 			break;
+		default:
+			break;
 		}
 		return description;
 	}
@@ -94,4 +102,40 @@ public class Element extends Graph {
 	public String toString() {
 		return getName() + ": " + getDescription();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((part == null) ? 0 : part.hashCode());
+		//result = prime * result + ((snake == null) ? 0 : snake.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Element)) {
+			return false;
+		}
+		Element other = (Element) obj;
+		if (part != other.part) {
+			return false;
+		}
+		//if (snake == null) {
+		//	if (other.snake != null) {
+		//		return false;
+		//	}
+		//} else if (!snake.equals(other.snake)) {
+		//	return false;
+		//}
+		return super.equals(obj);
+	}
+	
+	
 }

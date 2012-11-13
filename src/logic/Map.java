@@ -91,12 +91,10 @@ public class Map implements Iterable<Drawable> {
 		while (it1.hasNext())
 			if (checkExist(it1.next()))
 				throw new ObjectAlreadyAddedException("Coord:" + it1.next().getCoord());
+		putSnake(obj);
 		Iterator<Element> it = obj.iterator();
-		while (it.hasNext())
-			put((Drawable) it.next());
-		obj.setSnakeInMap(true, name);
 	}
-
+	
 	public Iterator<Drawable> iterator() {
 		return new Iterator<Drawable>() {
 			private int pos = -1;

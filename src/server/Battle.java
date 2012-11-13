@@ -175,7 +175,7 @@ public class Battle {
 		if (time < timeLimit && steps < stepsLimit)
 			// Если всем змейкам есть куда ходить
 			for (int i = 0; i < snake.length; i++)
-				if (snake[i].getMind().getAction(map).getType() != ACTION_TYPE.IN_DEAD_LOCK)
+				if (snake[i].getMind().getAction(map).action.getType() != ACTION_TYPE.IN_DEAD_LOCK)
 					return false;
 		
 		return true;
@@ -196,7 +196,7 @@ public class Battle {
 		// Пока битва идёт - писать лог действий
 		while(!Stop(snakes, timeElapsed, stepsPassed))
 		{
-			for (ActionList al : Common.doStep(snakes))
+			for (ActionList al : Common.doStep(map.getName(), snakes))
 				actions.add(al);
 			// Наращивание счётчика шагов
 			System.out.println(stepsPassed++);

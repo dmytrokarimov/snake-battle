@@ -1,19 +1,25 @@
 package client;
 
-import java.awt.Point;
-import server.Battle;
-
-import logic.Action;
-import logic.Action.ACTION_TYPE;
-import logic.HeadNoFirstException;
-import logic.Map;
-import logic.Snake;
-import logic.SnakeAlreadyInMapException;
-
-import gui.*;
+import gui.Common;
 import gui.Common.MapAlreadyExistException;
 import gui.Common.MapNotExistException;
+import gui.Dummy;
+import gui.Element;
 import gui.Element.PARTS;
+import gui.MindPolyGraph.LOGIC_TYPES;
+import gui.MindPolyGraph.OWNER_TYPES;
+import gui.MindPolyGraph;
+import gui.ObjectAlreadyAddedException;
+import gui.Screen;
+
+import java.awt.Point;
+
+import logic.Map;
+import logic.Mind;
+import logic.Mind.MindMap;
+import logic.Snake;
+import logic.SnakeAlreadyInMapException;
+import server.Battle;
 
 public class Demo {
 
@@ -182,9 +188,82 @@ public class Demo {
 					
 					m.drawAll();
 					int waitTime = 50;
+					
+					//-------exemple:  add element to mind
+					snake = new Snake();
+					
+					el = new Element(PARTS.HEAD, new Point(310, 270), 10,
+							10, snake);	
+					snake.addElement(el);
+
+					el = new Element(PARTS.BODY, new Point(310, 280), 10,
+							10, snake);	
+					snake.addElement(el);
+
+					el = new Element(PARTS.BODY, new Point(310, 290), 10,
+							10, snake);	
+					snake.addElement(el);
+
+					
+					el = new Element(PARTS.TAIL, new Point(310, 300), 10,
+							10, snake);	
+					snake.addElement(el);
+					
+					m.putSnake(snake);
+					
+					Mind mind = sn[0].getMind();
+					MindMap[] mm = mind.getMindMap();
+					MindPolyGraph mpg = new MindPolyGraph(new Point(), 10, 10);
+					mpg.setOwner(OWNER_TYPES.SNAKE);
+					mpg.setValue(new Element(PARTS.HEAD, new Point(), 10,10, null));
+					mm[0].setAt(2, 2, mpg);
+					
+					mpg = new MindPolyGraph(new Point(), 10, 10);
+					mpg.setOwner(OWNER_TYPES.ENEMY);
+					mpg.setLogic(LOGIC_TYPES.OR);
+					mpg.setValue(new Element(PARTS.TAIL, new Point(), 10,10, null));
+					mm[0].setAt(2, 1, mpg);
+
+					mpg = new MindPolyGraph(new Point(), 10, 10);
+					mpg.setOwner(OWNER_TYPES.ENEMY);
+					mpg.setLogic(LOGIC_TYPES.OR);
+					mpg.setValue(new Element(PARTS.TAIL, new Point(), 10,10, null));
+					mm[0].setAt(2, 0, mpg);
+
+					/*
+					mpg = new MindPolyGraph(new Point(), 10, 10);
+					mpg.setOwner(OWNER_TYPES.ENEMY);
+					mpg.setValue(new Element(PARTS.TAIL, new Point(), 10,10, null));
+					mm[0].setAt(2, 0, mpg);*/
+					
+					mind = sn[0].getMind();
+					MindMap mm1 = mind.getMindMap(1);
+					mpg = new MindPolyGraph(new Point(), 10, 10);
+					mpg.setOwner(OWNER_TYPES.SNAKE);
+					mpg.setValue(new Element(PARTS.HEAD, new Point(), 10,10, null));
+					mm1.setAt(3, 3, mpg);
+					
+					mpg = new MindPolyGraph(new Point(), 10, 10);
+					mpg.setOwner(OWNER_TYPES.NEUTRAL);
+					mpg.setValue(null);
+					mm1.setAt(3, 2, mpg);
+
+					
+					mpg = new MindPolyGraph(new Point(), 10, 10);
+					mpg.setOwner(OWNER_TYPES.NEUTRAL);
+					mpg.setValue(null);
+					mm1.setAt(3, 1, mpg);
+
+					mpg = new MindPolyGraph(new Point(), 10, 10);
+					mpg.setOwner(OWNER_TYPES.NEUTRAL);
+					mpg.setValue(null);
+					mm1.setAt(3, 0, mpg);
+
+					//-------end exemple
+					
 					while (true) {
 						long timeold = System.currentTimeMillis();
-						Common.doStep(sn);
+						Common.doStep(m.getName(), sn);
 						m.drawAll();
 						long timenow = System.currentTimeMillis() - timeold;
 						if (waitTime - timenow > 0)

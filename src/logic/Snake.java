@@ -1,7 +1,6 @@
 package logic;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,13 +15,16 @@ import gui.Common.MapNotExistException;
  */
 public class Snake {
 	public class ArrayList extends java.util.ArrayList<Element> {
+		private static final long serialVersionUID = 2365497221591029860L;
+
 		public boolean add(Element element) {
 			try {
 				if (snakeInMap) {
-					String name = Common.std_map.getName();
-					Common.selectMap(mapName);
-					Common.std_map.put(element);
-					Common.selectMap(name);
+					//String name = Common.std_map.getName();
+					//Common.selectMap(mapName);
+					Map map = Common.selectMap(mapName);;
+					map.put(element);
+					//Common.selectMap(name);
 				}
 				return super.add(element);
 			} catch (MapNotExistException | ObjectAlreadyAddedException e) {
@@ -34,10 +36,13 @@ public class Snake {
 		public void add(int index, Element element) {
 			try {
 				if (snakeInMap) {
-					String name = Common.std_map.getName();
+					Map map = Common.selectMap(mapName);;
+					map.put(element);
+
+					/*String name = Common.std_map.getName();
 					Common.selectMap(mapName);
 					Common.std_map.put(element);
-					Common.selectMap(name);
+					Common.selectMap(name);*/
 				}
 				super.add(index, element);
 			} catch (MapNotExistException | ObjectAlreadyAddedException e) {
@@ -48,10 +53,14 @@ public class Snake {
 		public Element remove(int index) {
 			try {
 				if (snakeInMap) {
+					Map map = Common.selectMap(mapName);;
+					map.remove(get(index));
+/*
 					String name = Common.std_map.getName();
 					Common.selectMap(mapName);
 					Common.std_map.remove(get(index));
 					Common.selectMap(name);
+					*/
 				}
 				return super.remove(index);
 			} catch (MapNotExistException e) {
@@ -63,10 +72,13 @@ public class Snake {
 		public boolean remove(Element o) {
 			try {
 				if (snakeInMap) {
+					Map map = Common.selectMap(mapName);;
+					map.remove(o);
+					/*
 					String name = Common.std_map.getName();
 					Common.selectMap(mapName);
 					Common.std_map.remove(o);
-					Common.selectMap(name);
+					Common.selectMap(name);*/
 				}
 				return super.remove(o);
 			} catch (MapNotExistException e) {
@@ -178,4 +190,57 @@ public class Snake {
 		this.snakeInMap = snakeInMap;
 		this.mapName = mapName;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((elements == null) ? 0 : elements.hashCode());
+		result = prime * result + ((mapName == null) ? 0 : mapName.hashCode());
+		result = prime * result + ((mind == null) ? 0 : mind.hashCode());
+		result = prime * result + (snakeInMap ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Snake)) {
+			return false;
+		}
+		Snake other = (Snake) obj;
+		if (elements == null) {
+			if (other.elements != null) {
+				return false;
+			}
+		} else if (!elements.equals(other.elements)) {
+			return false;
+		}
+		if (mapName == null) {
+			if (other.mapName != null) {
+				return false;
+			}
+		} else if (!mapName.equals(other.mapName)) {
+			return false;
+		}
+		if (mind == null) {
+			if (other.mind != null) {
+				return false;
+			}
+		} else if (!mind.equals(other.mind)) {
+			return false;
+		}
+		if (snakeInMap != other.snakeInMap) {
+			return false;
+		}
+		return true;
+	}
+	
+	
 }

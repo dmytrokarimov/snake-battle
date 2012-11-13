@@ -100,7 +100,7 @@ public class Demo2 {
 						//	ActionFactory.getEatTail().doAction(snake2, snake1);
 						//else ActionFactory.getRight().doAction(snake2);
 						long timeold = System.currentTimeMillis();
-						Common.doStep(sn);
+						Common.doStep(m.getName(), sn);
 						m.drawAll();
 						long timenow = System.currentTimeMillis() - timeold;
 						if (waitTime - timenow > 0)

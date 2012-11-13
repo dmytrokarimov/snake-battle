@@ -24,6 +24,11 @@ public interface Drawable {
 	/**
 	 * Точка, в которой данный элемент находится
 	 */
+	public void setCoord(Point p);
+	
+	/**
+	 * Точка, в которой данный элемент находится
+	 */
 	public Point getCoord();
 	
 	public int getWidth();
