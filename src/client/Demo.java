@@ -248,7 +248,6 @@ public class Demo {
 					mpg.setValue(null);
 					mm1.setAt(3, 2, mpg);
 
-					
 					mpg = new MindPolyGraph(new Point(), 10, 10);
 					mpg.setOwner(OWNER_TYPES.NEUTRAL);
 					mpg.setValue(null);
@@ -259,6 +258,7 @@ public class Demo {
 					mpg.setValue(null);
 					mm1.setAt(3, 0, mpg);
 
+					
 					//-------end exemple
 					
 					while (true) {

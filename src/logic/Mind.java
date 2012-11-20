@@ -401,21 +401,24 @@ public class Mind {
 					.check(map, head.getCoord());
 			if (check != -1) {
 
+				ActionList al = null;
 				if (check == 0)
-					return getSmartAction(ActionFactory.getUp(), map, snake,
+					al =  getSmartAction(ActionFactory.getUp(), map, snake,
 							headU);
 
 				if (check == 1)
-					return getSmartAction(ActionFactory.getRight(), map, snake,
+					al =  getSmartAction(ActionFactory.getRight(), map, snake,
 							headR);
 
 				if (check == 2)
-					return getSmartAction(ActionFactory.getDown(), map, snake,
+					al =  getSmartAction(ActionFactory.getDown(), map, snake,
 							headD);
 
 				if (check == 3)
-					return getSmartAction(ActionFactory.getLeft(), map, snake,
+					al =  getSmartAction(ActionFactory.getLeft(), map, snake,
 							headL);
+				if (al != null && al.action.getType() != ACTION_TYPE.IN_DEAD_LOCK)
+					return al;
 			}
 		}
 
