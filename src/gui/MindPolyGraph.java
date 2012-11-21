@@ -1,8 +1,10 @@
 package gui;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 public class MindPolyGraph extends Graph {
+	private static final long serialVersionUID = -6710178398758312928L;
 
 	public enum OWNER_TYPES {
 		SNAKE, ENEMY, NEUTRAL;

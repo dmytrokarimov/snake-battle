@@ -1,6 +1,7 @@
 package logic;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,7 +14,9 @@ import gui.Common.MapNotExistException;
  * @author Karimov
  * 
  */
-public class Snake {
+public class Snake implements Serializable{
+	private static final long serialVersionUID = 1L;
+
 	public class ArrayList extends java.util.ArrayList<Element> {
 		private static final long serialVersionUID = 2365497221591029860L;
 

@@ -1,50 +1,50 @@
 package server;
 
 import gui.Common;
-import gui.Dummy;
-import gui.ObjectAlreadyAddedException;
 import gui.Common.ActionList;
 import gui.Common.MapAlreadyExistException;
 import gui.Common.MapNotExistException;
 import gui.Element;
 import gui.Element.PARTS;
-import gui.Screen;
+import gui.ObjectAlreadyAddedException;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import logic.Action.ACTION_TYPE;
 import logic.Map;
 import logic.Snake;
-import logic.SnakeAlreadyInMapException;
 
 /**
  * Класс для инициализации битвы и расчёта её исхода
  * @author RED Developer
  */
-public class Battle {
+public class Battle implements Serializable{
+	private static final long serialVersionUID = 8068676336496071038L;
 	// Центр экрана !!!!!Размеры экрана (необходимо как-то получать)!!!!!!
 	private int centerX = 400;//Screen.instance.getWidth() / 2;
 	private int centerY = 300;//Screen.instance.getHeight() / 2;
+	// Размер ячейки змеек
+	private final Point snakeSize = new Point (10, 10);
 	// Множитель отступа змеек от центра поля битвы (множится на  размеры 1 элемента змейки)
-	private int deltaX = 10;
-	private int deltaY = 10;
+	private int deltaX = snakeSize.x;
+	private int deltaY = snakeSize.y;
 	
 	// В битве принимают участие до snakeLimit змеек
 	private final byte snakeLimit = 4;
 	// Выделенное время на битву (при его истечении бой заканчивается по тайм-ауту)
 	private final int timeLimit = 60000;	// 60c
 	// Выделенное количество шагов на битву
-	private final int stepsLimit = 1000;
+	private final int stepsLimit = 5;
 	// Количество змеек в заявке
 	private byte snakeCount = 0;
-	// Начальная длина каждой змейки
-	private final byte snakeLength = 20;
+	// Начальная длина каждой змейки (ячеек)
+	private final byte snakeLength = 5;
 	// Начальная координата 0-й змейки (относительно центра)
 	private Point snakeStart = new Point(0, -100);
-	// Размер ячейки змеек
-	private final Point snakeSize = new Point (10, 10);
 	// Множтели поправок для координат змеиных голов
 	private int headX = -1, headY = -1;
 	// Множтели поправок для координат змеиных элементов тела (и хвоста)
@@ -96,9 +96,20 @@ public class Battle {
 	 * 				- змейки, заявленные на бой
 	 * @throws MapAlreadyExistException 
 	 * @throws MapNotExistException 
+	 * @throws ObjectAlreadyAddedException 
 	 */
-	public void init(Map map, Snake[] snakes) throws MapAlreadyExistException, MapNotExistException{	
-		this.map = map;
+	public void init(String mapName, Snake[] snakes) throws MapAlreadyExistException, MapNotExistException, ObjectAlreadyAddedException{	
+		if (mapName == "" || mapName == null || snakes == null) return;
+		
+		// Регистрация указанной карты и её выбор для битвы
+		try{
+			map = Common.registerMap(new Map(mapName));
+		}
+		catch(Exception ex){
+			System.out.println("Карта" + mapName + " уже была создана, вибираем её");
+			map = Common.selectMap(mapName);
+		}
+		
 		// Количество змеек, заявленных на бой 
 		byte snakesCount = (byte) snakes.length;
 		// Реальное количество змеек в заявке
@@ -158,6 +169,8 @@ public class Battle {
 				// Для новой змейки будет новый список элементов
 				el.clear();
 			}
+			// Добавление змейки на карту
+			map.putSnake(snakes[iSnake]);
 			// Следующая змея
 			iSnake++;
 		}
@@ -170,12 +183,14 @@ public class Battle {
 	 * @param steps
 	 * @return
 	 */
-	private boolean Stop(Snake[] snake, int time, int steps){
+	private boolean Stop(Snake[] snakes, int time, int steps){
+		if (snakes == null) return true;
+		
 		// Если время ещё есть && Если действий ещё не больше допустимого количества
 		if (time < timeLimit && steps < stepsLimit)
 			// Если всем змейкам есть куда ходить
-			for (int i = 0; i < snake.length; i++)
-				if (snake[i].getMind().getAction(map).action.getType() != ACTION_TYPE.IN_DEAD_LOCK)
+			for (int i = 0; i < snakes.length; i++)
+				if (snakes[i].getMind().getAction(map).action.getType() != ACTION_TYPE.IN_DEAD_LOCK)
 					return false;
 		
 		return true;
@@ -199,79 +214,26 @@ public class Battle {
 			for (ActionList al : Common.doStep(map.getName(), snakes))
 				actions.add(al);
 			// Наращивание счётчика шагов
-			System.out.println(stepsPassed++);
+			stepsPassed++;
 		}
-		
+		System.out.println("Битва окончена за " + stepsPassed + " шагов");
 		return actions;
 	}
-	// =====================================================================
-	// ===========================Для тестирования==========================
-	// =====================================================================
-	public static void main(String[] args) throws ObjectAlreadyAddedException,
-			InterruptedException, SnakeAlreadyInMapException {
-		new Screen();
-		
-		while (!Screen.instance.canDraw())
-			Thread.sleep(100);
-		
-		Thread th = new Thread() {
-			public void run() {
-				try {
-					Battle b = new Battle();
-					Snake snake0 = new Snake();
-					Snake snake1 = new Snake();
-					Snake snake2 = new Snake();
-					Snake snake3 = new Snake();
-					
-					try{
-						b.init(new Map("battle"), new Snake[] { snake0, snake1, snake2, snake3 });
-					} 
-					catch (MapAlreadyExistException | MapNotExistException e){
-						e.printStackTrace();
-					}
-					
-					Dummy d;
-					int i;
-					for (i = 0; i < 60; i++) {
-						d = new Dummy(new Point(-10, i * 10), 10, 10);
-						map.put(d);
-					}
-
-					for (i = 0; i < 60; i++) {
-						d = new Dummy(new Point(810, i * 10), 10, 10);
-						map.put(d);
-					}
-
-					for (i = 0; i < 80; i++) {
-						d = new Dummy(new Point(i * 10, -10), 10, 10);
-						map.put(d);
-					}
-
-					for (i = 0; i < 80; i++) {
-						d = new Dummy(new Point(i * 10, 610), 10, 10);
-						map.put(d);
-					}
-
-					for (i = 0; i < 60; i++) {
-						d = new Dummy(new Point(10, i * 10), 10, 10);
-						map.put(d);
-					}			
-					
-					map.putSnake(snake0);
-					map.putSnake(snake1);
-					map.putSnake(snake2);
-					map.putSnake(snake3);
-
-					b.battleCalc(new Snake[] { snake0, snake1, snake2, snake3 });
-
-					map.drawAll();
-					
-				} catch (ObjectAlreadyAddedException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		th.setDaemon(true);
-		th.start();
+	
+	//
+	private String generateMap(String prefix){
+		return prefix + "-" + new Random().nextInt();
+	}
+	
+	/**
+	 * Тестовый набор змеек
+	 * @param snakes
+	 */
+	public Snake[] snake_fill(){
+		Snake snake0 = new Snake();
+		Snake snake1 = new Snake();
+		Snake snake2 = new Snake();
+		Snake snake3 = new Snake();
+		return new Snake[] { snake0, snake1, snake2, snake3 };
 	}
 }

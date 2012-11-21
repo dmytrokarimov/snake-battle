@@ -1,13 +1,14 @@
 package gui;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 /**
  * Базовый интерфейс для графических элементов
  * @author Karimov
  *
  */
-public interface Drawable {
+public interface Drawable extends Serializable{
 	/**
 	 *  вывод элемента на экран
 	 * @return 

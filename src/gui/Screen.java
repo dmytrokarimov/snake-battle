@@ -36,13 +36,14 @@ public class Screen {
 	private RenderingHints renderingHints;
 
 	private boolean ready = false;
-	
+
 	public boolean repaintOnEveryDraw = false;
-	
-	private static final boolean GRAPHICS_ON = true;
+
+	public static boolean GRAPHICS_ON = false;
+
 	/**
-	 * Создает объект экрана и отображает его на экране
-	 * Внимание! Это хоть и singleton, но предыдущие окна не закрываются
+	 * Создает объект экрана и отображает его на экране Внимание! Это хоть и
+	 * singleton, но предыдущие окна не закрываются
 	 */
 	public Screen() {
 		instance = this;
@@ -55,10 +56,13 @@ public class Screen {
 				} catch (Exception e) {
 					// use default
 				}
+				if (!GRAPHICS_ON)
+					return;
 				JFrame f = new JFrame("DooDoodle!");
 				f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				f.setLocationByPlatform(true);
 
+				// Добавлено после 33-й ревизии
 				f.setContentPane(instance.getGui());
 				f.setJMenuBar(instance.getMenuBar(false));
 
@@ -80,7 +84,7 @@ public class Screen {
 	}
 
 	/**
-	 * Рисует точку на экране 
+	 * Рисует точку на экране
 	 */
 	public void draw(Point point, Color color) {
 		if (!GRAPHICS_ON)
@@ -137,7 +141,7 @@ public class Screen {
 			return;
 		draw(p, text, color);
 	}
-	
+
 	/**
 	 * Выводит текст на экран
 	 */
@@ -180,21 +184,22 @@ public class Screen {
 		if (repaintOnEveryDraw)
 			this.imageLabel.repaint();
 	}
-	
-	public void repaint(){
+
+	public void repaint() {
 		if (!GRAPHICS_ON)
 			return;
 		if (repaintOnEveryDraw)
 			this.imageLabel.repaint();
-		else{
+		else {
 			imageLabel.setIcon(new ImageIcon(bufferImage));
 			this.imageLabel.repaint();
 			canvasImage = bufferImage;
-			bufferImage = new BufferedImage(canvasImage.getWidth(), canvasImage.getHeight(), BufferedImage.TYPE_INT_ARGB);;
+			bufferImage = new BufferedImage(canvasImage.getWidth(),
+					canvasImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			;
 			clear(bufferImage);
 		}
 	}
-
 
 	public void setImage(BufferedImage image) {
 		if (!GRAPHICS_ON)
@@ -209,11 +214,11 @@ public class Screen {
 		g.dispose();
 
 		g = bufferImage.createGraphics();
-		//g.setRenderingHints(renderingHints);
+		// g.setRenderingHints(renderingHints);
 		g.drawImage(image, 0, 0, gui);
 		g.dispose();
 
-		//new Rectangle(0, 0, w, h);
+		// new Rectangle(0, 0, w, h);
 		if (this.imageLabel != null) {
 			imageLabel.setIcon(new ImageIcon(canvasImage));
 			this.imageLabel.repaint();
@@ -234,7 +239,7 @@ public class Screen {
 
 		g.dispose();
 		if (repaintOnEveryDraw)
-			imageLabel.repaint();	
+			imageLabel.repaint();
 	}
 
 	public void clear(Point p, int width, int height) {
@@ -245,10 +250,10 @@ public class Screen {
 			g = this.canvasImage.createGraphics();
 		else
 			g = this.bufferImage.createGraphics();
-		//Graphics2D g = this.canvasImage.createGraphics();
+		// Graphics2D g = this.canvasImage.createGraphics();
 		g.setRenderingHints(renderingHints);
 		g.setColor(color);
-		g.fillRect(p.x-1, p.y-1, width+3, height+3);
+		g.fillRect(p.x - 1, p.y - 1, width + 3, height + 3);
 		g.dispose();
 		if (repaintOnEveryDraw)
 			this.imageLabel.repaint();
@@ -314,11 +319,11 @@ public class Screen {
 		return gui;
 	}
 
-    public JMenuBar getMenuBar(boolean webstart){
-        JMenuBar mb = new JMenuBar();
-        mb.add(this.getFileMenu(webstart));
-        return mb;
-    }
+	public JMenuBar getMenuBar(boolean webstart) {
+		JMenuBar mb = new JMenuBar();
+		mb.add(this.getFileMenu(webstart));
+		return mb;
+	}
 
 	private JMenu getFileMenu(boolean webstart) {
 		JMenu file = new JMenu("File");
@@ -371,24 +376,24 @@ public class Screen {
 
 		return canExit;
 	}
-	
-	public boolean canDraw(){
-		return ready;
+
+	public boolean canDraw() {
+		return ready && GRAPHICS_ON;
 	}
-	
+
 	/**
 	 * This method calc screen size
 	 */
-	public int getWidth(){
-		//TODO нужно каким-то образом вычислять это значение!
+	public int getWidth() {
+		// TODO нужно каким-то образом вычислять это значение!
 		return 800;
 	}
-	
+
 	/**
 	 * This method calc screen size
 	 */
-	public int getHeight(){
-		//TODO нужно каким-то образом вычислять это значение!
+	public int getHeight() {
+		// TODO нужно каким-то образом вычислять это значение!
 		return 600;
 	}
 }

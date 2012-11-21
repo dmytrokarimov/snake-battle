@@ -1,6 +1,7 @@
 package logic;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,9 @@ import gui.MindPolyGraph.OWNER_TYPES;
  * @author Karimov
  * 
  */
-public class Mind {
+public class Mind implements Serializable{
+	private static final long serialVersionUID = 1091988289276908947L;
+	
 	private static Random r = new Random(System.currentTimeMillis()
 			+ new Random(System.currentTimeMillis()).nextInt(1000000)
 			+ System.currentTimeMillis());
@@ -38,7 +41,9 @@ public class Mind {
 	 * @param <mindmap>
 	 * 
 	 */
-	public class MindMap {
+	public class MindMap implements Serializable{
+		private static final long serialVersionUID = 1932178797914012920L;
+		
 		private MindPolyGraph[][] mindmap;
 
 		public MindMap(int w, int h) {
@@ -295,7 +300,7 @@ public class Mind {
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + getOuterType().hashCode();
+			//result = prime * result + getOuterType().hashCode();
 			result = prime * result + Arrays.hashCode(mindmap);
 			return result;
 		}
@@ -312,9 +317,9 @@ public class Mind {
 				return false;
 			}
 			MindMap other = (MindMap) obj;
-			if (!getOuterType().equals(other.getOuterType())) {
-				return false;
-			}
+			//if (!getOuterType().equals(other.getOuterType())) {
+			//	return false;
+			//}
 			if (!Arrays.deepEquals(mindmap, other.mindmap)) {
 				return false;
 			}
@@ -515,7 +520,7 @@ public class Mind {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(mm);
-		result = prime * result + ((sn == null) ? 0 : sn.hashCode());
+		result = prime * result + ((sn == null) ? 0 : 1);//sn.hashCode());
 		return result;
 	}
 

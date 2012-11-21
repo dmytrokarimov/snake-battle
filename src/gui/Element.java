@@ -3,10 +3,13 @@ package gui;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.Serializable;
 
 import logic.Snake;
 
 public class Element extends Graph {
+	private static final long serialVersionUID = -6533857847490344497L;
+
 	public enum PARTS {
 		BODY, HEAD, TAIL, THIS_IS_BAD_IDEA;
 	}
@@ -136,6 +139,4 @@ public class Element extends Graph {
 		//}
 		return super.equals(obj);
 	}
-	
-	
 }

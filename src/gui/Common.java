@@ -3,6 +3,7 @@ package gui;
 import gui.Element.PARTS;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.*;
 
 import server.Battle;
@@ -110,7 +111,8 @@ public class Common {
 			throw new MapNotExistException("Map " + name + " no exist");
 	}
 
-	public static class ActionList {
+	public static class ActionList implements Serializable{
+		private static final long serialVersionUID = -2908059247897364803L;
 		public final Snake[] param;
 		public final Action action;
 		public ActionList(Action action, Snake... snakes){
@@ -141,6 +143,18 @@ public class Common {
 		}
 		return al;
 	}
+	
+	/*public static void doStep(List<ActionList> actions, String mapName, Snake... snakes) { 
+		try {
+			Map m = Common.selectMap(mapName);
+			for (int i = 0; i < snakes.length; i++) {
+				actions.doAction(actions.param);
+			}
+		} catch (MapNotExistException e) {
+			e.printStackTrace();
+		}
+	}*/
+
 
 	private Common() {
 

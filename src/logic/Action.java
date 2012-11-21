@@ -1,10 +1,12 @@
 package logic;
 
+import java.io.Serializable;
+
 /**
  *  Класс описывает интерфейс для выполнения какого-либо действия
  * @author RED Developer
  */
-public abstract class Action extends ActionFactory {
+public abstract class Action implements Serializable{
 	/**
 	 * Перечисление типов действий, которые могут происходить со змейкой
 	 * @author RED Developer

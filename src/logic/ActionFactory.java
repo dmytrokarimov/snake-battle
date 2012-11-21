@@ -1,6 +1,7 @@
 package logic;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 import javax.swing.JOptionPane;
 
@@ -12,6 +13,8 @@ import gui.Element.PARTS;
  * @author RED Developer
  */
 public class ActionFactory {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Описывает движение змейки вверх 
 	 * @return
