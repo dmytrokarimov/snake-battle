@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.swing.*;
 import logic.Map;
 
 public class Screen implements IScreen {
@@ -84,14 +83,6 @@ public class Screen implements IScreen {
 
 	public void setScreen(Map map) {
 		realScreen.setScreen(map);
-	}
-
-	public JComponent getGui() {
-		return realScreen.getGui();
-	}
-
-	public JMenuBar getMenuBar(boolean webstart) {
-		return realScreen.getMenuBar(webstart);
 	}
 
 	public boolean canExit() {
