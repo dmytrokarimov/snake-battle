@@ -6,7 +6,7 @@ package gui;
  * @author      Sami Shaio
  * @since       1.0
  */
-public class Point extends Point2D implements java.io.Serializable {
+public class Point{
     /**
      * The X coordinate of this <code>Point</code>.
      * If no X coordinate is set it will default to 0.
@@ -81,86 +81,7 @@ public class Point extends Point2D implements java.io.Serializable {
         return y;
     }
 
-    /**
-     * Returns the location of this point.
-     * This method is included for completeness, to parallel the
-     * <code>getLocation</code> method of <code>Component</code>.
-     * @return      a copy of this point, at the same location
-     * @since       1.1
-     */
-    public Point getLocation() {
-        return new Point(x, y);
-    }
-
-    /**
-     * Sets the location of the point to the specified location.
-     * This method is included for completeness, to parallel the
-     * <code>setLocation</code> method of <code>Component</code>.
-     * @param       p  a point, the new location for this point
-     * @since       1.1
-     */
-    public void setLocation(Point p) {
-        setLocation(p.x, p.y);
-    }
-
-    /**
-     * Changes the point to have the specified location.
-     * <p>
-     * This method is included for completeness, to parallel the
-     * <code>setLocation</code> method of <code>Component</code>.
-     * Its behavior is identical with <code>move(int,&nbsp;int)</code>.
-     * @param       x the X coordinate of the new location
-     * @param       y the Y coordinate of the new location
-     * @since       1.1
-     */
-    public void setLocation(int x, int y) {
-        move(x, y);
-    }
-
-    /**
-     * Sets the location of this point to the specified double coordinates.
-     * The double values will be rounded to integer values.
-     * Any number smaller than <code>Integer.MIN_VALUE</code>
-     * will be reset to <code>MIN_VALUE</code>, and any number
-     * larger than <code>Integer.MAX_VALUE</code> will be
-     * reset to <code>MAX_VALUE</code>.
-     *
-     * @param x the X coordinate of the new location
-     * @param y the Y coordinate of the new location
-     * @see #getLocation
-     */
-    public void setLocation(double x, double y) {
-        this.x = (int) Math.floor(x+0.5);
-        this.y = (int) Math.floor(y+0.5);
-    }
-
-    /**
-     * Moves this point to the specified location in the
-     * {@code (x,y)} coordinate plane. This method
-     * is identical with <code>setLocation(int,&nbsp;int)</code>.
-     * @param       x the X coordinate of the new location
-     * @param       y the Y coordinate of the new location
-     */
-    public void move(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    /**
-     * Translates this point, at location {@code (x,y)},
-     * by {@code dx} along the {@code x} axis and {@code dy}
-     * along the {@code y} axis so that it now represents the point
-     * {@code (x+dx,y+dy)}.
-     *
-     * @param       dx   the distance to move this point
-     *                            along the X axis
-     * @param       dy    the distance to move this point
-     *                            along the Y axis
-     */
-    public void translate(int dx, int dy) {
-        this.x += dx;
-        this.y += dy;
-    }
+   
 
     /**
      * Determines whether or not two points are equal. Two instances of

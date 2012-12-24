@@ -3,8 +3,6 @@ package gui;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JComponent;
-import javax.swing.JMenuBar;
 import gui.Point;
 public interface IScreen {
 
@@ -57,10 +55,6 @@ public interface IScreen {
 	public void setScreen(String name) ;
 
 	public void setScreen(logic.Map map) ;
-
-	public JComponent getGui() ;
-
-	public JMenuBar getMenuBar(boolean webstart) ;
 
 	public boolean canExit() ;
 
