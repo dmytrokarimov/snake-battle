@@ -1,12 +1,11 @@
 package logic;
 
-//import gui.Graph;
-
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import gui.*;
 
@@ -16,6 +15,8 @@ import gui.*;
  * @author Karimov
  */
 public class Map implements Iterable<Drawable>, Serializable {
+	private static final long serialVersionUID = 3847259324576480684L;
+
 	private String name;
 	private List<Object> list;
 
@@ -52,7 +53,7 @@ public class Map implements Iterable<Drawable>, Serializable {
 	}
 
 	/**
-	 * Ложит объект в массив
+	 * Кладёт объект в массив
 	 * 
 	 * @throws ObjectAlreadyAddedException
 	 *             генерируется если по координатам объекта obj в массиве уже
@@ -157,21 +158,8 @@ public class Map implements Iterable<Drawable>, Serializable {
 	public void setBorder(int width, int height) {
 		// Dummy
 		Dummy d;
-		// Итератор
-		int i;
 
 		try {
-			/*
-			 * // Граница слева for (i = 0; i < height / 10; i++) { d = new
-			 * Dummy(new Point(-10, i * 10), 10, 10); put(d); } // Граница
-			 * справа for (i = 0; i < height / 10; i++) { d = new Dummy(new
-			 * Point(width, i * 10), 10, 10); put(d); } // Граница снизу for (i
-			 * = 0; i < width / 10; i++) { d = new Dummy(new Point(i * 10,
-			 * height), 10, 10); put(d); } // Граница сверху for (i = 0; i <
-			 * width / 10; i++) { d = new Dummy(new Point(i * 10, -10), 10, 10);
-			 * put(d); }
-			 */
-
 			// Граница слева
 			d = new Dummy(new Point(-10, 0), 100, height);
 			put(d);

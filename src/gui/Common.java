@@ -155,6 +155,19 @@ public class Common {
 		}
 	}*/
 
+	
+	/**
+	 * Позволяет сгенерировать случайное имя для карты
+	 * @param mapName - Основная часть имени карты. По умолчанию "battle-"
+	 * @return
+	 */
+	public static String generateName(String mapName) {
+		String name;
+		Random r = new Random(9999999999L);
+		if (mapName == null || mapName == "") mapName = "battle-";
+		name = mapName + r.nextLong();
+		return name;
+	}
 
 	private Common() {
 

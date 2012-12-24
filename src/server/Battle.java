@@ -79,7 +79,7 @@ public class Battle implements Serializable{
 	 * @param coord
 	 * @return Point
 	 */
-	private Point coordCorrect(Point coord)
+	private Point coordRotate(Point coord)
 	{
 		if (coord.x != 0) headX *= -1;
 		if (coord.y != 0) headY *= -1;
@@ -90,10 +90,8 @@ public class Battle implements Serializable{
 	
 	/**
 	 * Инициализирует змейки
-	 * @param map
-	 * 				- карта, на которо будет происходить битва
-	 * @param snakes
-	 * 				- змейки, заявленные на бой
+	 * @param mapName - имя карты, на которой будет происходить битва
+	 * @param snakes - змейки, заявленные на бой
 	 * @throws MapAlreadyExistException 
 	 * @throws MapNotExistException 
 	 * @throws ObjectAlreadyAddedException 
@@ -106,7 +104,7 @@ public class Battle implements Serializable{
 			map = Common.registerMap(new Map(mapName));
 		}
 		catch(Exception ex){
-			System.out.println("Карта" + mapName + " уже была создана, вибираем её");
+			System.out.println("Карта " + mapName + " уже была создана, вибираем её");
 			map = Common.selectMap(mapName);
 		}
 		
@@ -123,9 +121,9 @@ public class Battle implements Serializable{
 		// Инициализация змеек
 		while (iSnake < snakeLimit && iSnake < snakesCount)
 		{
-			snakeStart = coordCorrect(snakeStart);
+			snakeStart = coordRotate(snakeStart);
 			// Если змей 2 - поставить друг напротив друга 
-			if (snakeCount == 2) snakeStart = coordCorrect(snakeStart);
+			if (snakeCount == 2) snakeStart = coordRotate(snakeStart);
 			
 			if (snakes[iSnake] != null) {
 				// Перестраиваем змею, если она была уже готовой
@@ -170,7 +168,7 @@ public class Battle implements Serializable{
 				el.clear();
 			}
 			// Добавление змейки на карту
-			map.putSnake(snakes[iSnake]);
+			//map.putSnake(snakes[iSnake]);
 			// Следующая змея
 			iSnake++;
 		}
