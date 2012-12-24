@@ -27,7 +27,7 @@ import server.Message;
  * Описывает клиента приложения
  * @author RED Developer
  */
-public class Client {
+public class Client2 {
 	static class ClientThread extends Thread {
 		public static Socket sClient;								// Клиентский сокет
 		public static InputStream is;								// Объект входящего потока
@@ -63,7 +63,7 @@ public class Client {
 			connect(host, port);									// Инициализация сокета клиента
 			
 			os = sClient.getOutputStream();							// Инициализация исходящего потока
-			oos = new ObjectOutputStream(os);						// Инициализация исходящего потока объекта
+			//oos = new ObjectOutputStream(os);						// Инициализация исходящего потока объекта
 			
 			start();												// Запуск потока
 		}
@@ -125,7 +125,7 @@ public class Client {
 				// ??? ??? ???
 				oos.flush();
 				// Закрытие исходящего потока
-				oos.close();
+				//oos.close();
 			} catch (Exception ex) {
 				System.out.println("[CLIENT]: Exception during serialization: " + ex);
 				System.exit(0);
@@ -206,7 +206,9 @@ public class Client {
 				// Выполнять, пока сокет не будет закрыт
 				//while (!sClient.isClosed()) {
 					// Отправка клиентской змейки на сервер
-					//sendObject(oos, mySnake);
+				mySnake = new Snake();
+				oos = new ObjectOutputStream(os);	
+				sendObject(oos, mySnake);
 					
 
 					is = sClient.getInputStream();							// Инициализация входящего потока
@@ -221,11 +223,6 @@ public class Client {
 						snakes = message.getSnakes();
 						actions = message.getAl();
 					}
-					
-					/*for (int i = 0; i < snakes.length; i++)
-					{
-						snakes[i].setSnakeInMap(false, map.getName());
-					}*/
 					
 					// Показать битву на клиенте
 					playBattle();
@@ -249,7 +246,7 @@ public class Client {
 	/**
 	 * Конструктор клиента
 	 */
-	public Client() {
+	public Client2() {
 		// Запуск клиентского потока
 		try {
 			thread = new ClientThread();
@@ -267,6 +264,6 @@ public class Client {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		new Client();
+		new Client2();
 	}
 }

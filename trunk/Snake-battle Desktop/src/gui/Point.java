@@ -1,4 +1,7 @@
 package gui;
+
+import java.io.Serializable;
+
 /**
  * A point representing a location in {@code (x,y)} coordinate space,
  * specified in integer precision.
@@ -6,7 +9,7 @@ package gui;
  * @author      Sami Shaio
  * @since       1.0
  */
-public class Point{
+public class Point implements Serializable{
     /**
      * The X coordinate of this <code>Point</code>.
      * If no X coordinate is set it will default to 0.
