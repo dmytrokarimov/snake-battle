@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.Point;
-
 public class Dummy extends Graph {
 
 	public Dummy(Point coord, int width, int height) {

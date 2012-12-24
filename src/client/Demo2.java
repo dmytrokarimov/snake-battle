@@ -1,6 +1,5 @@
 package client;
 
-import java.awt.Point;
 import server.Battle;
 
 import logic.Action;

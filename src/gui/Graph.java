@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.Point;
-
 /**
  * Основной класс для вывода графики
  * 

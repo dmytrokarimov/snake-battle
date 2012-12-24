@@ -1,6 +1,5 @@
 package logic;
 
-import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;

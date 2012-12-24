@@ -9,9 +9,8 @@ import gui.MindPolyGraph.LOGIC_TYPES;
 import gui.MindPolyGraph.OWNER_TYPES;
 import gui.MindPolyGraph;
 import gui.ObjectAlreadyAddedException;
+import gui.Point;
 import gui.Screen;
-
-import java.awt.Point;
 
 import logic.Map;
 import logic.Mind;

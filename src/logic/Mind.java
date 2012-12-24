@@ -1,6 +1,5 @@
 package logic;
 
-import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +17,7 @@ import gui.MindPolyGraph;
 import gui.MindPolyGraph.LOGIC_FLAGS;
 import gui.MindPolyGraph.LOGIC_TYPES;
 import gui.MindPolyGraph.OWNER_TYPES;
+import gui.Point;
 
 /**
  * Описывает класс для принятия решения о принимаемых действиях

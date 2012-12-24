@@ -1,8 +1,6 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.io.Serializable;
 
 import logic.Snake;

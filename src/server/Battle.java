@@ -7,8 +7,8 @@ import gui.Common.MapNotExistException;
 import gui.Element;
 import gui.Element.PARTS;
 import gui.ObjectAlreadyAddedException;
+import gui.Point;
 
-import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

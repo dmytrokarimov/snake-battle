@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.Point;
-
 import logic.Map;
 
 public class Text extends Graph implements Drawable{

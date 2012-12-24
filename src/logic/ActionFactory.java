@@ -1,12 +1,8 @@
 package logic;
 
-import java.awt.Point;
-import java.io.Serializable;
-
-import javax.swing.JOptionPane;
-
 import gui.Element;
 import gui.Element.PARTS;
+import gui.Point;
 
 /**
  * Реализует функции передвижения/действия змейки
@@ -197,7 +193,6 @@ public class ActionFactory {
 		return new Action() {
 			@Override
 			public void doAction(Snake... snake) {
-				JOptionPane.showMessageDialog(null, "Вы сбежали боя! Бог змей покарает Вас!!!");
 			}
 
 			@Override
