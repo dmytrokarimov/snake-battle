@@ -43,9 +43,14 @@ public class Demo {
 							new Snake(), new Snake() };
 					Battle b = new Battle();
 					b.init(mapName, sn);
-
+										
 					Map m = Common.selectMap(mapName);
 
+					for (int i = 0; i < sn.length; i++) {
+						m.putSnake(sn[i]);
+					}
+
+					
 					m.setBorder(800, 600);
 					int i;
 
