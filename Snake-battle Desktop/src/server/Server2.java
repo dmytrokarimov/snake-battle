@@ -18,7 +18,7 @@ import java.util.List;
 import logic.Map;
 import logic.Snake;
 
-public class Server {
+public class Server2 {
 	public static ServerSocket sServer; 		// Серверный сокет
 	private static int port = 65535; 			// Прослушиваемый порт
 	
@@ -29,16 +29,16 @@ public class Server {
 		System.out.println("Server Started");
 		try {
 			System.out.println("[SERVER]: Waiting for a client...");
-			if (connected < 4) {
+			//if (connected < 4) {
 				Socket sClient = sServer.accept();
 				System.out.println("[SERVER]: Client connected");
 				try {
 					System.out.println(connected++);
-					new ServerOneThread(sClient);
+					new ServerOneThread2(sClient);
 				} catch (IOException e) {
 					sClient.close();
 				}
-			}
+			//}
 		} catch (IOException e) {
 			System.out.println("[SERVER]: Can't accept");
 			System.exit(-1);
@@ -48,7 +48,7 @@ public class Server {
 	}
 }
 
-class ServerOneThread extends Thread{
+class ServerOneThread2 extends Thread{
 	public static Socket sClient; 				// Клиентский сокет
 	public static InputStream is; 				// Объект входящего потока
 	public static OutputStream os; 				// Объект исходящего потока
@@ -60,7 +60,7 @@ class ServerOneThread extends Thread{
 	private static Snake[] snakes = null;		// Змейки клиентов, учавствующие в битве
 	private static Map map = null;				// Карта, на которой проводится битва
 	
-	public ServerOneThread(Socket client) throws IOException
+	public ServerOneThread2(Socket client) throws IOException
 	{
 		sClient = client;
 		is = sClient.getInputStream(); 			// Инициализация входящего потока
@@ -70,12 +70,17 @@ class ServerOneThread extends Thread{
 	
 	/** Описывает поток сервера */
 	public void run(){
+		// Инициализация входящего потока объекта
 		while(!sClient.isClosed()){
-			// Инициализация
-			battle = new Battle();
-			snakes = battle.snake_fill();
-
 			try {
+				if (ois == null) ois = new ObjectInputStream(is);
+				Snake clientSnake = (Snake)receiveObject(ois);
+				snakes = new Snake[]{clientSnake, new Snake(), new Snake(), new Snake()};
+				
+				// Инициализация
+				battle = new Battle();
+				//snakes = battle.snake_fill();
+				
 				// Создание экрана, на котором будут происходит все действия змеек
 				new Screen();
 				
@@ -92,7 +97,8 @@ class ServerOneThread extends Thread{
 				System.out.println("[SERVER]: Battle ended");
 				
 				// Передача битвы на клиент
-				ois = new ObjectInputStream(is); 	// Инициализация входящего потока объекта
+				/*ois = new ObjectInputStream(is); 	// Инициализация входящего потока объекта
+				Snake clientSnake = (Snake)receiveObject(ois);*/
 				//oos = new ObjectOutputStream(os); 	// Инициализация исходящего потока объекта
 				
 				// Инициализация передаваемого сообщения
