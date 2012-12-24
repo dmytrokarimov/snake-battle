@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import logic.Map;
 
@@ -53,20 +52,8 @@ public class Screen implements IScreen {
 		realScreen.draw(p, text, color);
 	}
 
-	public void draw(Point p, BufferedImage image) {
-		realScreen.draw(p, image);
-	}
-
 	public void repaint() {
 		realScreen.repaint();
-	}
-
-	public void setImage(BufferedImage image) {
-		realScreen.setImage(image);
-	}
-
-	public void clear(BufferedImage bi) {
-		realScreen.clear(bi);
 	}
 
 	public void clear(Point p, int width, int height) {

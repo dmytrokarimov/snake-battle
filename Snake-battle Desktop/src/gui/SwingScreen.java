@@ -90,7 +90,7 @@ public class SwingScreen implements IScreen{
 		else
 			g = this.bufferImage.createGraphics();
 		g.setRenderingHints(renderingHints);
-		g.setColor(color);
+		g.setColor(new java.awt.Color(color.value));
 		g.setStroke(stroke);
 		int n = 0;
 		g.drawLine(point.x, point.y, point.x + n, point.y + n);
@@ -120,7 +120,7 @@ public class SwingScreen implements IScreen{
 		else
 			g = this.bufferImage.createGraphics();
 		g.setRenderingHints(renderingHints);
-		g.setColor(color);
+		g.setColor(new java.awt.Color(color.value));
 		g.setStroke(stroke);
 		g.drawRect(r.x, r.y, r.width, r.height);
 		g.dispose();
@@ -149,7 +149,7 @@ public class SwingScreen implements IScreen{
 		else
 			g = this.bufferImage.createGraphics();
 		g.setRenderingHints(renderingHints);
-		g.setColor(color);
+		g.setColor(new java.awt.Color(color.value));
 		g.setStroke(stroke);
 		g.drawString(text, p.x, p.y);
 		g.dispose();
@@ -229,7 +229,7 @@ public class SwingScreen implements IScreen{
 			return;
 		Graphics2D g = bi.createGraphics();
 		g.setRenderingHints(renderingHints);
-		g.setColor(color);
+		g.setColor(new java.awt.Color(color.value));
 		g.fillRect(0, 0, bi.getWidth(), bi.getHeight());
 
 		g.dispose();
@@ -247,7 +247,7 @@ public class SwingScreen implements IScreen{
 			g = this.bufferImage.createGraphics();
 		// Graphics2D g = this.canvasImage.createGraphics();
 		g.setRenderingHints(renderingHints);
-		g.setColor(color);
+		g.setColor(new java.awt.Color(color.value));
 		g.fillRect(p.x - 1, p.y - 1, width + 3, height + 3);
 		g.dispose();
 		if (repaintOnEveryDraw)
