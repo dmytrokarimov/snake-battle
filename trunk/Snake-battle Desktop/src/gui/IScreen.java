@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import gui.Point;
@@ -36,17 +35,7 @@ public interface IScreen {
 	 */
 	public void draw(Point p, String text, Color color) ;
 
-	/**
-	 * Выводит image на экран в точке p
-	 */
-	public void draw(Point p, BufferedImage image) ;
-
 	public void repaint() ;
-
-	public void setImage(BufferedImage image) ;
-
-	/** Clears the entire image area by painting it with the current color. */
-	public void clear(BufferedImage bi) ;
 
 	public void clear(Point p, int width, int height) ;
 
