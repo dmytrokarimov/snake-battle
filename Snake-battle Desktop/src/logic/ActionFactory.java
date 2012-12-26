@@ -201,4 +201,29 @@ public class ActionFactory {
 			}
 		};
 	}
+	
+	/**
+	 * Возвращает действие по введённой команде
+	 * @param command
+	 * @return Action
+	 */
+	public Object getValue(String command){
+		switch (command) {
+		case "getUp":
+			return getUp();
+		case "getDown":
+			return getDown();
+		case "getLeft":
+			return getLeft();
+		case "getRight":
+			return getRight();
+		case "getEatTail":
+			return getEatTail();
+		case "getInDeadLock":
+			return getInDeadlock();
+		case "getLeaveBattle":
+			return getLeaveBattle();
+		default: return getInDeadlock();
+		}
+	}
 }
