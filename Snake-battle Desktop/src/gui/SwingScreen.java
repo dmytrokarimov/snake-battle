@@ -34,6 +34,7 @@ public class SwingScreen implements IScreen{
 
 	private boolean ready = false;
 
+	private JFrame frame = null;
 	public boolean repaintOnEveryDraw = false;
 
 	/**
@@ -53,17 +54,17 @@ public class SwingScreen implements IScreen{
 				}
 				if (!Screen.GRAPHICS_ON)
 					return;
-				JFrame f = new JFrame("DooDoodle!");
-				f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				f.setLocationByPlatform(true);
+				frame = new JFrame("DooDoodle!");
+				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				frame.setLocationByPlatform(true);
 
 				// Добавлено после 33-й ревизии
-				f.setContentPane(instance.getGui());
-				f.setJMenuBar(instance.getMenuBar(false));
+				frame.setContentPane(instance.getGui());
+				frame.setJMenuBar(instance.getMenuBar(false));
 
-				f.pack();
-				f.setMinimumSize(f.getSize());
-				f.setVisible(true);
+				frame.pack();
+				frame.setMinimumSize(frame.getSize());
+				frame.setVisible(true);
 			}
 		};
 		SwingUtilities.invokeLater(r);
@@ -343,7 +344,9 @@ public class SwingScreen implements IScreen{
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					// TODO Auto-generated method stub
-					System.exit(0);
+					ready = false;
+					frame.dispose();
+					//System.exit(0);
 				}
 			};
 			JMenuItem exitItem = new JMenuItem("Exit");

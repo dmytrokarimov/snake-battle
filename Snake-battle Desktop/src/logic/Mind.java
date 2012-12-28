@@ -25,7 +25,7 @@ import gui.Point;
  * @author Karimov
  * 
  */
-public class Mind implements Serializable{
+public class Mind implements Serializable, Cloneable{
 	private static final long serialVersionUID = 1091988289276908947L;
 	
 	private static Random r = new Random(System.currentTimeMillis()
@@ -549,4 +549,11 @@ public class Mind implements Serializable{
 		return true;
 	}
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Mind m = new Mind(this.sn);
+		m.mm = this.mm.clone();
+		// TODO Auto-generated method stub
+		return m;
+	}
 }

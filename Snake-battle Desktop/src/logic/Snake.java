@@ -13,7 +13,7 @@ import gui.Common.MapNotExistException;
  * @author Karimov
  * 
  */
-public class Snake implements Serializable{
+public class Snake implements Serializable, Cloneable{
 	private static final long serialVersionUID = 1L;
 
 	public class ArrayList extends java.util.ArrayList<Element> {
@@ -244,5 +244,16 @@ public class Snake implements Serializable{
 		return true;
 	}
 	
-	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Snake sn = new Snake();
+		sn.elements = new ArrayList();
+		for (int i = 0; i < this.elements.size(); i++){
+			sn.elements.add((Element) this.elements.get(i).clone());
+		}
+		sn.mapName = new String(this.mapName);
+		sn.mind = (Mind) this.mind.clone();
+		sn.snakeInMap = this.snakeInMap;
+		return sn;
+	}
 }

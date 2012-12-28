@@ -1,86 +1,108 @@
 package client;
 
 import gui.Common;
-import gui.ObjectAlreadyAddedException;
-import gui.Screen;
 import gui.Common.ActionList;
 import gui.Common.MapAlreadyExistException;
 import gui.Common.MapNotExistException;
+import gui.Element.PARTS;
+import gui.MindPolyGraph.LOGIC_TYPES;
+import gui.MindPolyGraph.OWNER_TYPES;
+import gui.Dummy;
+import gui.Element;
+import gui.MindPolyGraph;
+import gui.ObjectAlreadyAddedException;
+import gui.Point;
+import gui.Screen;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 
 import logic.Map;
+import logic.Mind;
+import logic.Mind.MindMap;
 import logic.Snake;
-
 import server.Battle;
+import server.Commands;
 import server.Message;
 
 /**
  * Описывает клиента приложения
+ * 
  * @author RED Developer
  */
 public class Client {
 	static class ClientThread extends Thread {
-		public static Socket sClient;								// Клиентский сокет
-		public static InputStream is;								// Объект входящего потока
-		public static OutputStream os;								// Объект исходящего потока
-		public static ObjectInputStream ois;						// Объект входящего потока объекта
-		public static ObjectOutputStream oos;						// Объект исходящего потока объекта
-		
+		public static Socket sClient; // Клиентский сокет
+		public PrintWriter out;
+		public BufferedReader in;
+		// public static ObjectInputStream ois; // Объект входящего потока
+		// объекта
+		// public static ObjectOutputStream oos; // Объект исходящего потока
+		// объекта
+
 		// Клиентские специфические переменные
-		private Message message = null;								// Сообщение, получаемое от сервера
-		private	List<ActionList> actions = null;					// Запись ходов боя (получается с сервера)
-		private Snake[] snakes = null;								// Змейки, учавствующие в бою (получаются с сервера)
-		private Snake mySnake = null;								// Змейка клиента (передаётся на сервер)
-		private Map map = null;										// Карта, на которой проводится битва
-		private Battle battle = null;								// Объект класса Battle, для воспроизведения битвы
-		
-		static String host = "localhost";							// Адрес сервера
-		static int port = 65535;									// Порт сервера
+		private Message message = null; // Сообщение, получаемое от сервера
+		private List<ActionList> actions = null; // Запись ходов боя (получается
+													// с сервера)
+		private Snake[] snakes = null; // Змейки, учавствующие в бою (получаются
+										// с сервера)
+		private Snake mySnake = null; // Змейка клиента (передаётся на сервер)
+		private Map map = null; // Карта, на которой проводится битва
+		private Battle battle = null; // Объект класса Battle, для
+										// воспроизведения битвы
+
+		static String host = "localhost"; // Адрес сервера
+		static int port = 65535; // Порт сервера
+
 		/**
 		 * Конструктор потока клиента
+		 * 
 		 * @throws IOException
 		 */
-		public ClientThread() throws IOException {
-			this(InetAddress.getByName(host), port);			
+		public ClientThread(Snake mySnake) throws IOException {
+			this(mySnake, InetAddress.getByName(host), port);
 		}
-		
+
 		/**
 		 * Конструктор потока клиента
+		 * 
 		 * @param host
 		 * @param port
 		 * @throws IOException
 		 */
-		public ClientThread(InetAddress host, int port) throws IOException {
-			connect(host, port);									// Инициализация сокета клиента
-			
-			os = sClient.getOutputStream();							// Инициализация исходящего потока
-			oos = new ObjectOutputStream(os);						// Инициализация исходящего потока объекта
-			
-			start();												// Запуск потока
+		public ClientThread(Snake mySnake, InetAddress host, int port) throws IOException {
+			this.mySnake = mySnake; 
+			connect(host, port); // Инициализация сокета клиента
+
+			start(); // Запуск потока
 		}
-		
-		/*+++ Вспомогательные функции, отвечающие за логику на клиенте +++*/
+
+		/* +++ Вспомогательные функции, отвечающие за логику на клиенте +++ */
 		/**
 		 * Осуществляет инициализацию подключения к серверу
-		 * @param host - адрес хоста
-		 * @param port - порт хоста
+		 * 
+		 * @param host
+		 *            - адрес хоста
+		 * @param port
+		 *            - порт хоста
 		 */
-		private void connect(InetAddress host, int port){
+		private void connect(InetAddress host, int port) {
 			System.out.println("[CLIENT]: Connecting to... " + host);
 			// Пока не подключился - пытайся
-			while(sClient == null)
+			while (sClient == null)
 				try {
 					sClient = new Socket(host, port);
-					System.out.println("[CLIENT]: Connected to " + host);		
+					System.out.println("[CLIENT]: Connected to " + host);
 				} catch (IOException e) {
 					e.printStackTrace();
 					try {
@@ -91,101 +113,90 @@ public class Client {
 					}
 				}
 		}
-		
-		/**
-		 * Получает объект из указанного входящего потока
-		 * @param ois - входящий поток
-		 * @return
-		 * @throws IOException
-		 */
-		private synchronized Object receiveObject(ObjectInputStream ois) throws IOException {
-			Object receivedObject = null;							// Обект "полученный объект" 
+
+		public synchronized String receive() {
 			try {
-				// Чтение объекта из входящего потока
-				receivedObject = ois.readObject();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			//ois.close();
-			return receivedObject;
-		}
-		
-		/**
-		 * Передаёт указанный объект в указанный исходящй поток 
-		 * @param oos - исходящий поток
-		 * @param sendingObject - пересылаемый объект
-		 */
-		private synchronized void sendObject(ObjectOutputStream oos, Object sendingObject) {
-			// Сериализация рассчитанных данных
-			try {
-				// Получение исходящего потока socket'а
-				oos = new ObjectOutputStream(sClient.getOutputStream());
-				// Запись объекта в исходящий поток
-				oos.writeObject(sendingObject);
-				// ??? ??? ???
-				oos.flush();
-				// Закрытие исходящего потока
-				oos.close();
+				return in.readLine();
 			} catch (Exception ex) {
-				System.out.println("[CLIENT]: Exception during serialization: " + ex);
+				System.out.println("[CLIENT]: Exception during send: " + ex);
+				System.exit(0);
+			}
+			return "";
+		}
+
+		public synchronized void send(String message) {
+			try {
+				out.println(message);
+			} catch (Exception ex) {
+				System.out.println("[CLIENT]: Exception during send: " + ex);
 				System.exit(0);
 			}
 		}
-		
+
 		/**
-		 * Проводит инициализацию GUI (Окно игры, меню, непосредственное поле битвы)
+		 * Проводит инициализацию GUI (Окно игры, меню, непосредственное поле
+		 * битвы)
+		 * 
 		 * @param mapName
 		 * @throws InterruptedException
 		 * @throws MapAlreadyExistException
 		 * @throws MapNotExistException
 		 * @throws ObjectAlreadyAddedException
 		 */
-		public void initInterface(String mapName) throws InterruptedException, MapAlreadyExistException, MapNotExistException, ObjectAlreadyAddedException{
+		public void initInterface(String mapName) throws InterruptedException,
+				MapAlreadyExistException, MapNotExistException,
+				ObjectAlreadyAddedException {
 			// Еси графика была выключена - включить
-			if (!Screen.GRAPHICS_ON) Screen.GRAPHICS_ON = true;
-			
+			if (!Screen.GRAPHICS_ON)
+				Screen.GRAPHICS_ON = true;
+
 			// Инициализация и отображение GUI
 			new Screen();
-			
+
 			// Размеры экрана (для отрисовки границ)
-			int width = Screen.instance.getWidth(),
-				height = Screen.instance.getHeight();
-			
+			int width = Screen.instance.getWidth(), height = Screen.instance
+					.getHeight();
+
 			// Ожидание возможности отрисовки
 			while (!Screen.instance.canDraw())
 				Thread.sleep(100);
-			
+
 			// Регистрация указанной карты и её выбор для битвы
 			map = Common.registerMap(new Map(mapName));
-			//map = Common.selectMap(mapName);
+			// map = Common.selectMap(mapName);
 			// Задание границ игровой карты
 			map.setBorder(width, height);
 		}
-		
+
 		/**
 		 * Описывает действия, необходимые для воспроизведения битвы на клиенте
-		 * @throws ObjectAlreadyAddedException 
-		 * @throws MapNotExistException 
-		 * @throws MapAlreadyExistException 
-		 * @throws InterruptedException 
+		 * 
+		 * @throws ObjectAlreadyAddedException
+		 * @throws MapNotExistException
+		 * @throws MapAlreadyExistException
+		 * @throws InterruptedException
 		 */
-		private void playBattle() throws InterruptedException, MapAlreadyExistException, MapNotExistException, ObjectAlreadyAddedException {
-			initInterface(map.getName());		// Инициализирует интерфейс
-			
+		private void playBattle() throws InterruptedException,
+				MapAlreadyExistException, MapNotExistException,
+				ObjectAlreadyAddedException {
+			initInterface(map.getName()); // Инициализирует интерфейс
+
 			battle = new Battle();
-/*
-			Common.removeMap(map);
-			Common.registerMap(new Map(message.getMap().getName()));*/
-			battle.init(map.getName(), snakes);	// Инициализирует битву
-			
+			/*
+			 * Common.removeMap(map); Common.registerMap(new
+			 * Map(message.getMap().getName()));
+			 */
+			battle.init(map.getName(), snakes); // Инициализирует битву
+
 			// Змейки на поле боя
 			for (int i = 0; i < snakes.length; i++)
 				map.putSnake(snakes[i]);
-			// Змейки уже добавлены в .BattleInit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// Змейки уже добавлены в
+			// .BattleInit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			// Добавление в BattleInit отменено
-			
+
 			map.drawAll();
-			
+
 			int waitTime = 500;
 			for (ActionList al : actions) {
 				long timeold = System.currentTimeMillis();
@@ -196,43 +207,111 @@ public class Client {
 					Thread.sleep(waitTime - timenow);
 			}
 		}
+
 		/*--- Вспомогательные функции, отвечающие за логику на клиенте ---*/
-		
+
 		/**
 		 * Описывает действия в потоке клиента
 		 */
 		public void run() {
-			try {				
+			try {
 				// Выполнять, пока сокет не будет закрыт
-				//while (!sClient.isClosed()) {
-					// Отправка клиентской змейки на сервер
-					//sendObject(oos, mySnake);
-					
+				// while (!sClient.isClosed()) {
+				// Отправка клиентской змейки на сервер
+				// sendObject(oos, mySnake);
+				System.out.println("[CLIENT]: init streams");
+				in = new BufferedReader(new InputStreamReader(
+						sClient.getInputStream()));
+				out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+						sClient.getOutputStream())), true);
+				//инициализация потока считывания
+				new Thread(){
+					public void run() {
+						
+					};
+				};
+				// oos = new ObjectOutputStream(os); // Инициализация исходящего
+				// потока
+				// объекта
 
-					is = sClient.getInputStream();							// Инициализация входящего потока
-					ois = new ObjectInputStream(is);						// Инициализация входящего потока объекта
-					
-					// Получение сообщения от сервера
-					message = (Message) receiveObject(ois);
-					// Считывание данных из сообщения
-					if (message != null) {
-						map = new Map(message.getMap().getName());
-						//map = Common.registerMap(new Map(Common.generateName("clientMap-")));
-						snakes = message.getSnakes();
-						actions = message.getAl();
+				while (!sClient.isClosed()) {
+					System.out.println("[CLIENT]: receive message");
+					String command = receive();
+
+					System.out.println("[CLIENT]: message: [" + command + "]");
+
+					if (command.equals(Commands.getSnake)) {
+						send(Commands.COMMAND_NOT_SUPPORTED);
 					}
-					
-					/*for (int i = 0; i < snakes.length; i++)
-					{
-						snakes[i].setSnakeInMap(false, map.getName());
-					}*/
-					
-					// Показать битву на клиенте
-					playBattle();
-				//}
-			} catch (IOException | InterruptedException | MapAlreadyExistException | MapNotExistException | ObjectAlreadyAddedException e) {
+					if (command.equals(Commands.actions)) {
+						/*
+						 * message = (Message) receiveObject(ois); map = new
+						 * Map(message.getMap().getName()); snakes =
+						 * message.getSnakes(); actions = message.getAl();
+						 * playBattle();
+						 */
+					}
+					if (command.equals(Commands.GET_MIND)) {
+						Mind mind = mySnake.getMind();
+						for (int i = 0; i < mind.getMindMap().length; i++) {
+							MindMap mm = mind.getMindMap(i);
+
+							MindPolyGraph[][] mpg = mm.get();
+							for (int j = 0; j < mpg.length; j++) {
+								for (int k = 0; k < mpg[j].length; k++) {
+									if (mpg[j][k] == null)
+										continue;
+									
+									// 1.2.3.ENEMY.AND.BODY.RED
+									String line = "";
+
+									line += i + ".";
+									line += j + "." + k + ".";
+									line += mpg[j][k].getOwner()
+											+ ".";
+									line += mpg[j][k].getLogic()
+											+ ".";
+									//=========value=========
+									if (mpg[j][k].getValue() instanceof Element)
+										line += ((Element) mpg[j][k].getValue()).getPart();
+									else
+									if ((mpg[j][k].getValue() instanceof Dummy))//||(mpg[j][k].getValue() instanceof Wall)
+										line += "Dummy";
+									else
+										line += mpg[j][k].getValue();
+
+									line += ".";
+									//=======================
+									line += mpg[j][k].getFlags();
+									System.out.println("[CLIENT]: send: " + line);
+									send(line);
+								}
+							}
+						}
+						send(Commands.END_SENDING);
+					}
+					sleep(10);
+				}
+				/*
+				 * // Получение сообщения от сервера message = (Message)
+				 * receiveObject(ois); // Считывание данных из сообщения if
+				 * (message != null) { map = new
+				 * Map(message.getMap().getName()); // map =
+				 * Common.registerMap(new //
+				 * Map(Common.generateName("clientMap-"))); snakes =
+				 * message.getSnakes(); actions = message.getAl(); }
+				 */
+				/*
+				 * for (int i = 0; i < snakes.length; i++) {
+				 * snakes[i].setSnakeInMap(false, map.getName()); }
+				 */
+
+				// Показать битву на клиенте
+				// playBattle();
+				// }
+			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
-			}  finally {
+			} finally {
 				// Закрыть сокет
 				try {
 					sClient.close();
@@ -242,31 +321,85 @@ public class Client {
 			}
 		}
 	}
-	
+
+	private Snake mySnake;
 	// Создание объекта потока клиента
 	public static ClientThread thread = null;
-	
+
 	/**
 	 * Конструктор клиента
 	 */
-	public Client() {
+	public Client(Snake mySnake) {
+		this.mySnake = mySnake;
 		// Запуск клиентского потока
 		try {
-			thread = new ClientThread();
-		}
-		catch (Exception e)
-		{
+			thread = new ClientThread(mySnake);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Основная функция клиента
+	 * 
 	 * @param args
 	 * @throws UnknownHostException
 	 * @throws IOException
 	 */
-	public static void main(String[] args) throws UnknownHostException, IOException {
-		new Client();
+	public static void main(String[] args) throws UnknownHostException,
+			IOException {
+		Snake sn = new Snake();
+		Mind mind = sn.getMind();
+		MindMap[] mm = mind.getMindMap();
+		MindPolyGraph mpg = new MindPolyGraph(new Point(), 10, 10);
+		mpg.setOwner(OWNER_TYPES.SNAKE);
+		mpg.setValue(new Element(PARTS.HEAD, new Point(), 10, 10,
+				null));
+		mm[0].setAt(2, 2, mpg);
+
+		mpg = new MindPolyGraph(new Point(), 10, 10);
+		mpg.setOwner(OWNER_TYPES.ENEMY);
+		mpg.setLogic(LOGIC_TYPES.OR);
+		mpg.setValue(new Element(PARTS.TAIL, new Point(), 10, 10,
+				null));
+		mm[0].setAt(2, 1, mpg);
+
+		mpg = new MindPolyGraph(new Point(), 10, 10);
+		mpg.setOwner(OWNER_TYPES.ENEMY);
+		mpg.setLogic(LOGIC_TYPES.OR);
+		mpg.setValue(new Element(PARTS.TAIL, new Point(), 10, 10,
+				null));
+		mm[0].setAt(2, 0, mpg);
+
+		/*
+		 * mpg = new MindPolyGraph(new Point(), 10, 10);
+		 * mpg.setOwner(OWNER_TYPES.ENEMY); mpg.setValue(new
+		 * Element(PARTS.TAIL, new Point(), 10,10, null));
+		 * mm[0].setAt(2, 0, mpg);
+		 */
+
+		mind = sn.getMind();
+		MindMap mm1 = mind.getMindMap(1);
+		mpg = new MindPolyGraph(new Point(), 10, 10);
+		mpg.setOwner(OWNER_TYPES.SNAKE);
+		mpg.setValue(new Element(PARTS.HEAD, new Point(), 10, 10,
+				null));
+		mm1.setAt(3, 3, mpg);
+
+		mpg = new MindPolyGraph(new Point(), 10, 10);
+		mpg.setOwner(OWNER_TYPES.NEUTRAL);
+		mpg.setValue(null);
+		mm1.setAt(3, 2, mpg);
+
+		mpg = new MindPolyGraph(new Point(), 10, 10);
+		mpg.setOwner(OWNER_TYPES.NEUTRAL);
+		mpg.setValue(null);
+		mm1.setAt(3, 1, mpg);
+
+		mpg = new MindPolyGraph(new Point(), 10, 10);
+		mpg.setOwner(OWNER_TYPES.NEUTRAL);
+		mpg.setValue(null);
+		mm1.setAt(3, 0, mpg);
+		new Client(sn);
 	}
 }
