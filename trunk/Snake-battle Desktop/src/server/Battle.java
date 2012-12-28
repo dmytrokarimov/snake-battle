@@ -38,7 +38,7 @@ public class Battle implements Serializable{
 	// Выделенное время на битву (при его истечении бой заканчивается по тайм-ауту)
 	private final int timeLimit = 60000;	// 60c
 	// Выделенное количество шагов на битву
-	private final int stepsLimit = 5;
+	private final int stepsLimit = 500;
 	// Количество змеек в заявке
 	private byte snakeCount = 0;
 	// Начальная длина каждой змейки (ячеек)

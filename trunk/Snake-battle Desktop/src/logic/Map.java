@@ -135,7 +135,7 @@ public class Map implements Iterable<Drawable>, Serializable {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = name.intern();
 	}
 
 	/**

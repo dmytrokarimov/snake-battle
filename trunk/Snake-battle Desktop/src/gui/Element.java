@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import logic.Snake;
 
-public class Element extends Graph {
+public class Element extends Graph implements Cloneable{
 	private static final long serialVersionUID = -6533857847490344497L;
 
 	public enum PARTS {
@@ -135,5 +135,11 @@ public class Element extends Graph {
 		//	return false;
 		//}
 		return super.equals(obj);
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Element el = new Element(part, coord, width, height, snake);
+		return el;
 	}
 }
