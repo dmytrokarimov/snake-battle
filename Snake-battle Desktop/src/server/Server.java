@@ -128,7 +128,7 @@ public class Server {
 	}
 
 	public static void main(String[] args) throws IOException {
-		byte connected = 0; // Количество подключённых клиентов
+		byte connected = 0; // Количество подключенных клиентов
 
 		sServer = new ServerSocket(port);
 
@@ -186,10 +186,8 @@ public class Server {
 							// Snake[] snakes = battle.snake_fill();
 							try {
 								Map map = null;
-								// Создание экрана, на котором будут происходит
-								// все
-								// действия
-								// змеек
+								// Создание экрана, на котором будут происходить
+								// все действия змеек
 								new Screen(new EmptyScreen());
 								/** Блок из тестовой функции */
 								try {
@@ -211,7 +209,7 @@ public class Server {
 								
 								//==================================================
 								//===================ВЫВОД==========================
-								map = new Map("asdasd");
+								map = new Map("ServerMap");
 								HashSet<Snake> hs = new HashSet<>();
 								for (int i = 0; i < al.size(); i++) {
 									for (int j = 0; j < al.get(i).param.length; j++) {
@@ -232,44 +230,22 @@ public class Server {
 								Screen.instance = null;
 								new Screen(new SwingScreen());
 								Screen.GRAPHICS_ON = true;
-								// initInterface("asdasd");
+								// initInterface("ServerMap");
 								while (!Screen.instance.canDraw())
 									Thread.sleep(100);
-								playBattle(map, snakesDraw, al);
+								// ===Проиграть битву=== \\
+								playBattle(map, snakesDraw, al);								
 
 								// Передача битвы на клиент
-								System.out
-										.println("[SERVER]: Sending ActionList");
-								for (int i = 0; i < players.size(); i++) {/*
-																		 * players.
-																		 * get
-																		 * (i) .
-																		 * sot.
-																		 * sendObject
-																		 * (
-																		 * Commands
-																		 * .
-																		 * actions
-																		 * );
-																		 * Message
-																		 * mes =
-																		 * new
-																		 * Message
-																		 * (map,
-																		 * snakes
-																		 * ,
-																		 * al);
-																		 * players
-																		 * .
-																		 * get(i
-																		 * )
-																		 * .sot.
-																		 * sendObject
-																		 * (
-																		 * mes);
-																		 */
+								System.out.println("[SERVER]: Sending ActionList");
+								for (int i = 0; i < players.size(); i++) {
+									/*
+									 * players.get(i).sot.sendObject(Commands.actions);
+									 * Message mes = new Message(map, snakes, al);
+									 * players.get(i).sot.sendObject(mes);
+									 */
 								}
-								System.out.println("[SERVER]: Send sacceseful");
+								System.out.println("[SERVER]: Send successful");
 								/*
 								 * ois = new ObjectInputStream(is); //
 								 * Инициализация // входящего // потока объекта
@@ -351,8 +327,7 @@ class ServerOneThread extends Thread {
 			// oos = new ObjectOutputStream(os);
 
 			// System.out.println("[SERVER]: send command: [" +
-			// Commands.getSnake
-			// + "]");
+			// 					   Commands.getSnake + "]");
 
 			// send(Commands.getSnake);
 
@@ -369,26 +344,11 @@ class ServerOneThread extends Thread {
 			// =================
 			command = "";
 			sleep(100);
-			System.out.println("[SERVER]: send command [" + Commands.GET_MIND
-					+ "]");
+			
+			System.out.println("[SERVER]: send command [" + Commands.GET_MIND + "]");
 			send(Commands.GET_MIND);
 			Mind mind = sn.getMind();
-			//ActionList Action.param
-			//					length
-			//           id.name.N.sn1.....snN
-			//ACTION:    id.name.snake
-			// 			 1.ActionUp.1
-			// 			 2.ActionUp.2
-			// 			 3.ActionUp.3
-			// 			 4.ActionUp.4
-			// 			 5.ActionLeft.1
-			// 			 6.ActionUp.2
-			// 			 7.ActionUp.3
-			// 			 8.ActionUp.4
-			//						snake=sn[Integer.valueOf(lines[2])];
-			//			   a=ActionFactory.valueOf(lines[1]);
-			//ActionList al = new ActionList(a,snake);
-			//			 alList.add(al);
+
 			String line = receive(); // line вида "1.2.3.ENEMY.AND.BODY.RED",
 										// где 1 - номер мозга,
 										// 2 и 3 - координаты , AND -
@@ -427,17 +387,59 @@ class ServerOneThread extends Thread {
 				line = receive();
 			}
 			// =================
-
+			
+			// [05.01.2013]
+			// Расчёт битвы и передача на клиенты её действий
+			/*sleep(100);
+			
+			System.out.println("[SERVER]: send command [" + Commands.actions + "]");
+			send(Commands.actions);
+			List<ActionList> al = null;
+			try {
+				battle.init(map.getName(), snakes);
+				al = battle.battleCalc(snakes);
+			} catch (MapAlreadyExistException | MapNotExistException
+					| ObjectAlreadyAddedException e) {
+				e.printStackTrace();
+			}
+			// Формирование отправляемого сообщения
+			String message = "";
+			for(int i = 0; i < al.size(); i++)
+			{
+				// i - id действия
+				// al.get(i).action - тип действия
+				// message += "." + al.get(i).param[j] - действующие змейки
+				message += i + "." + al.get(i).action;
+				// Если действующих змеек больше 1-ой
+				for(int j = 0; j < al.get(i).param.length; j++)
+					message += "." + al.get(i).param[j];
+			}
+			
+			// Отправка сообщения
+			send(message);
+			// Завершение отправки
+			send(Commands.END_SENDING);*/
+			
+			//ActionList Action.param
+			//					{length}
+			//           id.name{.N}.sn1.....snN
+			//ACTION:    id.name.snake[.snake2]
+			// 			 1.ActionUp.1
+			// 			 2.ActionUp.2
+			// 			 3.ActionLeft.1
+			//						snake=sn[Integer.valueOf(lines[2])];
+			//			   a=ActionFactory.valueOf(lines[1]);
+			//ActionList al = new ActionList(a,snake);
+			//			 alList.add(al);
+			// [05.01.2013] \\
+			
 			//setSnake(sn);
-
 			while (!sClient.isClosed()) {
 				sleep(10);
 			}
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		while (!sClient.isClosed()) {
