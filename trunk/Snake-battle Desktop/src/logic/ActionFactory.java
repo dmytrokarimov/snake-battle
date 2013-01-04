@@ -207,7 +207,7 @@ public class ActionFactory {
 	 * @param command
 	 * @return Action
 	 */
-	public Object getValue(String command){
+	public static Action getValue(String command){
 		switch (command) {
 		case "getUp":
 			return getUp();

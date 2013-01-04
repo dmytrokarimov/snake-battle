@@ -25,8 +25,10 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
+import logic.ActionFactory;
 import logic.Map;
 import logic.Mind;
 import logic.Mind.MindMap;
@@ -91,10 +93,8 @@ public class Client {
 		/**
 		 * Осуществляет инициализацию подключения к серверу
 		 * 
-		 * @param host
-		 *            - адрес хоста
-		 * @param port
-		 *            - порт хоста
+		 * @param host - адрес хоста
+		 * @param port - порт хоста
 		 */
 		private void connect(InetAddress host, int port) {
 			System.out.println("[CLIENT]: Connecting to... " + host);
@@ -154,8 +154,7 @@ public class Client {
 			new Screen();
 
 			// Размеры экрана (для отрисовки границ)
-			int width = Screen.instance.getWidth(), height = Screen.instance
-					.getHeight();
+			int width = Screen.instance.getWidth(), height = Screen.instance.getHeight();
 
 			// Ожидание возможности отрисовки
 			while (!Screen.instance.canDraw())
@@ -231,8 +230,7 @@ public class Client {
 					};
 				};
 				// oos = new ObjectOutputStream(os); // Инициализация исходящего
-				// потока
-				// объекта
+				// потока объекта
 
 				while (!sClient.isClosed()) {
 					System.out.println("[CLIENT]: receive message");
@@ -240,17 +238,11 @@ public class Client {
 
 					System.out.println("[CLIENT]: message: [" + command + "]");
 
+					// ===Отправка параметров змейки на сервер=== \\
 					if (command.equals(Commands.getSnake)) {
 						send(Commands.COMMAND_NOT_SUPPORTED);
 					}
-					if (command.equals(Commands.actions)) {
-						/*
-						 * message = (Message) receiveObject(ois); map = new
-						 * Map(message.getMap().getName()); snakes =
-						 * message.getSnakes(); actions = message.getAl();
-						 * playBattle();
-						 */
-					}
+					// ===Отправка мозгов змейки на сервер=== \\
 					if (command.equals(Commands.GET_MIND)) {
 						Mind mind = mySnake.getMind();
 						for (int i = 0; i < mind.getMindMap().length; i++) {
@@ -290,6 +282,56 @@ public class Client {
 						}
 						send(Commands.END_SENDING);
 					}
+					// [05.01.2013]
+					// ===Получение хода битвы от сервера=== \\
+					// id_action.action_type.id_snake[.id_snake2]
+					if (command.equals(Commands.actions)) {
+						// Список действий в битве
+						ArrayList<ActionList> al = new ArrayList<ActionList>();
+						// Список содержит порядок ходов змеек
+						ArrayList<Integer> order = new ArrayList<Integer>();
+						String line = "";	// Получаемые данные от сервера (построчно)
+						line = receive();	// Получение данных от сервера (1-я строка)
+						
+						// Пока не получено команды на завершение получения сообщения
+						while (!line.equals(Commands.END_SENDING)) {
+							System.out.println("[CLIENT]: receive message: " + line);
+							String[] lines = line.split("\\.");	// Разбиение данных на строки по "."
+							
+							// Считывание получаемых данных
+							order.add(Integer.valueOf(lines[0]));	// Порядковый номер хода
+							// Если в действии учавствует только 1 змейка
+							if (lines.length == 3)
+								al.add(/*order.get(order.size() - 1),*/ 						// Вставить действие в нужном порядке
+									   new ActionList(ActionFactory.getValue(lines[1]), 	// Тип действия
+											   		  snakes[Integer.valueOf(lines[2])]));	// Змейка, к которой относится действие
+							// Если в действии учавствует более 1 змейки
+							else al.add(/*order.get(order.size() - 1),*/ 
+										new ActionList(ActionFactory.getValue(lines[1]), 
+												   	   snakes[Integer.valueOf(lines[2])],
+												   	   snakes[Integer.valueOf(lines[3])]));
+							
+							line = receive();	// Получение данных от сервера
+						}
+						
+						// Расположение ходов в правильном порядке
+						for (Integer i : order) {
+							// Добавляем действие под номером i
+							actions.add(al.get(i));
+						}
+						
+						// Битва рассчитана, надо воспроизвести
+						playBattle();
+						/*
+						 * message = (Message) receiveObject(ois); map = new
+						 * Map(message.getMap().getName()); 
+						 * snakes = message.getSnakes(); 
+						 * actions = message.getAl();
+						 * playBattle();
+						 */
+					}
+					// [05.01.2013] \\
+					// Ожидание 10мс
 					sleep(10);
 				}
 				/*
@@ -309,7 +351,7 @@ public class Client {
 				// Показать битву на клиенте
 				// playBattle();
 				// }
-			} catch (IOException | InterruptedException e) {
+			} catch (IOException | InterruptedException | MapAlreadyExistException | MapNotExistException | ObjectAlreadyAddedException e) {
 				e.printStackTrace();
 			} finally {
 				// Закрыть сокет
@@ -400,6 +442,7 @@ public class Client {
 		mpg.setOwner(OWNER_TYPES.NEUTRAL);
 		mpg.setValue(null);
 		mm1.setAt(3, 0, mpg);
+		
 		new Client(sn);
 	}
 }

@@ -116,7 +116,7 @@ public class Battle implements Serializable{
 		// Счётчик змеек
 		byte iSnake = 0;
 		// Для создания элементов змеек
-		List<Element> el = new ArrayList<Element>();;
+		List<Element> el = new ArrayList<Element>();
 		
 		// Инициализация змеек
 		while (iSnake < snakeLimit && iSnake < snakesCount)
