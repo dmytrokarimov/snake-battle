@@ -1,6 +1,7 @@
 package org.snakebattle.gui;
 
-import java.io.Serializable;
+import java.awt.Point;
+
 
 public class MindPolyGraph extends Graph {
 	private static final long serialVersionUID = -6710178398758312928L;

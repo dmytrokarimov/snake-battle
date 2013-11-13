@@ -1,15 +1,15 @@
 package org.snakebattle.logic;
 
-import org.snakebattle.gui.Element;
-import org.snakebattle.gui.Point;
-import org.snakebattle.gui.Element.PARTS;
+import java.awt.Point;
+
+import org.snakebattle.gui.engine.snake.Element;
+import org.snakebattle.gui.engine.snake.Element.PARTS;
 
 /**
  * Реализует функции передвижения/действия змейки
  * @author RED Developer
  */
 public class ActionFactory {
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Описывает движение змейки вверх 
@@ -18,6 +18,11 @@ public class ActionFactory {
 	 */
 	public static Action getUp() {
 		return new Action() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5186996567560235054L;
+
 			@Override
 			public void doAction(Snake... snake) {
 				// Передвижение змейки на 1 клетку вверх
@@ -45,6 +50,11 @@ public class ActionFactory {
 	 */
 	public static Action getDown() {
 		return new Action() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 2693849212560051141L;
+
 			@Override
 			public void doAction(Snake... snake) {
 				// Передвижение змейки на 1 клетку вниз
@@ -72,6 +82,11 @@ public class ActionFactory {
 	 */
 	public static Action getLeft() {
 		return new Action() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 8329109675822870643L;
+
 			@Override
 			public void doAction(Snake... snake) {
 				// Передвижение змейки на 1 клетку влево
@@ -99,6 +114,11 @@ public class ActionFactory {
 	 */
 	public static Action getRight() {
 		return new Action() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -4971390959079220777L;
+
 			@Override
 			public void doAction(Snake... snake) {
 				// Передвижение змейки на 1 клетку вправо
@@ -126,6 +146,11 @@ public class ActionFactory {
 	 */
 	public static Action getEatTail() {
 		return new Action() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5108913997649018894L;
+
 			@Override
 			public void doAction(Snake... snake) {				
 				/* Рост размеров 0-ой змейки */
@@ -173,6 +198,11 @@ public class ActionFactory {
 	 */
 	public static Action getInDeadlock() {
 		return new Action() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3369284277823385855L;
+
 			@Override
 			public void doAction(Snake... snake) {
 			}
@@ -191,6 +221,11 @@ public class ActionFactory {
 	 */
 	public static Action getLeaveBattle() {
 		return new Action() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -4216255007609930437L;
+
 			@Override
 			public void doAction(Snake... snake) {
 			}

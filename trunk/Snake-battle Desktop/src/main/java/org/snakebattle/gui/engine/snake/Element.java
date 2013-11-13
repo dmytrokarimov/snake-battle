@@ -1,7 +1,11 @@
-package org.snakebattle.gui;
+package org.snakebattle.gui.engine.snake;
 
-import java.io.Serializable;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
 
+import org.snakebattle.gui.Graph;
+import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.Snake;
 
 public class Element extends Graph implements Cloneable{

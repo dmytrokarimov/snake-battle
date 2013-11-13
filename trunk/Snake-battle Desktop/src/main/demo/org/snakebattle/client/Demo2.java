@@ -1,17 +1,18 @@
 package org.snakebattle.client;
 
-import org.snakebattle.gui.*;
+import java.awt.Point;
+
+import org.snakebattle.gui.Common;
 import org.snakebattle.gui.Common.MapAlreadyExistException;
 import org.snakebattle.gui.Common.MapNotExistException;
-import org.snakebattle.gui.Element.PARTS;
-import org.snakebattle.logic.Action;
-import org.snakebattle.logic.ActionFactory;
-import org.snakebattle.logic.HeadNoFirstException;
+import org.snakebattle.gui.Dummy;
+import org.snakebattle.gui.ObjectAlreadyAddedException;
+import org.snakebattle.gui.engine.snake.Element;
+import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.Map;
 import org.snakebattle.logic.Snake;
 import org.snakebattle.logic.SnakeAlreadyInMapException;
-import org.snakebattle.logic.Action.ACTION_TYPE;
-import org.snakebattle.server.Battle;
 
 public class Demo2 {
 

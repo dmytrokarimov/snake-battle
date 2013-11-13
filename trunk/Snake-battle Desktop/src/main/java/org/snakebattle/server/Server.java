@@ -1,45 +1,40 @@
+
 package org.snakebattle.server;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.lang.invoke.SwitchPoint;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Vector;
 
 import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Element;
-import org.snakebattle.gui.EmptyScreen;
-import org.snakebattle.gui.Graph;
-import org.snakebattle.gui.MindPolyGraph;
-import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.Point;
-import org.snakebattle.gui.Screen;
-import org.snakebattle.gui.SwingScreen;
 import org.snakebattle.gui.Common.ActionList;
 import org.snakebattle.gui.Common.MapAlreadyExistException;
 import org.snakebattle.gui.Common.MapNotExistException;
-import org.snakebattle.gui.Element.PARTS;
+import org.snakebattle.gui.Graph;
+import org.snakebattle.gui.MindPolyGraph;
 import org.snakebattle.gui.MindPolyGraph.LOGIC_FLAGS;
 import org.snakebattle.gui.MindPolyGraph.LOGIC_TYPES;
 import org.snakebattle.gui.MindPolyGraph.OWNER_TYPES;
+import org.snakebattle.gui.ObjectAlreadyAddedException;
+import org.snakebattle.gui.engine.snake.Element;
+import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.screen.EmptyScreen;
+import org.snakebattle.gui.screen.Screen;
+import org.snakebattle.gui.screen.SwingScreen;
 import org.snakebattle.logic.Map;
 import org.snakebattle.logic.Mind;
-import org.snakebattle.logic.Snake;
 import org.snakebattle.logic.Mind.MindMap;
+import org.snakebattle.logic.Snake;
 
 public class Server {
 

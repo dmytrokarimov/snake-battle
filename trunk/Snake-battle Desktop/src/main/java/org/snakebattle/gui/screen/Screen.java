@@ -1,6 +1,8 @@
-package org.snakebattle.gui;
+package org.snakebattle.gui.screen;
 
-import java.awt.image.BufferedImage;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 import org.snakebattle.logic.Map;
 

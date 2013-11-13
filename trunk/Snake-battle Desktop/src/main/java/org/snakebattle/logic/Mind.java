@@ -1,21 +1,21 @@
 package org.snakebattle.logic;
 
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import org.snakebattle.gui.Common.ActionList;
 import org.snakebattle.gui.Drawable;
 import org.snakebattle.gui.Dummy;
-import org.snakebattle.gui.Element;
 import org.snakebattle.gui.MindPolyGraph;
-import org.snakebattle.gui.Point;
-import org.snakebattle.gui.Common.ActionList;
-import org.snakebattle.gui.Element.PARTS;
 import org.snakebattle.gui.MindPolyGraph.LOGIC_FLAGS;
 import org.snakebattle.gui.MindPolyGraph.LOGIC_TYPES;
 import org.snakebattle.gui.MindPolyGraph.OWNER_TYPES;
+import org.snakebattle.gui.engine.snake.Element;
+import org.snakebattle.gui.engine.snake.Element.PARTS;
 import org.snakebattle.logic.Action.ACTION_TYPE;
 
 /**
@@ -325,10 +325,6 @@ public class Mind implements Serializable, Cloneable{
 			return true;
 		}
 
-		private Mind getOuterType() {
-			return Mind.this;
-		}
-
 	}
 
 	public Mind(Snake snake) {
@@ -346,7 +342,7 @@ public class Mind implements Serializable, Cloneable{
 	 * @param headE
 	 * @return can return nex actions: EatTail, LeaveBattle
 	 */
-	private static ActionList getEatTail(Map map, Snake snake, Dummy headE) {
+	protected static ActionList getEatTail(Map map, Snake snake, Dummy headE) {
 		Drawable d = map.getObject(headE.getCoord());
 		if (d instanceof Element) {
 			Element e = (Element) d;

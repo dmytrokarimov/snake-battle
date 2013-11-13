@@ -1,28 +1,27 @@
 package org.snakebattle.client;
 
+import java.awt.Point;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
 import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Element;
-import org.snakebattle.gui.EmptyScreen;
-import org.snakebattle.gui.MindPolyGraph;
-import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.Point;
-import org.snakebattle.gui.Screen;
-import org.snakebattle.gui.SwingScreen;
 import org.snakebattle.gui.Common.ActionList;
 import org.snakebattle.gui.Common.MapAlreadyExistException;
 import org.snakebattle.gui.Common.MapNotExistException;
-import org.snakebattle.gui.Element.PARTS;
+import org.snakebattle.gui.MindPolyGraph;
 import org.snakebattle.gui.MindPolyGraph.LOGIC_TYPES;
 import org.snakebattle.gui.MindPolyGraph.OWNER_TYPES;
+import org.snakebattle.gui.ObjectAlreadyAddedException;
+import org.snakebattle.gui.engine.snake.Element;
+import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.screen.EmptyScreen;
+import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.Map;
 import org.snakebattle.logic.Mind;
+import org.snakebattle.logic.Mind.MindMap;
 import org.snakebattle.logic.Snake;
 import org.snakebattle.logic.SnakeAlreadyInMapException;
-import org.snakebattle.logic.Mind.MindMap;
 import org.snakebattle.server.Battle;
 
 public class Demo_TestBattle {
@@ -139,8 +138,8 @@ public class Demo_TestBattle {
 					new Screen();
 
 					// Размеры экрана (для отрисовки границ)
-					int width = Screen.instance.getWidth(), height = Screen.instance
-							.getHeight();
+					//int width = Screen.instance.getWidth(), height = Screen.instance
+					//		.getHeight();
 
 					// Ожидание возможности отрисовки
 					while (!Screen.instance.canDraw())

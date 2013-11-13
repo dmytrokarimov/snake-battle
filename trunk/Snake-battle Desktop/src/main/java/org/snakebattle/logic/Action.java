@@ -2,11 +2,14 @@ package org.snakebattle.logic;
 
 import java.io.Serializable;
 
+
 /**
  *  Класс описывает интерфейс для выполнения какого-либо действия
  * @author RED Developer
  */
 public abstract class Action implements Serializable{
+	private static final long serialVersionUID = 8503241747509513740L;
+
 	/**
 	 * Перечисление типов действий, которые могут происходить со змейкой
 	 * @author RED Developer

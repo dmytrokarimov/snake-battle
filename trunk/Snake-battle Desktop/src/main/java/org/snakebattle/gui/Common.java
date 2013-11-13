@@ -1,17 +1,13 @@
 package org.snakebattle.gui;
 
-import java.awt.Point;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-import org.snakebattle.gui.Element.PARTS;
 import org.snakebattle.logic.Action;
-import org.snakebattle.logic.HeadNoFirstException;
 import org.snakebattle.logic.Map;
 import org.snakebattle.logic.Snake;
-import org.snakebattle.logic.SnakeAlreadyInMapException;
-import org.snakebattle.logic.Action.ACTION_TYPE;
-import org.snakebattle.server.Battle;
 
 /**
  * Class for work with map and can do actions and get result in record
