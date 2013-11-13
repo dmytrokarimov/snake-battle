@@ -43,7 +43,7 @@ public interface IScreen {
 
 	public void setScreen(String name) ;
 
-	public void setScreen(org.snakebattle.logic.Map map) ;
+	public void setScreen(org.snakebattle.logic.BattleMap battleMap) ;
 
 	public boolean canExit() ;
 

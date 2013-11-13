@@ -5,10 +5,10 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
-import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Common.MapNotExistException;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.engine.snake.Element;
+import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.utils.BattleMapUtils;
+import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 /**
  * Описывает возможные действия со змейкой
@@ -25,11 +25,11 @@ public class Snake implements Serializable, Cloneable{
 		public boolean add(Element element) {
 			try {
 				if (snakeInMap) {
-					//String name = Common.std_map.getName();
-					//Common.selectMap(mapName);
-					Map map = Common.selectMap(mapName);;
-					map.put(element);
-					//Common.selectMap(name);
+					//String name = BattleMapUtils.std_map.getName();
+					//BattleMapUtils.selectMap(mapName);
+					BattleMap battleMap = BattleMapUtils.selectMap(mapName);;
+					battleMap.put(element);
+					//BattleMapUtils.selectMap(name);
 				}
 				return super.add(element);
 			} catch (MapNotExistException | ObjectAlreadyAddedException e) {
@@ -41,13 +41,13 @@ public class Snake implements Serializable, Cloneable{
 		public void add(int index, Element element) {
 			try {
 				if (snakeInMap) {
-					Map map = Common.selectMap(mapName);;
-					map.put(element);
+					BattleMap battleMap = BattleMapUtils.selectMap(mapName);;
+					battleMap.put(element);
 
-					/*String name = Common.std_map.getName();
-					Common.selectMap(mapName);
-					Common.std_map.put(element);
-					Common.selectMap(name);*/
+					/*String name = BattleMapUtils.std_map.getName();
+					BattleMapUtils.selectMap(mapName);
+					BattleMapUtils.std_map.put(element);
+					BattleMapUtils.selectMap(name);*/
 				}
 				super.add(index, element);
 			} catch (MapNotExistException | ObjectAlreadyAddedException e) {
@@ -58,13 +58,13 @@ public class Snake implements Serializable, Cloneable{
 		public Element remove(int index) {
 			try {
 				if (snakeInMap) {
-					Map map = Common.selectMap(mapName);;
-					map.remove(get(index));
+					BattleMap battleMap = BattleMapUtils.selectMap(mapName);;
+					battleMap.remove(get(index));
 /*
-					String name = Common.std_map.getName();
-					Common.selectMap(mapName);
-					Common.std_map.remove(get(index));
-					Common.selectMap(name);
+					String name = BattleMapUtils.std_map.getName();
+					BattleMapUtils.selectMap(mapName);
+					BattleMapUtils.std_map.remove(get(index));
+					BattleMapUtils.selectMap(name);
 					*/
 				}
 				return super.remove(index);
@@ -77,13 +77,13 @@ public class Snake implements Serializable, Cloneable{
 		public boolean remove(Element o) {
 			try {
 				if (snakeInMap) {
-					Map map = Common.selectMap(mapName);;
-					map.remove(o);
+					BattleMap battleMap = BattleMapUtils.selectMap(mapName);;
+					battleMap.remove(o);
 					/*
-					String name = Common.std_map.getName();
-					Common.selectMap(mapName);
-					Common.std_map.remove(o);
-					Common.selectMap(name);*/
+					String name = BattleMapUtils.std_map.getName();
+					BattleMapUtils.selectMap(mapName);
+					BattleMapUtils.std_map.remove(o);
+					BattleMapUtils.selectMap(name);*/
 				}
 				return super.remove(o);
 			} catch (MapNotExistException e) {

@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Common.ActionList;
-import org.snakebattle.gui.Common.MapAlreadyExistException;
-import org.snakebattle.gui.Common.MapNotExistException;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.engine.snake.Element;
-import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.gui.primitive.snake.Element.PARTS;
 import org.snakebattle.logic.Action.ACTION_TYPE;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Snake;
+import org.snakebattle.utils.BattleMapUtils;
+import org.snakebattle.utils.BattleMapUtils.ActionList;
+import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
+import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 /**
  * Класс для инициализации битвы и расчёта её исхода
@@ -49,7 +49,7 @@ public class Battle implements Serializable{
 	// Множтели поправок для координат змеиных элементов тела (и хвоста)
 	private int bodyX = 0, bodyY = 0;
 	// Карта, на которой проводится битва
-	private static Map map;
+	private static BattleMap battleMap;
 	
 	/**
 	 * Проводит нормализацию координаты относительно центра экрана
@@ -100,11 +100,11 @@ public class Battle implements Serializable{
 		
 		// Регистрация указанной карты и её выбор для битвы
 		try{
-			map = Common.registerMap(new Map(mapName));
+			battleMap = BattleMapUtils.registerMap(new BattleMap(mapName));
 		}
 		catch(Exception ex){
 			System.out.println("Карта " + mapName + " уже была создана, вибираем её");
-			map = Common.selectMap(mapName);
+			battleMap = BattleMapUtils.selectMap(mapName);
 		}
 		
 		// Количество змеек, заявленных на бой 
@@ -167,7 +167,7 @@ public class Battle implements Serializable{
 				el.clear();
 			}
 			// Добавление змейки на карту
-			//map.putSnake(snakes[iSnake]);
+			//battleMap.putSnake(snakes[iSnake]);
 			// Следующая змея
 			iSnake++;
 		}
@@ -187,7 +187,7 @@ public class Battle implements Serializable{
 		if (time < timeLimit && steps < stepsLimit)
 			// Если всем змейкам есть куда ходить
 			for (int i = 0; i < snakes.length; i++)
-				if (snakes[i].getMind().getAction(map).action.getType() != ACTION_TYPE.IN_DEAD_LOCK)
+				if (snakes[i].getMind().getAction(battleMap).action.getType() != ACTION_TYPE.IN_DEAD_LOCK)
 					return false;
 		
 		return true;
@@ -208,7 +208,7 @@ public class Battle implements Serializable{
 		// Пока битва идёт - писать лог действий
 		while(!Stop(snakes, timeElapsed, stepsPassed))
 		{
-			for (ActionList al : Common.doStep(map.getName(), snakes))
+			for (ActionList al : BattleMapUtils.doStep(battleMap.getName(), snakes))
 				actions.add(al);
 			// Наращивание счётчика шагов
 			stepsPassed++;

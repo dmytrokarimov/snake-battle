@@ -2,8 +2,8 @@ package org.snakebattle.logic;
 
 import java.awt.Point;
 
-import org.snakebattle.gui.engine.snake.Element;
-import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.gui.primitive.snake.Element.PARTS;
 
 /**
  * Реализует функции передвижения/действия змейки

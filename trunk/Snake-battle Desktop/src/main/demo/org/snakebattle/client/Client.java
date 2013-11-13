@@ -13,26 +13,26 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Common.ActionList;
-import org.snakebattle.gui.Common.MapAlreadyExistException;
-import org.snakebattle.gui.Common.MapNotExistException;
-import org.snakebattle.gui.Dummy;
-import org.snakebattle.gui.MindPolyGraph;
-import org.snakebattle.gui.MindPolyGraph.LOGIC_TYPES;
-import org.snakebattle.gui.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.engine.snake.Element;
-import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.Dummy;
+import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph;
+import org.snakebattle.gui.primitive.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_TYPES;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.ActionFactory;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Mind;
 import org.snakebattle.logic.Mind.MindMap;
 import org.snakebattle.logic.Snake;
 import org.snakebattle.server.Battle;
 import org.snakebattle.server.Commands;
 import org.snakebattle.server.Message;
+import org.snakebattle.utils.BattleMapUtils;
+import org.snakebattle.utils.BattleMapUtils.ActionList;
+import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
+import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 /**
  * Описывает клиента приложения
@@ -56,7 +56,7 @@ public class Client {
 		private Snake[] snakes = null; // Змейки, учавствующие в бою (получаются
 										// с сервера)
 		private Snake mySnake = null; // Змейка клиента (передаётся на сервер)
-		private Map map = null; // Карта, на которой проводится битва
+		private BattleMap battleMap = null; // Карта, на которой проводится битва
 		private Battle battle = null; // Объект класса Battle, для
 										// воспроизведения битвы
 
@@ -158,10 +158,10 @@ public class Client {
 				Thread.sleep(100);
 
 			// Регистрация указанной карты и её выбор для битвы
-			map = Common.registerMap(new Map(mapName));
-			// map = Common.selectMap(mapName);
+			battleMap = BattleMapUtils.registerMap(new BattleMap(mapName));
+			// battleMap = BattleMapUtils.selectMap(mapName);
 			// Задание границ игровой карты
-			map.setBorder(width, height);
+			battleMap.setBorder(width, height);
 		}
 
 		/**
@@ -175,29 +175,29 @@ public class Client {
 		private void playBattle() throws InterruptedException,
 				MapAlreadyExistException, MapNotExistException,
 				ObjectAlreadyAddedException {
-			initInterface(map.getName()); // Инициализирует интерфейс
+			initInterface(battleMap.getName()); // Инициализирует интерфейс
 
 			battle = new Battle();
 			/*
-			 * Common.removeMap(map); Common.registerMap(new
-			 * Map(message.getMap().getName()));
+			 * BattleMapUtils.removeMap(battleMap); BattleMapUtils.registerMap(new
+			 * BattleMap(message.getMap().getName()));
 			 */
-			battle.init(map.getName(), snakes); // Инициализирует битву
+			battle.init(battleMap.getName(), snakes); // Инициализирует битву
 
 			// Змейки на поле боя
 			for (int i = 0; i < snakes.length; i++)
-				map.putSnake(snakes[i]);
+				battleMap.putSnake(snakes[i]);
 			// Змейки уже добавлены в
 			// .BattleInit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			// Добавление в BattleInit отменено
 
-			map.drawAll();
+			battleMap.drawAll();
 
 			int waitTime = 500;
 			for (ActionList al : actions) {
 				long timeold = System.currentTimeMillis();
 				al.action.doAction(al.param);
-				map.drawAll();
+				battleMap.drawAll();
 				long timenow = System.currentTimeMillis() - timeold;
 				if (waitTime - timenow > 0)
 					Thread.sleep(waitTime - timenow);
@@ -320,8 +320,8 @@ public class Client {
 						// Битва рассчитана, надо воспроизвести
 						playBattle();
 						/*
-						 * message = (Message) receiveObject(ois); map = new
-						 * Map(message.getMap().getName()); 
+						 * message = (Message) receiveObject(ois); battleMap = new
+						 * BattleMap(message.getMap().getName()); 
 						 * snakes = message.getSnakes(); 
 						 * actions = message.getAl();
 						 * playBattle();
@@ -334,15 +334,15 @@ public class Client {
 				/*
 				 * // Получение сообщения от сервера message = (Message)
 				 * receiveObject(ois); // Считывание данных из сообщения if
-				 * (message != null) { map = new
-				 * Map(message.getMap().getName()); // map =
-				 * Common.registerMap(new //
-				 * Map(Common.generateName("clientMap-"))); snakes =
+				 * (message != null) { battleMap = new
+				 * BattleMap(message.getMap().getName()); // battleMap =
+				 * BattleMapUtils.registerMap(new //
+				 * BattleMap(BattleMapUtils.generateName("clientMap-"))); snakes =
 				 * message.getSnakes(); actions = message.getAl(); }
 				 */
 				/*
 				 * for (int i = 0; i < snakes.length; i++) {
-				 * snakes[i].setSnakeInMap(false, map.getName()); }
+				 * snakes[i].setSnakeInMap(false, battleMap.getName()); }
 				 */
 
 				// Показать битву на клиенте

@@ -286,7 +286,7 @@ public class SwingScreen implements IScreen{
 
 	}
 
-	public void setScreen(org.snakebattle.logic.Map map) {
+	public void setScreen(org.snakebattle.logic.BattleMap battleMap) {
 
 	}
 

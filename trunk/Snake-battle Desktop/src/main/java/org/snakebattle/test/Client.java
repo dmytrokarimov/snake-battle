@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.snakebattle.gui.Common.ActionList;
+import org.snakebattle.utils.BattleMapUtils.ActionList;
 
 public class Client {
 	Socket sClient = null;

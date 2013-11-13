@@ -1,4 +1,4 @@
-package org.snakebattle.gui;
+package org.snakebattle.utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.snakebattle.logic.Action;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Snake;
 
 /**
@@ -15,9 +15,9 @@ import org.snakebattle.logic.Snake;
  * @author Karimov
  * 
  */
-public class Common {
-	//public static Map std_map = new Map("Battle_map");
-	private static List<Map> registeredMaps = new ArrayList<Map>();
+public class BattleMapUtils {
+	//public static BattleMap std_map = new BattleMap("Battle_map");
+	private static List<BattleMap> registeredMaps = new ArrayList<BattleMap>();
 
 	/**
 	 * Включает (может быть активна только одна карта) карту с именем name
@@ -28,15 +28,15 @@ public class Common {
 	 * @throws MapNotExistException
 	 *             если карты нет в списке зарегестрированных
 	 */
-	public synchronized static Map selectMap(String name) throws MapNotExistException {
-		Map std_map = null;
+	public synchronized static BattleMap selectMap(String name) throws MapNotExistException {
+		BattleMap std_map = null;
 		for (int i = 0; i < registeredMaps.size(); i++)
 			if (registeredMaps.get(i).getName().equals(name)) {
 				std_map = registeredMaps.get(i);
 				break;
 			}
 		if (std_map == null)
-			throw new MapNotExistException("Map " + name + " no exist");
+			throw new MapNotExistException("BattleMap " + name + " no exist");
 		return std_map;
 	}
 
@@ -59,31 +59,31 @@ public class Common {
 	/**
 	 * Register map in internal map archive
 	 * 
-	 * @param map
+	 * @param battleMap
 	 *            map
 	 * @throws MapAlreadyExistException
 	 *             if map exist this exception will be throwen
 	 */
-	public synchronized static Map registerMap(Map map) throws MapAlreadyExistException {
+	public synchronized static BattleMap registerMap(BattleMap battleMap) throws MapAlreadyExistException {
 		for (int i = 0; i < registeredMaps.size(); i++)
-			if (registeredMaps.get(i).getName().equals(map.getName())) {
-				throw new MapAlreadyExistException("Map " + map.getName()
+			if (registeredMaps.get(i).getName().equals(battleMap.getName())) {
+				throw new MapAlreadyExistException("BattleMap " + battleMap.getName()
 						+ " already exist");
 			}
-		registeredMaps.add(map);
-		return map;
+		registeredMaps.add(battleMap);
+		return battleMap;
 	}
 
 	/**
 	 * Remvoe map in internal map archive
 	 * 
-	 * @param map
+	 * @param battleMap
 	 *            registered map
 	 * @throws MapNotExistException
 	 *             if map not exist this exception will be throwen
 	 */
-	public synchronized  static void removeMap(Map map) throws MapNotExistException {
-		removeMap(map.getName());
+	public synchronized  static void removeMap(BattleMap battleMap) throws MapNotExistException {
+		removeMap(battleMap.getName());
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class Common {
 				deleted = true;
 			}
 		if (!deleted)
-			throw new MapNotExistException("Map " + name + " no exist");
+			throw new MapNotExistException("BattleMap " + name + " no exist");
 	}
 
 	public static class ActionList implements Serializable{
@@ -122,7 +122,7 @@ public class Common {
 	public synchronized static List<ActionList> doStep(String mapName, Snake... sn) {
 		List<ActionList> al = new ArrayList<ActionList>(); 
 		try {
-			Map m = Common.selectMap(mapName);
+			BattleMap m = BattleMapUtils.selectMap(mapName);
 			for (int i = 0; i < sn.length; i++) {
 				if (sn[i].getElements().size() < 2)
 					continue;
@@ -140,7 +140,7 @@ public class Common {
 	
 	/*public static void doStep(List<ActionList> actions, String mapName, Snake... snakes) { 
 		try {
-			Map m = Common.selectMap(mapName);
+			BattleMap m = BattleMapUtils.selectMap(mapName);
 			for (int i = 0; i < snakes.length; i++) {
 				actions.doAction(actions.param);
 			}
@@ -163,7 +163,7 @@ public class Common {
 		return name;
 	}
 
-	private Common() {
+	private BattleMapUtils() {
 
 	}
 }

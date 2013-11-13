@@ -7,16 +7,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import org.snakebattle.gui.Common.ActionList;
 import org.snakebattle.gui.Drawable;
-import org.snakebattle.gui.Dummy;
-import org.snakebattle.gui.MindPolyGraph;
-import org.snakebattle.gui.MindPolyGraph.LOGIC_FLAGS;
-import org.snakebattle.gui.MindPolyGraph.LOGIC_TYPES;
-import org.snakebattle.gui.MindPolyGraph.OWNER_TYPES;
-import org.snakebattle.gui.engine.snake.Element;
-import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.Dummy;
+import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph;
+import org.snakebattle.gui.primitive.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_FLAGS;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_TYPES;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.logic.Action.ACTION_TYPE;
+import org.snakebattle.utils.BattleMapUtils.ActionList;
 
 /**
  * ќписывает класс дл€ прин€ти€ решени€ о принимаемых действи€х
@@ -76,7 +76,7 @@ public class Mind implements Serializable, Cloneable{
 			mindmap = m;
 		}
 
-		private boolean check(MindPolyGraph[][] mindmap, Map map, Point coord) {
+		private boolean check(MindPolyGraph[][] mindmap, BattleMap battleMap, Point coord) {
 			boolean flag = true;
 			int dx = -1;
 			int dy = -1;
@@ -119,7 +119,7 @@ public class Mind implements Serializable, Cloneable{
 					// в €чейке должно быть пусто так же как и в карте мозга
 					if (mindmap[i][j].getValue() == null
 							&& mindmap[i][j].getOwner() == OWNER_TYPES.NEUTRAL) {
-						Drawable d = map.getObject(new Point(i
+						Drawable d = battleMap.getObject(new Point(i
 								* mindmap[i][j].getWidth() + dx, j
 								* mindmap[i][j].getHeight() + dy));
 						color_flags[mindmap[i][j].getFlags().ordinal()][mindmap[i][j]
@@ -132,7 +132,7 @@ public class Mind implements Serializable, Cloneable{
 						continue;
 					}
 					Drawable md = mindmap[i][j].getValue();
-					Drawable d = map.getObject(new Point(i
+					Drawable d = battleMap.getObject(new Point(i
 							* mindmap[i][j].getWidth() + dx, j
 							* mindmap[i][j].getHeight() + dy));
 					if (d != null) {
@@ -216,12 +216,12 @@ public class Mind implements Serializable, Cloneable{
 		 * 
 		 * @param coord
 		 *            координата, в которой проводить поиск
-		 * @param map
+		 * @param battleMap
 		 *            реальна€ карта
 		 * @return возвращает номер поворота, при котором карта мозга совпала с
 		 *         реальной картой или -1, если не совпала
 		 */
-		public int check(Map map, Point coord) {
+		public int check(BattleMap battleMap, Point coord) {
 			boolean flag = false;
 			for (int i = 0; i < mindmap.length; i++)
 				for (int j = 0; j < mindmap[0].length; j++) {
@@ -259,7 +259,7 @@ public class Mind implements Serializable, Cloneable{
 			 * d.getCoord().y; md.setCoord(new Point(x,y)); if (md.equals(d))
 			 * continue; } else { break loop1; } }
 			 */
-			if (check(mindmap, map, coord))
+			if (check(mindmap, battleMap, coord))
 				return 0;
 
 			//  арта, повЄрнута€ на 90 градусов
@@ -269,7 +269,7 @@ public class Mind implements Serializable, Cloneable{
 				for (int j = 0; j < mindmap.length; j++)
 					map90[i][j] = mindmap[j][mindmap.length - 1 - i];
 
-			if (check(map90, map, coord))
+			if (check(map90, battleMap, coord))
 				return 1;
 
 			//  арта, повЄрнута€ на 180 градусов
@@ -279,7 +279,7 @@ public class Mind implements Serializable, Cloneable{
 					map180[i][j] = mindmap[mindmap.length - 1 - i][mindmap.length
 							- 1 - j];
 
-			if (check(map180, map, coord))
+			if (check(map180, battleMap, coord))
 				return 2;
 
 			//  арта, повЄрнута€ на 270 градусов
@@ -289,7 +289,7 @@ public class Mind implements Serializable, Cloneable{
 					map270[i][j] = map90[map90.length - 1 - i][map90.length - 1
 							- j];
 
-			if (check(map270, map, coord))
+			if (check(map270, battleMap, coord))
 				return 3;
 
 			return -1;
@@ -337,21 +337,21 @@ public class Mind implements Serializable, Cloneable{
 
 	/**
 	 * 
-	 * @param map
+	 * @param battleMap
 	 * @param snake
 	 * @param headE
 	 * @return can return nex actions: EatTail, LeaveBattle
 	 */
-	protected static ActionList getEatTail(Map map, Snake snake, Dummy headE) {
-		Drawable d = map.getObject(headE.getCoord());
+	protected static ActionList getEatTail(BattleMap battleMap, Snake snake, Dummy headE) {
+		Drawable d = battleMap.getObject(headE.getCoord());
 		if (d instanceof Element) {
 			Element e = (Element) d;
-			return getEatTail(e, map, snake, headE);
+			return getEatTail(e, battleMap, snake, headE);
 		}
 		return null;
 	}
 
-	private static ActionList getEatTail(Element e, Map map, Snake snake,
+	private static ActionList getEatTail(Element e, BattleMap battleMap, Snake snake,
 			Dummy headE) {
 		if (e.getPart() == PARTS.TAIL && e.getSnake() != snake)
 			return new ActionList(ActionFactory.getEatTail(), snake,
@@ -361,14 +361,14 @@ public class Mind implements Serializable, Cloneable{
 		return null;
 	}
 
-	private static ActionList getSmartAction(Action primaryAction, Map map,
+	private static ActionList getSmartAction(Action primaryAction, BattleMap battleMap,
 			Snake snake, Dummy headE) {
-		Drawable d = map.getObject(headE.getCoord());
+		Drawable d = battleMap.getObject(headE.getCoord());
 		if (d == null)
 			return new ActionList(primaryAction, snake);
 		else {
 			if (d instanceof Element)
-				return getEatTail((Element) d, map, snake, headE);
+				return getEatTail((Element) d, battleMap, snake, headE);
 		}
 		return new ActionList(ActionFactory.getInDeadlock(), snake);
 	}
@@ -376,13 +376,13 @@ public class Mind implements Serializable, Cloneable{
 	/**
 	 * ѕо карте определ€ет действие, которое змейка "хочет" выполнить
 	 * 
-	 * @param map
+	 * @param battleMap
 	 *            карта дл€ определени€ действи€
 	 * @param snake
 	 *            змейка, дл€ которой проводить расчет
 	 * @return действи€
 	 */
-	public static ActionList getAction(Map map, Snake snake) {
+	public static ActionList getAction(BattleMap battleMap, Snake snake) {
 		Element head = snake.getElements().get(0);
 		if (head.getPart() != PARTS.HEAD)
 			throw new HeadNoFirstException();
@@ -398,24 +398,24 @@ public class Mind implements Serializable, Cloneable{
 
 		for (int i = 0; i < snake.getMind().getMindMap().length; i++) {
 			int check = snake.getMind().getMindMap(i)
-					.check(map, head.getCoord());
+					.check(battleMap, head.getCoord());
 			if (check != -1) {
 
 				ActionList al = null;
 				if (check == 0)
-					al =  getSmartAction(ActionFactory.getUp(), map, snake,
+					al =  getSmartAction(ActionFactory.getUp(), battleMap, snake,
 							headU);
 
 				if (check == 1)
-					al =  getSmartAction(ActionFactory.getRight(), map, snake,
+					al =  getSmartAction(ActionFactory.getRight(), battleMap, snake,
 							headR);
 
 				if (check == 2)
-					al =  getSmartAction(ActionFactory.getDown(), map, snake,
+					al =  getSmartAction(ActionFactory.getDown(), battleMap, snake,
 							headD);
 
 				if (check == 3)
-					al =  getSmartAction(ActionFactory.getLeft(), map, snake,
+					al =  getSmartAction(ActionFactory.getLeft(), battleMap, snake,
 							headL);
 				if (al != null && al.action.getType() != ACTION_TYPE.IN_DEAD_LOCK)
 					return al;
@@ -468,10 +468,10 @@ public class Mind implements Serializable, Cloneable{
 		 * (map.checkExist(headR)) if (map.checkExist(headU)) if
 		 * (map.checkExist(headD)) ;// return ActionFactory.getInDeadlock();
 		 */
-		a.add(getSmartAction(ActionFactory.getUp(), map, snake, headU));
-		a.add(getSmartAction(ActionFactory.getDown(), map, snake, headD));
-		a.add(getSmartAction(ActionFactory.getLeft(), map, snake, headL));
-		a.add(getSmartAction(ActionFactory.getRight(), map, snake, headR));
+		a.add(getSmartAction(ActionFactory.getUp(), battleMap, snake, headU));
+		a.add(getSmartAction(ActionFactory.getDown(), battleMap, snake, headD));
+		a.add(getSmartAction(ActionFactory.getLeft(), battleMap, snake, headL));
+		a.add(getSmartAction(ActionFactory.getRight(), battleMap, snake, headR));
 		List<ActionList> temp = a;
 		a = new ArrayList<ActionList>();
 		for (int i = 0; i < temp.size(); i++) {
@@ -490,12 +490,12 @@ public class Mind implements Serializable, Cloneable{
 	/**
 	 * ѕо карте определ€ет действие, которое змейка "хочет" выполнить
 	 * 
-	 * @param map
+	 * @param battleMap
 	 *            карта дл€ определени€ действи€
 	 * @return действие
 	 */
-	public ActionList getAction(Map map) {
-		return getAction(map, sn);
+	public ActionList getAction(BattleMap battleMap) {
+		return getAction(battleMap, sn);
 	}
 
 	public MindMap getMindMap(int i) {

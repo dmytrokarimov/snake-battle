@@ -5,23 +5,23 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Common.ActionList;
-import org.snakebattle.gui.Common.MapAlreadyExistException;
-import org.snakebattle.gui.Common.MapNotExistException;
-import org.snakebattle.gui.MindPolyGraph;
-import org.snakebattle.gui.MindPolyGraph.LOGIC_TYPES;
-import org.snakebattle.gui.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.engine.snake.Element;
-import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph;
+import org.snakebattle.gui.primitive.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_TYPES;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.gui.screen.Screen;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Mind;
 import org.snakebattle.logic.Mind.MindMap;
 import org.snakebattle.logic.Snake;
 import org.snakebattle.logic.SnakeAlreadyInMapException;
 import org.snakebattle.server.Battle;
+import org.snakebattle.utils.BattleMapUtils;
+import org.snakebattle.utils.BattleMapUtils.ActionList;
+import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
+import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 public class CopyOfDemo_TestBattle {
 
@@ -96,12 +96,12 @@ public class CopyOfDemo_TestBattle {
 					mpg.setOwner(OWNER_TYPES.NEUTRAL);
 					mpg.setValue(null);
 					mm1.setAt(3, 0, mpg);
-					Map m = null;
+					BattleMap m = null;
 					
 					try {
 						// Инициализация карты, змеек
 						battle.init("serverMap", snakes);
-						m = Common.selectMap("serverMap");
+						m = BattleMapUtils.selectMap("serverMap");
 						for (int i = 0; i < snakes.length; i++) {
 							m.putSnake(snakes[i]);
 						}
@@ -132,11 +132,11 @@ public class CopyOfDemo_TestBattle {
 					//for (int i = 0; i < snakes.length; i++) {
 					//	snakesDraw[i].setMind(snakes[i].getMind());
 					//}
-					Map mapDraw = null;
+					BattleMap mapDraw = null;
 					Battle battleShow = new Battle();
 					battleShow.init("asdasd", snakesDraw); // Инициализирует битву
 
-					mapDraw = Common.selectMap("asdasd");
+					mapDraw = BattleMapUtils.selectMap("asdasd");
 					mapDraw.setBorder(800, 600);
 					// Змейки на поле боя
 					for (int i = 0; i < snakes.length; i++)

@@ -1,4 +1,4 @@
-package org.snakebattle.gui.engine.snake;
+package org.snakebattle.gui.primitive.snake;
 
 import java.awt.Color;
 import java.awt.Point;

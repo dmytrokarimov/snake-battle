@@ -16,25 +16,25 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Common.ActionList;
-import org.snakebattle.gui.Common.MapAlreadyExistException;
-import org.snakebattle.gui.Common.MapNotExistException;
 import org.snakebattle.gui.Graph;
-import org.snakebattle.gui.MindPolyGraph;
-import org.snakebattle.gui.MindPolyGraph.LOGIC_FLAGS;
-import org.snakebattle.gui.MindPolyGraph.LOGIC_TYPES;
-import org.snakebattle.gui.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.engine.snake.Element;
-import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph;
+import org.snakebattle.gui.primitive.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_FLAGS;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_TYPES;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.gui.screen.EmptyScreen;
 import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.gui.screen.SwingScreen;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Mind;
 import org.snakebattle.logic.Mind.MindMap;
 import org.snakebattle.logic.Snake;
+import org.snakebattle.utils.BattleMapUtils;
+import org.snakebattle.utils.BattleMapUtils.ActionList;
+import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
+import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 public class Server {
 
@@ -72,10 +72,10 @@ public class Server {
 			Thread.sleep(100);
 
 		// Регистрация указанной карты и её выбор для битвы
-		Map map = Common.registerMap(new Map(mapName));
-		// map = Common.selectMap(mapName);
+		BattleMap battleMap = BattleMapUtils.registerMap(new BattleMap(mapName));
+		// battleMap = BattleMapUtils.selectMap(mapName);
 		// Задание границ игровой карты
-		map.setBorder(width, height);
+		battleMap.setBorder(width, height);
 	}
 
 	/**
@@ -86,35 +86,35 @@ public class Server {
 	 * @throws MapAlreadyExistException
 	 * @throws InterruptedException
 	 */
-	private static void playBattle(Map map, Snake[] snakes,
+	private static void playBattle(BattleMap battleMap, Snake[] snakes,
 			List<ActionList> actions) throws InterruptedException,
 			MapAlreadyExistException, MapNotExistException,
 			ObjectAlreadyAddedException {
 
-		initInterface(map.getName()); // Инициализирует интерфейс
+		initInterface(battleMap.getName()); // Инициализирует интерфейс
 
 		Battle battle = new Battle();
 		/*
-		 * Common.removeMap(map); Common.registerMap(new
-		 * Map(message.getMap().getName()));
+		 * BattleMapUtils.removeMap(battleMap); BattleMapUtils.registerMap(new
+		 * BattleMap(message.getMap().getName()));
 		 */
-		battle.init(map.getName(), snakes); // Инициализирует битву
+		battle.init(battleMap.getName(), snakes); // Инициализирует битву
 
 		// Змейки на поле боя
 		for (int i = 0; i < snakes.length; i++)
-			map.putSnake(snakes[i]);
+			battleMap.putSnake(snakes[i]);
 		// Змейки уже добавлены в
 		// .BattleInit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		// Добавление в BattleInit отменено
 
-		map.drawAll();
+		battleMap.drawAll();
 
 		int waitTime = 50;
 		while (Screen.instance.canDraw())
 			for (ActionList al : actions) {
 				long timeold = System.currentTimeMillis();
 				al.action.doAction(al.param);
-				map.drawAll();
+				battleMap.drawAll();
 				long timenow = System.currentTimeMillis() - timeold;
 				if (waitTime - timenow > 0)
 					Thread.sleep(waitTime - timenow);
@@ -179,7 +179,7 @@ public class Server {
 							Battle battle = new Battle();
 							// Snake[] snakes = battle.snake_fill();
 							try {
-								Map map = null;
+								BattleMap battleMap = null;
 								// Создание экрана, на котором будут происходить
 								// все действия змеек
 								new Screen(new EmptyScreen());
@@ -187,11 +187,11 @@ public class Server {
 								try {
 									// Инициализация карты, змеек
 									battle.init("serverMap", snakes);
-									map = Common.selectMap("serverMap");
+									battleMap = BattleMapUtils.selectMap("serverMap");
 									for (int i = 0; i < snakes.length; i++) {
-										map.putSnake(snakes[i]);
+										battleMap.putSnake(snakes[i]);
 									}
-									map.setBorder(800, 600);
+									battleMap.setBorder(800, 600);
 								} catch (MapAlreadyExistException
 										| MapNotExistException
 										| ObjectAlreadyAddedException e) {
@@ -203,7 +203,7 @@ public class Server {
 								
 								//==================================================
 								//===================ВЫВОД==========================
-								map = new Map("ServerMap");
+								battleMap = new BattleMap("ServerMap");
 								HashSet<Snake> hs = new HashSet<>();
 								for (int i = 0; i < al.size(); i++) {
 									for (int j = 0; j < al.get(i).param.length; j++) {
@@ -228,14 +228,14 @@ public class Server {
 								while (!Screen.instance.canDraw())
 									Thread.sleep(100);
 								// ===Проиграть битву=== \\
-								playBattle(map, snakesDraw, al);								
+								playBattle(battleMap, snakesDraw, al);								
 
 								// Передача битвы на клиент
 								System.out.println("[SERVER]: Sending ActionList");
 								for (int i = 0; i < players.size(); i++) {
 									/*
 									 * players.get(i).sot.sendObject(Commands.actions);
-									 * Message mes = new Message(map, snakes, al);
+									 * Message mes = new Message(battleMap, snakes, al);
 									 * players.get(i).sot.sendObject(mes);
 									 */
 								}
@@ -247,7 +247,7 @@ public class Server {
 								 * Инициализация // исходящего // потока объекта
 								 * 
 								 * // Инициализация передаваемого сообщения
-								 * message = new Message(map, snakes, al);
+								 * message = new Message(battleMap, snakes, al);
 								 * System
 								 * .out.println("[SERVER]: Message created"); //
 								 * Передача сообщения на клиент
@@ -302,7 +302,7 @@ class ServerOneThread extends Thread {
 											// результата битвы
 	private static Snake[] snakes = null; // Змейки клиентов, учавствующие в
 											// битве
-	private static Map map = null; // Карта, на которой проводится битва
+	private static BattleMap battleMap = null; // Карта, на которой проводится битва
 
 	public ServerOneThread(Socket client, int id) throws IOException {
 		sClient = client;
@@ -390,7 +390,7 @@ class ServerOneThread extends Thread {
 			send(Commands.actions);
 			List<ActionList> al = null;
 			try {
-				battle.init(map.getName(), snakes);
+				battle.init(battleMap.getName(), snakes);
 				al = battle.battleCalc(snakes);
 			} catch (MapAlreadyExistException | MapNotExistException
 					| ObjectAlreadyAddedException e) {
