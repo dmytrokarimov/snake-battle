@@ -1,6 +1,8 @@
-package org.snakebattle.gui;
+package org.snakebattle.gui.primitive;
 
 import java.awt.Point;
+
+import org.snakebattle.gui.Graph;
 
 public class Dummy extends Graph {
 

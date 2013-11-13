@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 
 public class EmptyScreen implements IScreen{
 	public static EmptyScreen instance = null;
@@ -62,7 +62,7 @@ public class EmptyScreen implements IScreen{
 		
 	}
 	@Override
-	public void setScreen(Map map) {
+	public void setScreen(BattleMap battleMap) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -3,17 +3,17 @@ package gui;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Common.MapAlreadyExistException;
-import org.snakebattle.gui.Common.MapNotExistException;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
+import org.snakebattle.utils.BattleMapUtils;
+import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
+import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 public class TestCommon {
 
 	@Test
 	public void testSelectMapNull() throws MapNotExistException {
 		try {
-			Common.selectMap("");
+			BattleMapUtils.selectMap("");
 			assert false;
 		} catch (MapNotExistException e) {
 			assert true;
@@ -24,10 +24,10 @@ public class TestCommon {
 	public void testSelectMap() throws MapNotExistException,
 			MapAlreadyExistException {
 		try {
-			Map map = new Map("name");
-			Common.registerMap(map);
-			Map map2 = Common.selectMap("name");
-			assert map.equals(map2);
+			BattleMap battleMap = new BattleMap("name");
+			BattleMapUtils.registerMap(battleMap);
+			BattleMap map2 = BattleMapUtils.selectMap("name");
+			assert battleMap.equals(map2);
 		} catch (MapNotExistException | MapAlreadyExistException e) {
 			assert false;
 		}
@@ -36,9 +36,9 @@ public class TestCommon {
 	@Test
 	public void testReRegisterMap() {
 		try {
-			Map map = new Map("name");
-			Common.registerMap(map);
-			Common.registerMap(map);
+			BattleMap battleMap = new BattleMap("name");
+			BattleMapUtils.registerMap(battleMap);
+			BattleMapUtils.registerMap(battleMap);
 			assert false;
 		} catch (MapAlreadyExistException e) {
 			assert true;
@@ -48,9 +48,9 @@ public class TestCommon {
 	@Test
 	public void testRegisterMap() {
 		try {
-			Map map = new Map("name");
-			Map map2 = Common.registerMap(map);
-			assert map.equals(map2);
+			BattleMap battleMap = new BattleMap("name");
+			BattleMap map2 = BattleMapUtils.registerMap(battleMap);
+			assert battleMap.equals(map2);
 		} catch (MapAlreadyExistException e) {
 			assert false;
 		}
@@ -59,11 +59,11 @@ public class TestCommon {
 	@Test
 	public void testRemoveMapMap() {
 		try {
-			Map map = new Map("name");
-			Common.registerMap(map);
-			Common.removeMap(map);
-			Map map2 = Common.selectMap(map.getName());
-			assert map.equals(map2);
+			BattleMap battleMap = new BattleMap("name");
+			BattleMapUtils.registerMap(battleMap);
+			BattleMapUtils.removeMap(battleMap);
+			BattleMap map2 = BattleMapUtils.selectMap(battleMap.getName());
+			assert battleMap.equals(map2);
 		} catch (MapAlreadyExistException | MapNotExistException e) {
 			assert true;
 		}
@@ -72,11 +72,11 @@ public class TestCommon {
 	@Test
 	public void testRemoveMapString() {
 		try {
-			Map map = new Map("name");
-			Common.registerMap(map);
-			Common.removeMap(map.getName());
-			Map map2 = Common.selectMap(map.getName());
-			assert map.equals(map2);
+			BattleMap battleMap = new BattleMap("name");
+			BattleMapUtils.registerMap(battleMap);
+			BattleMapUtils.removeMap(battleMap.getName());
+			BattleMap map2 = BattleMapUtils.selectMap(battleMap.getName());
+			assert battleMap.equals(map2);
 		} catch (MapAlreadyExistException | MapNotExistException e) {
 			assert true;
 		}

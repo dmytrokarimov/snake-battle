@@ -1,6 +1,9 @@
-package org.snakebattle.gui;
+package org.snakebattle.gui.primitive.snake;
 
 import java.awt.Point;
+
+import org.snakebattle.gui.Drawable;
+import org.snakebattle.gui.Graph;
 
 
 public class MindPolyGraph extends Graph {

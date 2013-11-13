@@ -2,17 +2,17 @@ package org.snakebattle.client;
 
 import java.awt.Point;
 
-import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Common.MapAlreadyExistException;
-import org.snakebattle.gui.Common.MapNotExistException;
-import org.snakebattle.gui.Dummy;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.engine.snake.Element;
-import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.Dummy;
+import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.gui.primitive.snake.Element.PARTS;
 import org.snakebattle.gui.screen.Screen;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Snake;
 import org.snakebattle.logic.SnakeAlreadyInMapException;
+import org.snakebattle.utils.BattleMapUtils;
+import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
+import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 public class Demo2 {
 
@@ -32,8 +32,8 @@ public class Demo2 {
 		Thread th = new Thread() {
 			public void run() {
 				try {
-					Common.registerMap(new Map("battle"));
-					Map m = Common.selectMap("battle");
+					BattleMapUtils.registerMap(new BattleMap("battle"));
+					BattleMap m = BattleMapUtils.selectMap("battle");
 					Dummy d;
 					int i;
 					for (i = 0; i < 60; i++) {
@@ -98,7 +98,7 @@ public class Demo2 {
 						//	ActionFactory.getEatTail().doAction(snake2, snake1);
 						//else ActionFactory.getRight().doAction(snake2);
 						long timeold = System.currentTimeMillis();
-						Common.doStep(m.getName(), sn);
+						BattleMapUtils.doStep(m.getName(), sn);
 						m.drawAll();
 						long timenow = System.currentTimeMillis() - timeold;
 						if (waitTime - timenow > 0)

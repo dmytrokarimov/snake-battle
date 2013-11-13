@@ -2,22 +2,22 @@ package org.snakebattle.client;
 
 import java.awt.Point;
 
-import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Common.MapAlreadyExistException;
-import org.snakebattle.gui.Common.MapNotExistException;
-import org.snakebattle.gui.MindPolyGraph;
-import org.snakebattle.gui.MindPolyGraph.LOGIC_TYPES;
-import org.snakebattle.gui.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.engine.snake.Element;
-import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph;
+import org.snakebattle.gui.primitive.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_TYPES;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.gui.screen.Screen;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Mind;
 import org.snakebattle.logic.Mind.MindMap;
 import org.snakebattle.logic.Snake;
 import org.snakebattle.logic.SnakeAlreadyInMapException;
 import org.snakebattle.server.Battle;
+import org.snakebattle.utils.BattleMapUtils;
+import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
+import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 public class Demo {
 
@@ -44,7 +44,7 @@ public class Demo {
 					Battle b = new Battle();
 					b.init(mapName, sn);
 										
-					Map m = Common.selectMap(mapName);
+					BattleMap m = BattleMapUtils.selectMap(mapName);
 
 					for (int i = 0; i < sn.length; i++) {
 						m.putSnake(sn[i]);
@@ -234,7 +234,7 @@ public class Demo {
 
 					while (true) {
 						long timeold = System.currentTimeMillis();
-						Common.doStep(m.getName(), sn);
+						BattleMapUtils.doStep(m.getName(), sn);
 						m.drawAll();
 						long timenow = System.currentTimeMillis() - timeold;
 						if (waitTime - timenow > 0)

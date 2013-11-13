@@ -3,9 +3,9 @@ package org.snakebattle.server;
 import java.io.Serializable;
 import java.util.List;
 
-import org.snakebattle.gui.Common.ActionList;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Snake;
+import org.snakebattle.utils.BattleMapUtils.ActionList;
 
 /**
  * Сообщение, которое передаётся от сервера клиентам
@@ -14,23 +14,23 @@ import org.snakebattle.logic.Snake;
 public class Message implements Serializable{
 	private static final long serialVersionUID = -1806470678368730150L;
 	// Карта, на которой проводилась битва
-	private Map map;
+	private BattleMap battleMap;
 	// Змеи, которые принимали участие в битве
 	private Snake[] snakes;
 	// Список действий, которые совершили змейки в битве
 	private List<ActionList> al;
 	
-	public Message(Map map, Snake[] snakes, List<ActionList> al){
-		this.map = map;
+	public Message(BattleMap battleMap, Snake[] snakes, List<ActionList> al){
+		this.battleMap = battleMap;
 		this.snakes = snakes;
 		this.al = al;
 	}
 	
-	public Map getMap() {
-		return map;
+	public BattleMap getMap() {
+		return battleMap;
 	}
-	/*public void setMap(Map map) {
-		this.map = map;
+	/*public void setMap(BattleMap battleMap) {
+		this.map = battleMap;
 	}*/
 	public Snake[] getSnakes() {
 		return snakes;

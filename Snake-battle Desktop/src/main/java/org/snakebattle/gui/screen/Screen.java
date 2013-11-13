@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 
 public class Screen implements IScreen {
 	public static Screen instance = null;
@@ -71,8 +71,8 @@ public class Screen implements IScreen {
 		realScreen.setScreen(name);
 	}
 
-	public void setScreen(Map map) {
-		realScreen.setScreen(map);
+	public void setScreen(BattleMap battleMap) {
+		realScreen.setScreen(battleMap);
 	}
 
 	public boolean canExit() {

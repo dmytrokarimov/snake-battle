@@ -1,9 +1,11 @@
-package org.snakebattle.gui;
+package org.snakebattle.gui.primitive;
 
 import java.awt.Point;
 
+import org.snakebattle.gui.Drawable;
+import org.snakebattle.gui.Graph;
 import org.snakebattle.gui.screen.Screen;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 
 public class Text extends Graph implements Drawable{
 	private static final long serialVersionUID = -147751962202965335L;
@@ -17,9 +19,9 @@ public class Text extends Graph implements Drawable{
 	/**
 	 * Create new Text graphical object
 	 * @param TTD Time To Die - how many tics can text be alive
-	 * @param map reference to map, who contain this object
+	 * @param battleMap reference to map, who contain this object
 	 */
-	public Text(Point coord, String text, int TTD, Map map) {
+	public Text(Point coord, String text, int TTD, BattleMap battleMap) {
 		super(coord, 0, 0);
 		this.text = text;
 		this.TTD = TTD;

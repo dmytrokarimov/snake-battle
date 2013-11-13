@@ -8,14 +8,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 
-import org.snakebattle.gui.Common;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.Common.ActionList;
-import org.snakebattle.gui.Common.MapAlreadyExistException;
-import org.snakebattle.gui.Common.MapNotExistException;
 import org.snakebattle.gui.screen.Screen;
-import org.snakebattle.logic.Map;
+import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Snake;
+import org.snakebattle.utils.BattleMapUtils;
+import org.snakebattle.utils.BattleMapUtils.ActionList;
+import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
+import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 public class Server2 {
 	public static ServerSocket sServer; 		// Серверный сокет
@@ -57,7 +57,7 @@ class ServerOneThread2 extends Thread{
 	private Message message = null;				// Сообщение, получаемое от сервера
 	private static Battle battle = null; 		// Объект класса Battle для обсчёта результата битвы
 	private static Snake[] snakes = null;		// Змейки клиентов, учавствующие в битве
-	private static Map map = null;				// Карта, на которой проводится битва
+	private static BattleMap battleMap = null;				// Карта, на которой проводится битва
 	
 	public ServerOneThread2(Socket client) throws IOException
 	{
@@ -87,8 +87,8 @@ class ServerOneThread2 extends Thread{
 				try {
 					// Инициализация карты, змеек
 					battle.init("serverMap", snakes);
-					map = Common.selectMap("serverMap");
-					//map.setBorder(800, 600);
+					battleMap = BattleMapUtils.selectMap("serverMap");
+					//battleMap.setBorder(800, 600);
 				} catch (MapAlreadyExistException | MapNotExistException | ObjectAlreadyAddedException e) {
 					e.printStackTrace();
 				}
@@ -101,7 +101,7 @@ class ServerOneThread2 extends Thread{
 				//oos = new ObjectOutputStream(os); 	// Инициализация исходящего потока объекта
 				
 				// Инициализация передаваемого сообщения
-				message = new Message(map, snakes, al);
+				message = new Message(battleMap, snakes, al);
 				System.out.println("[SERVER]: Message created");
 				// Передача сообщения на клиент
 				sendObject(sClient, message);

@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.snakebattle.gui.Drawable;
-import org.snakebattle.gui.Dummy;
 import org.snakebattle.gui.Graph;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.engine.snake.Element;
+import org.snakebattle.gui.primitive.Dummy;
+import org.snakebattle.gui.primitive.snake.Element;
 import org.snakebattle.gui.screen.Screen;
 
 /**
@@ -18,13 +18,13 @@ import org.snakebattle.gui.screen.Screen;
  * 
  * @author Karimov
  */
-public class Map implements Iterable<Drawable>, Serializable {
+public class BattleMap implements Iterable<Drawable>, Serializable {
 	private static final long serialVersionUID = 3847259324576480684L;
 
 	private String name;
 	private List<Object> list;
 
-	public Map(String name) {
+	public BattleMap(String name) {
 		this.name = name;
 		list = new ArrayList<Object>();
 	}
