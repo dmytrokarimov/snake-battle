@@ -1,11 +1,14 @@
 package org.snakebattle.logic;
 
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
-import org.snakebattle.gui.*;
+import org.snakebattle.gui.Common;
 import org.snakebattle.gui.Common.MapNotExistException;
+import org.snakebattle.gui.ObjectAlreadyAddedException;
+import org.snakebattle.gui.engine.snake.Element;
 
 /**
  * Описывает возможные действия со змейкой

@@ -1,12 +1,17 @@
 package org.snakebattle.logic;
 
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
-import org.snakebattle.gui.*;
+import org.snakebattle.gui.Drawable;
+import org.snakebattle.gui.Dummy;
+import org.snakebattle.gui.Graph;
+import org.snakebattle.gui.ObjectAlreadyAddedException;
+import org.snakebattle.gui.engine.snake.Element;
+import org.snakebattle.gui.screen.Screen;
 
 /**
  * Карта с различными объектами для вывода
@@ -94,7 +99,6 @@ public class Map implements Iterable<Drawable>, Serializable {
 				throw new ObjectAlreadyAddedException("Coord:"
 						+ it1.next().getCoord());
 		putSnake(obj);
-		Iterator<Element> it = obj.iterator();
 	}
 
 	public Iterator<Drawable> iterator() {

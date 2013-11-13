@@ -10,10 +10,10 @@ import java.util.List;
 
 import org.snakebattle.gui.Common;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.Screen;
 import org.snakebattle.gui.Common.ActionList;
 import org.snakebattle.gui.Common.MapAlreadyExistException;
 import org.snakebattle.gui.Common.MapNotExistException;
+import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.Map;
 import org.snakebattle.logic.Snake;
 

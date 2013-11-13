@@ -1,11 +1,17 @@
 package org.snakebattle.gui;
 
+import java.awt.Point;
+
+import org.snakebattle.gui.screen.Screen;
+
 /**
  * Основной класс для вывода графики
  * 
  * @author Karimov
  */
 public abstract class Graph implements Drawable {
+	private static final long serialVersionUID = -8393895271849405329L;
+	
 	protected Point coord;
 	protected int width;
 	protected int height;

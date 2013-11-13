@@ -1,5 +1,6 @@
 package org.snakebattle.gui;
 
+import java.awt.Point;
 import java.io.Serializable;
 
 /**

@@ -1,21 +1,22 @@
 package org.snakebattle.client;
 
+import java.awt.Point;
+
 import org.snakebattle.gui.Common;
-import org.snakebattle.gui.Element;
-import org.snakebattle.gui.MindPolyGraph;
-import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.Point;
-import org.snakebattle.gui.Screen;
 import org.snakebattle.gui.Common.MapAlreadyExistException;
 import org.snakebattle.gui.Common.MapNotExistException;
-import org.snakebattle.gui.Element.PARTS;
+import org.snakebattle.gui.MindPolyGraph;
 import org.snakebattle.gui.MindPolyGraph.LOGIC_TYPES;
 import org.snakebattle.gui.MindPolyGraph.OWNER_TYPES;
+import org.snakebattle.gui.ObjectAlreadyAddedException;
+import org.snakebattle.gui.engine.snake.Element;
+import org.snakebattle.gui.engine.snake.Element.PARTS;
+import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.Map;
 import org.snakebattle.logic.Mind;
+import org.snakebattle.logic.Mind.MindMap;
 import org.snakebattle.logic.Snake;
 import org.snakebattle.logic.SnakeAlreadyInMapException;
-import org.snakebattle.logic.Mind.MindMap;
 import org.snakebattle.server.Battle;
 
 public class Demo {

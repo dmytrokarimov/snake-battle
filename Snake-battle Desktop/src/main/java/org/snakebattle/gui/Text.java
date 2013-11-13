@@ -1,8 +1,13 @@
 package org.snakebattle.gui;
 
+import java.awt.Point;
+
+import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.Map;
 
 public class Text extends Graph implements Drawable{
+	private static final long serialVersionUID = -147751962202965335L;
+	
 	/**
 	 * Time To Die - how many tics can text be alive
 	 */
