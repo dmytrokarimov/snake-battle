@@ -3,8 +3,22 @@ package org.snakebattle.gui.screen;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
+
+import org.snakebattle.gui.events.EventListener;
 public interface IScreen {
 
+	/**
+	 * Подписаться на события
+	 * @param eventListener объект, который подписывается на события
+	 */
+	public void subscribe(EventListener eventListener);
+	
+	/**
+	 * Отписаться от события
+	 * @param eventListener объект, который отписывается от событий
+	 */
+	public void unSubscribe(EventListener eventListener);
+	
 	/**
 	 * Рисует точку на экране цветом по-умолчанию
 	 */

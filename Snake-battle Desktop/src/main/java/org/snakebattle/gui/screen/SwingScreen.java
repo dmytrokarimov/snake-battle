@@ -13,9 +13,14 @@ import java.awt.RenderingHints.Key;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -31,7 +36,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-public class SwingScreen implements IScreen{
+import org.apache.commons.lang3.ClassUtils;
+import org.snakebattle.gui.events.EventListener;
+import org.snakebattle.gui.events.mouse.MouseClickListener;
+
+public class SwingScreen implements IScreen {
 	public static SwingScreen instance = null;
 	/** Image used to make changes. */
 	private BufferedImage canvasImage;
@@ -57,6 +66,41 @@ public class SwingScreen implements IScreen{
 
 	private JFrame frame = null;
 	public boolean repaintOnEveryDraw = false;
+
+	private Map<Class<?>, Set<EventListener>> eventListeners = new HashMap<>();
+	private MouseListener mouseListener = new MouseListener() {
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			Set<EventListener> listeners = eventListeners
+					.get(MouseClickListener.class);
+			if (listeners != null) {
+				for (EventListener eventListener : listeners) {
+					((MouseClickListener) eventListener).onMouseClick(e.getPoint());
+				}
+			}
+		}
+	};
 
 	/**
 	 * Создает объект экрана и отображает его на экране Внимание! Это хоть и
@@ -309,6 +353,9 @@ public class SwingScreen implements IScreen{
 			JPanel imageView = new JPanel(new GridBagLayout());
 			imageView.setPreferredSize(new Dimension(820, 620));
 			imageLabel = new JLabel(new ImageIcon(canvasImage));
+
+			imageView.addMouseListener(mouseListener);
+
 			JScrollPane imageScroll = new JScrollPane(imageView);
 			imageView.add(imageLabel);
 			gui.add(imageScroll, BorderLayout.CENTER);
@@ -367,7 +414,7 @@ public class SwingScreen implements IScreen{
 					// TODO Auto-generated method stub
 					ready = false;
 					frame.dispose();
-					//System.exit(0);
+					// System.exit(0);
 				}
 			};
 			JMenuItem exitItem = new JMenuItem("Exit");
@@ -414,5 +461,36 @@ public class SwingScreen implements IScreen{
 	public int getHeight() {
 		// TODO нужно каким-то образом вычислять это значение!
 		return 600;
+	}
+
+	@Override
+	public void subscribe(EventListener eventListener) {
+		for (Class<?> listenerInterface : ClassUtils
+				.getAllInterfaces(eventListener.getClass())) {
+			if (EventListener.class.isAssignableFrom(listenerInterface)) {
+				Set<EventListener> listeners = eventListeners
+						.get(listenerInterface);
+				if (listeners == null) {
+					listeners = new HashSet<>();
+					eventListeners.put(listenerInterface, listeners);
+				}
+
+				listeners.add(eventListener);
+			}
+		}
+	}
+
+	@Override
+	public void unSubscribe(EventListener eventListener) {
+		for (Class<?> listenerInterface : ClassUtils
+				.getAllInterfaces(eventListener.getClass())) {
+			if (EventListener.class.isAssignableFrom(listenerInterface)) {
+				Set<EventListener> listeners = eventListeners
+						.get(listenerInterface);
+				if (listeners != null) {
+					listeners.remove(eventListener);
+				}
+			}
+		}
 	}
 }
