@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import org.snakebattle.gui.events.EventListener;
 import org.snakebattle.logic.BattleMap;
 
 public class Screen implements IScreen {
@@ -89,6 +90,16 @@ public class Screen implements IScreen {
 
 	public int getHeight() {
 		return realScreen.getHeight();
+	}
+
+	@Override
+	public void subscribe(EventListener eventListener) {
+		realScreen.subscribe(eventListener);
+	}
+
+	@Override
+	public void unSubscribe(EventListener eventListener) {
+		realScreen.unSubscribe(eventListener);
 	}
 
 }
