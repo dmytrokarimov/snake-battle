@@ -3,7 +3,7 @@ package org.snakebattle.client;
 import java.awt.Point;
 
 import org.snakebattle.gui.ObjectAlreadyAddedException;
-import org.snakebattle.gui.controls.AbstractButton;
+import org.snakebattle.gui.controls.NiceButton;
 import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Snake;
@@ -29,15 +29,13 @@ public class DemoButtons {
 			Thread.sleep(100);
 
 		//Создаем кнопку, а в обработчике создаем новую игру
-		AbstractButton button = new AbstractButton("Click me!",
-				new Point(100, 100), 100, 100) {
-
-			private static final long serialVersionUID = 8458814054996957653L;
+		NiceButton niceButton = new NiceButton("New game", new Point(300, 300), 100, 30) {
+			
+			private static final long serialVersionUID = 800384528686843000L;
 
 			@Override
 			public void onMouseClick(int x, int y) {
-				System.out.println("Pushed!");
-				m.remove(this);
+				m.removeAll();
 				try {
 					DemoUtils.fillBatleMap(m, sn);
 					for (Snake snake : sn) {
@@ -51,14 +49,23 @@ public class DemoButtons {
 			}
 		};
 
+		NiceButton niceButton2 = new NiceButton("Exit", new Point(300, 350), 100, 30) {
+			
+			private static final long serialVersionUID = 800384528686843000L;
+
+			@Override
+			public void onMouseClick(int x, int y) {
+				System.exit(0);
+			}
+		};
 		Battle b = new Battle();
 		b.init(mapName, sn);
 
 		m = BattleMapUtils.selectMap(mapName);
 
-		m.put(button);
+		m.put(niceButton);
+		m.put(niceButton2);
 
-		Screen.instance.subscribe(button);
 		Thread th = new Thread() {
 			public void run() {
 				int waitTime = 50;

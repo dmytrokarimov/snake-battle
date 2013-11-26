@@ -97,5 +97,22 @@ public class EmptyScreen implements IScreen{
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void fillRoundRect(int x, int y, int width, int height,
+			int arcWidth, int arcHeight) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void setColor(Color color) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void drawRoundRect(int x, int y, int width, int height,
+			int arcWidth, int arcHeight) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

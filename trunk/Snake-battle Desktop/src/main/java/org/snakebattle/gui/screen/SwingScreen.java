@@ -13,14 +13,9 @@ import java.awt.RenderingHints.Key;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -36,9 +31,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.snakebattle.gui.events.EventListener;
-import org.snakebattle.gui.events.mouse.MouseClickListener;
+import org.snakebattle.gui.events.SwingListener;
 
 public class SwingScreen implements IScreen {
 	public static SwingScreen instance = null;
@@ -67,40 +61,7 @@ public class SwingScreen implements IScreen {
 	private JFrame frame = null;
 	public boolean repaintOnEveryDraw = false;
 
-	private Map<Class<?>, Set<EventListener>> eventListeners = new HashMap<>();
-	private MouseListener mouseListener = new MouseListener() {
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			Set<EventListener> listeners = eventListeners
-					.get(MouseClickListener.class);
-			if (listeners != null) {
-				for (EventListener eventListener : listeners) {
-					((MouseClickListener) eventListener).onMouseClick(e.getPoint());
-				}
-			}
-		}
-	};
+	private SwingListener listener = new SwingListener();
 
 	/**
 	 * Создает объект экрана и отображает его на экране Внимание! Это хоть и
@@ -354,7 +315,8 @@ public class SwingScreen implements IScreen {
 			imageView.setPreferredSize(new Dimension(820, 620));
 			imageLabel = new JLabel(new ImageIcon(canvasImage));
 
-			imageView.addMouseListener(mouseListener);
+			imageLabel.addMouseListener(listener);
+			imageLabel.addMouseMotionListener(listener);
 
 			JScrollPane imageScroll = new JScrollPane(imageView);
 			imageView.add(imageLabel);
@@ -465,32 +427,50 @@ public class SwingScreen implements IScreen {
 
 	@Override
 	public void subscribe(EventListener eventListener) {
-		for (Class<?> listenerInterface : ClassUtils
-				.getAllInterfaces(eventListener.getClass())) {
-			if (EventListener.class.isAssignableFrom(listenerInterface)) {
-				Set<EventListener> listeners = eventListeners
-						.get(listenerInterface);
-				if (listeners == null) {
-					listeners = new HashSet<>();
-					eventListeners.put(listenerInterface, listeners);
-				}
-
-				listeners.add(eventListener);
-			}
-		}
+		listener.subscribe(eventListener);
 	}
 
 	@Override
 	public void unSubscribe(EventListener eventListener) {
-		for (Class<?> listenerInterface : ClassUtils
-				.getAllInterfaces(eventListener.getClass())) {
-			if (EventListener.class.isAssignableFrom(listenerInterface)) {
-				Set<EventListener> listeners = eventListeners
-						.get(listenerInterface);
-				if (listeners != null) {
-					listeners.remove(eventListener);
-				}
-			}
-		}
+		listener.unSubscribe(eventListener);
+	}
+
+	@Override
+	public void fillRoundRect(int x, int y, int width, int height,
+			int arcWidth, int arcHeight) {
+		Graphics2D g;
+		if (repaintOnEveryDraw)
+			g = this.canvasImage.createGraphics();
+		else
+			g = this.bufferImage.createGraphics();
+		// Graphics2D g = this.canvasImage.createGraphics();
+		g.setRenderingHints(renderingHints);
+		g.setColor(new java.awt.Color(color.getRGB()));
+		g.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
+		g.dispose();
+		if (repaintOnEveryDraw)
+			this.imageLabel.repaint();
+	}
+
+	@Override
+	public void drawRoundRect(int x, int y, int width, int height,
+			int arcWidth, int arcHeight) {
+		Graphics2D g;
+		if (repaintOnEveryDraw)
+			g = this.canvasImage.createGraphics();
+		else
+			g = this.bufferImage.createGraphics();
+		// Graphics2D g = this.canvasImage.createGraphics();
+		g.setRenderingHints(renderingHints);
+		g.setColor(new java.awt.Color(color.getRGB()));
+		g.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
+		g.dispose();
+		if (repaintOnEveryDraw)
+			this.imageLabel.repaint();
+	}
+
+	@Override
+	public void setColor(Color color) {
+		this.color = color;
 	}
 }

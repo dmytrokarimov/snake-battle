@@ -72,4 +72,12 @@ public interface IScreen {
 	 * This method calc screen size
 	 */
 	public int getHeight() ;
+	
+	public void fillRoundRect(int x, int y, int width, int height,
+			int arcWidth, int arcHeight);
+
+	public void setColor(Color color);
+	
+	public void drawRoundRect(int x, int y, int width, int height,
+			int arcWidth, int arcHeight);
 }
