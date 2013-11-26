@@ -102,4 +102,25 @@ public class Screen implements IScreen {
 		realScreen.unSubscribe(eventListener);
 	}
 
+	@Override
+	public void fillRoundRect(int x, int y, int width, int height,
+            int arcWidth, int arcHeight) {
+		if (!Screen.GRAPHICS_ON)
+			return;
+		realScreen.fillRoundRect(x, y, width, height, arcWidth, arcHeight);;
+	}
+
+	@Override
+	public void setColor(Color color) {
+		realScreen.setColor(color);
+	}
+
+	@Override
+	public void drawRoundRect(int x, int y, int width, int height,
+            int arcWidth, int arcHeight) {
+		if (!Screen.GRAPHICS_ON)
+			return;
+		realScreen.drawRoundRect(x, y, width, height, arcWidth, arcHeight);;
+	}
+
 }

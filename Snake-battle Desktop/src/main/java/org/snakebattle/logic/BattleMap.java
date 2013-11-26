@@ -7,10 +7,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.snakebattle.gui.Drawable;
-import org.snakebattle.gui.Graph;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
+import org.snakebattle.gui.events.EventListener;
 import org.snakebattle.gui.primitive.Dummy;
 import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.gui.screen.IScreen;
 import org.snakebattle.gui.screen.Screen;
 
 /**
@@ -22,11 +23,11 @@ public class BattleMap implements Iterable<Drawable>, Serializable {
 	private static final long serialVersionUID = 3847259324576480684L;
 
 	private String name;
-	private List<Object> list;
+	private List<Drawable> list;
 
 	public BattleMap(String name) {
 		this.name = name;
-		list = new ArrayList<Object>();
+		list = new ArrayList<Drawable>();
 	}
 
 	/**
@@ -57,13 +58,17 @@ public class BattleMap implements Iterable<Drawable>, Serializable {
 	}
 
 	/**
-	 * Кладёт объект в массив
+	 * Кладёт объект в массив. Если это {@link EventListener}, то подписывает на
+	 * события с помощью {@link IScreen#subscribe(EventListener)}
 	 * 
 	 * @throws ObjectAlreadyAddedException
 	 *             генерируется если по координатам объекта obj в массиве уже
 	 *             есть объект
 	 */
 	public void put(Drawable obj) throws ObjectAlreadyAddedException {
+		if (obj instanceof EventListener) {
+			Screen.instance.subscribe((EventListener) obj);
+		}
 		if (!checkExist(obj))
 			list.add(obj);
 		else
@@ -143,11 +148,15 @@ public class BattleMap implements Iterable<Drawable>, Serializable {
 	}
 
 	/**
-	 * Удаление объекта
+	 * Удаление объекта Если это {@link EventListener}, то отписывает от событий
+	 * с помощью {@link IScreen#unSubscribe(EventListener)}
 	 * 
 	 * @param object
 	 */
-	public void remove(Graph object) {
+	public void remove(Drawable object) {
+		if (object instanceof EventListener) {
+			Screen.instance.unSubscribe((EventListener) object);
+		}
 		list.remove(object);
 	}
 
@@ -177,6 +186,15 @@ public class BattleMap implements Iterable<Drawable>, Serializable {
 			put(d);
 		} catch (ObjectAlreadyAddedException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Удаляет все объекты. Отписывает всех слушателей событий
+	 */
+	public void removeAll() {
+		while (list.size() > 0) {
+			remove(list.get(0));
 		}
 	}
 }
