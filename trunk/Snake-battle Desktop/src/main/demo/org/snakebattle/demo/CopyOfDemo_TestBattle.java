@@ -1,4 +1,4 @@
-package org.snakebattle.client;
+package org.snakebattle.demo;
 
 import java.awt.Point;
 import java.util.HashSet;
@@ -11,7 +11,6 @@ import org.snakebattle.gui.primitive.snake.MindPolyGraph;
 import org.snakebattle.gui.primitive.snake.Element.PARTS;
 import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_TYPES;
 import org.snakebattle.gui.primitive.snake.MindPolyGraph.OWNER_TYPES;
-import org.snakebattle.gui.screen.EmptyScreen;
 import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Mind;
@@ -24,10 +23,10 @@ import org.snakebattle.utils.BattleMapUtils.ActionList;
 import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
 import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
-public class Demo_TestBattle {
+public class CopyOfDemo_TestBattle {
 
 	/**
-	 * просто тестировать интерфейс и юазовые действия
+	 * Just for testing interface and basic actions
 	 * 
 	 * @param args
 	 * @throws ObjectAlreadyAddedException
@@ -43,7 +42,7 @@ public class Demo_TestBattle {
 		Thread th = new Thread() {
 			public void run() {
 				try {
-					// Инициализация
+					// init
 					Battle battle = new Battle();
 					Snake[] snakes = battle.snake_fill();
 					Mind mind = snakes[0].getMind();
@@ -97,54 +96,25 @@ public class Demo_TestBattle {
 					mpg.setOwner(OWNER_TYPES.NEUTRAL);
 					mpg.setValue(null);
 					mm1.setAt(3, 0, mpg);
-					BattleMap battleMap = null;
-					// Создание экрана, на котором будут происходит
-					// все
-					// действия
-					// змеек
-					new Screen(new EmptyScreen());
-					/** Блок из тестовой функции */
+					BattleMap m = null;
+					
 					try {
-						// Инициализация карты, змеек
+						// init map and snakes
 						battle.init("serverMap", snakes);
-						battleMap = BattleMapUtils.selectMap("serverMap");
+						m = BattleMapUtils.selectMap("serverMap");
 						for (int i = 0; i < snakes.length; i++) {
-							battleMap.putSnake(snakes[i]);
+							m.putSnake(snakes[i]);
 						}
-						battleMap.setBorder(800, 600);
+						m.setBorder(800, 600);
 					} catch (MapAlreadyExistException
 							| MapNotExistException
 							| ObjectAlreadyAddedException e) {
 						e.printStackTrace();
 					}
+					
 					List<ActionList> al = battle.battleCalc(snakes);
-					System.out.println("[SERVER]: Battle end");
-					
-					
-					
-					//Screen.instance = null;
-					//new Screen(new SwingScreen());
-					//Screen.GRAPHICS_ON = true;
-					// initInterface("asdasd");
-					//while (!Screen.instance.canDraw())
-					//	Thread.sleep(100);
-					
-					
-					// Еси графика была выключена - включить
-					if (!Screen.GRAPHICS_ON)
-						Screen.GRAPHICS_ON = true;
-
-					// Инициализация и отображение GUI
-					new Screen();
-
-					// Размеры экрана (для отрисовки границ)
-					//int width = Screen.instance.getWidth(), height = Screen.instance
-					//		.getHeight();
-
-					// Ожидание возможности отрисовки
-					while (!Screen.instance.canDraw())
-						Thread.sleep(100);
-					
+					//===============================================
+					//=================Draw==========================
 					HashSet<Snake> hs = new HashSet<>();
 					for (int i = 0; i < al.size(); i++) {
 						for (int j = 0; j < al.get(i).param.length; j++) {
@@ -159,35 +129,34 @@ public class Demo_TestBattle {
 						pos++;
 					}
 
-					for (int i = 0; i < snakes.length; i++) {
-						snakesDraw[i].setMind(snakes[i].getMind());
-					}
-					
-
-					// Регистрация указанной карты и её выбор для битвы
-					BattleMap mapDraw = null;//BattleMapUtils.registerMap(new BattleMap("asdasd"));
-					// map = BattleMapUtils.selectMap(mapName);
-					// Задание границ игровой карты
-					//mapDraw.setBorder(width, height);
-					
-					Battle battleInit = new Battle();
-					/*
-					 * BattleMapUtils.removeMap(map); BattleMapUtils.registerMap(new
-					 * BattleMap(message.getMap().getName()));
-					 */
-					battleInit.init("asdasd", snakesDraw); // Инициализирует битву
+					//for (int i = 0; i < snakes.length; i++) {
+					//	snakesDraw[i].setMind(snakes[i].getMind());
+					//}
+					BattleMap mapDraw = null;
+					Battle battleShow = new Battle();
+					battleShow.init("asdasd", snakesDraw); // init battle
 
 					mapDraw = BattleMapUtils.selectMap("asdasd");
 					mapDraw.setBorder(800, 600);
-					// Змейки на поле боя
+					// put snakes into battle map
 					for (int i = 0; i < snakes.length; i++)
 						mapDraw.putSnake(snakesDraw[i]);
-					// Змейки уже добавлены в
-					// .BattleInit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-					// Добавление в BattleInit отменено
+					
+					
+					// If graphics has been off - enable it
+					if (!Screen.GRAPHICS_ON)
+						Screen.GRAPHICS_ON = true;
 
-					mapDraw.drawAll();
+					// Init and show GUI
+					new Screen();
 
+					//int width = Screen.instance.getWidth(), height = Screen.instance
+					//		.getHeight();
+
+					// Waiting for the screen initialization
+					while (!Screen.instance.canDraw())
+						Thread.sleep(100);
+					
 					int waitTime = 5;
 					while (Screen.instance.canDraw())
 						for (ActionList a : al) {
@@ -199,8 +168,7 @@ public class Demo_TestBattle {
 								Thread.sleep(waitTime - timenow);
 						}
 					
-				} catch (InterruptedException | ObjectAlreadyAddedException
-						| MapAlreadyExistException | MapNotExistException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

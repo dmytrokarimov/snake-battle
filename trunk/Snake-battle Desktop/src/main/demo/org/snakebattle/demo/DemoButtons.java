@@ -1,4 +1,4 @@
-package org.snakebattle.client;
+package org.snakebattle.demo;
 
 import java.awt.Point;
 
@@ -28,7 +28,7 @@ public class DemoButtons {
 		while (!Screen.instance.canDraw())
 			Thread.sleep(100);
 
-		//Создаем кнопку, а в обработчике создаем новую игру
+		//Create button. In mouseClick creates new game.
 		NiceButton niceButton = new NiceButton("New game", new Point(300, 300), 100, 30) {
 			
 			private static final long serialVersionUID = 800384528686843000L;

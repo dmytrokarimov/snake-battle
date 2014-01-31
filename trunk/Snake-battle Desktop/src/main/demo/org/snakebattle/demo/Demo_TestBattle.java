@@ -1,4 +1,4 @@
-package org.snakebattle.client;
+package org.snakebattle.demo;
 
 import java.awt.Point;
 import java.util.HashSet;
@@ -11,6 +11,7 @@ import org.snakebattle.gui.primitive.snake.MindPolyGraph;
 import org.snakebattle.gui.primitive.snake.Element.PARTS;
 import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_TYPES;
 import org.snakebattle.gui.primitive.snake.MindPolyGraph.OWNER_TYPES;
+import org.snakebattle.gui.screen.EmptyScreen;
 import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Mind;
@@ -23,10 +24,10 @@ import org.snakebattle.utils.BattleMapUtils.ActionList;
 import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
 import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
-public class CopyOfDemo_TestBattle {
+public class Demo_TestBattle {
 
 	/**
-	 * просто тестировать интерфейс и юазовые действия
+	 * Just for testing interface and basic actions
 	 * 
 	 * @param args
 	 * @throws ObjectAlreadyAddedException
@@ -42,7 +43,7 @@ public class CopyOfDemo_TestBattle {
 		Thread th = new Thread() {
 			public void run() {
 				try {
-					// Инициализация
+					// Initialization
 					Battle battle = new Battle();
 					Snake[] snakes = battle.snake_fill();
 					Mind mind = snakes[0].getMind();
@@ -96,25 +97,34 @@ public class CopyOfDemo_TestBattle {
 					mpg.setOwner(OWNER_TYPES.NEUTRAL);
 					mpg.setValue(null);
 					mm1.setAt(3, 0, mpg);
-					BattleMap m = null;
-					
+					BattleMap battleMap = null;
+
+					new Screen(new EmptyScreen());
 					try {
-						// Инициализация карты, змеек
 						battle.init("serverMap", snakes);
-						m = BattleMapUtils.selectMap("serverMap");
+						battleMap = BattleMapUtils.selectMap("serverMap");
 						for (int i = 0; i < snakes.length; i++) {
-							m.putSnake(snakes[i]);
+							battleMap.putSnake(snakes[i]);
 						}
-						m.setBorder(800, 600);
+						battleMap.setBorder(800, 600);
 					} catch (MapAlreadyExistException
 							| MapNotExistException
 							| ObjectAlreadyAddedException e) {
 						e.printStackTrace();
 					}
-					
 					List<ActionList> al = battle.battleCalc(snakes);
-					//===============================================
-					//================ВЫВОД==========================
+					System.out.println("[SERVER]: Battle end");
+					
+					
+					
+					if (!Screen.GRAPHICS_ON)
+						Screen.GRAPHICS_ON = true;
+
+					new Screen();
+
+					while (!Screen.instance.canDraw())
+						Thread.sleep(100);
+					
 					HashSet<Snake> hs = new HashSet<>();
 					for (int i = 0; i < al.size(); i++) {
 						for (int j = 0; j < al.get(i).param.length; j++) {
@@ -129,35 +139,28 @@ public class CopyOfDemo_TestBattle {
 						pos++;
 					}
 
-					//for (int i = 0; i < snakes.length; i++) {
-					//	snakesDraw[i].setMind(snakes[i].getMind());
-					//}
-					BattleMap mapDraw = null;
-					Battle battleShow = new Battle();
-					battleShow.init("asdasd", snakesDraw); // Инициализирует битву
+					for (int i = 0; i < snakes.length; i++) {
+						snakesDraw[i].setMind(snakes[i].getMind());
+					}
+					
+
+					BattleMap mapDraw = null;//BattleMapUtils.registerMap(new BattleMap("asdasd"));
+					
+					Battle battleInit = new Battle();
+					/*
+					 * BattleMapUtils.removeMap(map); BattleMapUtils.registerMap(new
+					 * BattleMap(message.getMap().getName()));
+					 */
+					battleInit.init("asdasd", snakesDraw); // init battle
 
 					mapDraw = BattleMapUtils.selectMap("asdasd");
 					mapDraw.setBorder(800, 600);
-					// Змейки на поле боя
+
 					for (int i = 0; i < snakes.length; i++)
 						mapDraw.putSnake(snakesDraw[i]);
-					
-					
-					// Еси графика была выключена - включить
-					if (!Screen.GRAPHICS_ON)
-						Screen.GRAPHICS_ON = true;
 
-					// Инициализация и отображение GUI
-					new Screen();
+					mapDraw.drawAll();
 
-					// Размеры экрана (для отрисовки границ)
-					//int width = Screen.instance.getWidth(), height = Screen.instance
-					//		.getHeight();
-
-					// Ожидание возможности отрисовки
-					while (!Screen.instance.canDraw())
-						Thread.sleep(100);
-					
 					int waitTime = 5;
 					while (Screen.instance.canDraw())
 						for (ActionList a : al) {
@@ -169,16 +172,8 @@ public class CopyOfDemo_TestBattle {
 								Thread.sleep(waitTime - timenow);
 						}
 					
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (MapAlreadyExistException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (MapNotExistException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ObjectAlreadyAddedException e) {
-					// TODO Auto-generated catch block
+				} catch (InterruptedException | ObjectAlreadyAddedException
+						| MapAlreadyExistException | MapNotExistException e) {
 					e.printStackTrace();
 				}
 			}
