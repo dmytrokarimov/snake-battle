@@ -6,259 +6,259 @@ import org.snakebattle.gui.primitive.snake.Element;
 import org.snakebattle.gui.primitive.snake.Element.PARTS;
 
 /**
- * Реализует функции передвижения/действия змейки
+ * Р РµР°Р»РёР·СѓРµС‚ С„СѓРЅРєС†РёРё РїРµСЂРµРґРІРёР¶РµРЅРёСЏ/РґРµР№СЃС‚РІРёСЏ Р·РјРµР№РєРё
  * @author RED Developer
  */
 public class ActionFactory {
 
-	/**
-	 * Описывает движение змейки вверх 
-	 * @return
-	 * Action
-	 */
-	public static Action getUp() {
-		return new Action() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 5186996567560235054L;
+  /**
+   * РћРїРёСЃС‹РІР°РµС‚ РґРІРёР¶РµРЅРёРµ Р·РјРµР№РєРё РІРІРµСЂС… 
+   * @return
+   * Action
+   */
+  public static Action getUp() {
+    return new Action() {
+      /**
+       * 
+       */
+      private static final long serialVersionUID = 5186996567560235054L;
 
-			@Override
-			public void doAction(Snake... snake) {
-				// Передвижение змейки на 1 клетку вверх
-				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
-					// Координата текущего элемента змейки равна координате предыдущего
-					snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
-				
-				// Меняем координату головы змеи
-				snake[0].getElements().get(0).setCoord(
-						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y - snake[0].getElements().get(0).getHeight()));
-			}
+      @Override
+      public void doAction(Snake... snake) {
+        // РџРµСЂРµРґРІРёР¶РµРЅРёРµ Р·РјРµР№РєРё РЅР° 1 РєР»РµС‚РєСѓ РІРІРµСЂС…
+        for(int i = snake[0].getElements().size() - 1; i > 0; i--)
+          // РљРѕРѕСЂРґРёРЅР°С‚Р° С‚РµРєСѓС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° Р·РјРµР№РєРё СЂР°РІРЅР° РєРѕРѕСЂРґРёРЅР°С‚Рµ РїСЂРµРґС‹РґСѓС‰РµРіРѕ
+          snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
+        
+        // РњРµРЅСЏРµРј РєРѕРѕСЂРґРёРЅР°С‚Сѓ РіРѕР»РѕРІС‹ Р·РјРµРё
+        snake[0].getElements().get(0).setCoord(
+            new Point(snake[0].getElements().get(0).getCoord().x,
+                  snake[0].getElements().get(0).getCoord().y - snake[0].getElements().get(0).getHeight()));
+      }
 
-			@Override
-			public ACTION_TYPE getType() {
-				return ACTION_TYPE.UP;
-			}
-		};
-	}
+      @Override
+      public ACTION_TYPE getType() {
+        return ACTION_TYPE.UP;
+      }
+    };
+  }
 
-	/**
-	 * Описывает движение змейки вниз 
-	 * @return
-	 * Action
-	 */
-	public static Action getDown() {
-		return new Action() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 2693849212560051141L;
+  /**
+   * РћРїРёСЃС‹РІР°РµС‚ РґРІРёР¶РµРЅРёРµ Р·РјРµР№РєРё РІРЅРёР· 
+   * @return
+   * Action
+   */
+  public static Action getDown() {
+    return new Action() {
+      /**
+       * 
+       */
+      private static final long serialVersionUID = 2693849212560051141L;
 
-			@Override
-			public void doAction(Snake... snake) {
-				// Передвижение змейки на 1 клетку вниз
-				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
-					// Координата текущего элемента змейки равна координате предыдущего
-					snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
-				
-				// Меняем координату головы змеи
-				snake[0].getElements().get(0).setCoord(
-						new Point(snake[0].getElements().get(0).getCoord().x,
-								  snake[0].getElements().get(0).getCoord().y + snake[0].getElements().get(0).getHeight()));
-			}
+      @Override
+      public void doAction(Snake... snake) {
+        // РџРµСЂРµРґРІРёР¶РµРЅРёРµ Р·РјРµР№РєРё РЅР° 1 РєР»РµС‚РєСѓ РІРЅРёР·
+        for(int i = snake[0].getElements().size() - 1; i > 0; i--)
+          // РљРѕРѕСЂРґРёРЅР°С‚Р° С‚РµРєСѓС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° Р·РјРµР№РєРё СЂР°РІРЅР° РєРѕРѕСЂРґРёРЅР°С‚Рµ РїСЂРµРґС‹РґСѓС‰РµРіРѕ
+          snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
+        
+        // РњРµРЅСЏРµРј РєРѕРѕСЂРґРёРЅР°С‚Сѓ РіРѕР»РѕРІС‹ Р·РјРµРё
+        snake[0].getElements().get(0).setCoord(
+            new Point(snake[0].getElements().get(0).getCoord().x,
+                  snake[0].getElements().get(0).getCoord().y + snake[0].getElements().get(0).getHeight()));
+      }
 
-			@Override
-			public ACTION_TYPE getType() {
-				return ACTION_TYPE.DOWN;
-			}
-		};
-	}
+      @Override
+      public ACTION_TYPE getType() {
+        return ACTION_TYPE.DOWN;
+      }
+    };
+  }
 
-	/**
-	 * Описывает движение змейки влево 
-	 * @return
-	 * Action
-	 */
-	public static Action getLeft() {
-		return new Action() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 8329109675822870643L;
+  /**
+   * РћРїРёСЃС‹РІР°РµС‚ РґРІРёР¶РµРЅРёРµ Р·РјРµР№РєРё РІР»РµРІРѕ 
+   * @return
+   * Action
+   */
+  public static Action getLeft() {
+    return new Action() {
+      /**
+       * 
+       */
+      private static final long serialVersionUID = 8329109675822870643L;
 
-			@Override
-			public void doAction(Snake... snake) {
-				// Передвижение змейки на 1 клетку влево
-				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
-					// Координата текущего элемента змейки равна координате предыдущего
-					snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
-				
-				// Меняем координату головы змеи
-				snake[0].getElements().get(0).setCoord(
-						new Point(snake[0].getElements().get(0).getCoord().x - snake[0].getElements().get(0).getWidth(),
-								  snake[0].getElements().get(0).getCoord().y));
-			}
+      @Override
+      public void doAction(Snake... snake) {
+        // РџРµСЂРµРґРІРёР¶РµРЅРёРµ Р·РјРµР№РєРё РЅР° 1 РєР»РµС‚РєСѓ РІР»РµРІРѕ
+        for(int i = snake[0].getElements().size() - 1; i > 0; i--)
+          // РљРѕРѕСЂРґРёРЅР°С‚Р° С‚РµРєСѓС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° Р·РјРµР№РєРё СЂР°РІРЅР° РєРѕРѕСЂРґРёРЅР°С‚Рµ РїСЂРµРґС‹РґСѓС‰РµРіРѕ
+          snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
+        
+        // РњРµРЅСЏРµРј РєРѕРѕСЂРґРёРЅР°С‚Сѓ РіРѕР»РѕРІС‹ Р·РјРµРё
+        snake[0].getElements().get(0).setCoord(
+            new Point(snake[0].getElements().get(0).getCoord().x - snake[0].getElements().get(0).getWidth(),
+                  snake[0].getElements().get(0).getCoord().y));
+      }
 
-			@Override
-			public ACTION_TYPE getType() {
-				return ACTION_TYPE.LEFT;
-			}
-		};
-	}
+      @Override
+      public ACTION_TYPE getType() {
+        return ACTION_TYPE.LEFT;
+      }
+    };
+  }
 
-	/**
-	 * Описывает движение змейки вправо 
-	 * @return
-	 * Action
-	 */
-	public static Action getRight() {
-		return new Action() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -4971390959079220777L;
+  /**
+   * РћРїРёСЃС‹РІР°РµС‚ РґРІРёР¶РµРЅРёРµ Р·РјРµР№РєРё РІРїСЂР°РІРѕ 
+   * @return
+   * Action
+   */
+  public static Action getRight() {
+    return new Action() {
+      /**
+       * 
+       */
+      private static final long serialVersionUID = -4971390959079220777L;
 
-			@Override
-			public void doAction(Snake... snake) {
-				// Передвижение змейки на 1 клетку вправо
-				for(int i = snake[0].getElements().size() - 1; i > 0; i--)
-					// Координата текущего элемента змейки равна координате предыдущего
-					snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
-				
-				// Меняем координату головы змеи
-				snake[0].getElements().get(0).setCoord(
-						new Point(snake[0].getElements().get(0).getCoord().x + snake[0].getElements().get(0).getWidth(),
-								  snake[0].getElements().get(0).getCoord().y));
-			}
+      @Override
+      public void doAction(Snake... snake) {
+        // РџРµСЂРµРґРІРёР¶РµРЅРёРµ Р·РјРµР№РєРё РЅР° 1 РєР»РµС‚РєСѓ РІРїСЂР°РІРѕ
+        for(int i = snake[0].getElements().size() - 1; i > 0; i--)
+          // РљРѕРѕСЂРґРёРЅР°С‚Р° С‚РµРєСѓС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° Р·РјРµР№РєРё СЂР°РІРЅР° РєРѕРѕСЂРґРёРЅР°С‚Рµ РїСЂРµРґС‹РґСѓС‰РµРіРѕ
+          snake[0].getElements().get(i).setCoord(snake[0].getElements().get(i - 1).getCoord());
+        
+        // РњРµРЅСЏРµРј РєРѕРѕСЂРґРёРЅР°С‚Сѓ РіРѕР»РѕРІС‹ Р·РјРµРё
+        snake[0].getElements().get(0).setCoord(
+            new Point(snake[0].getElements().get(0).getCoord().x + snake[0].getElements().get(0).getWidth(),
+                  snake[0].getElements().get(0).getCoord().y));
+      }
 
-			@Override
-			public ACTION_TYPE getType() {
-				return ACTION_TYPE.RIGHT;
-			}
-		};
-	}
+      @Override
+      public ACTION_TYPE getType() {
+        return ACTION_TYPE.RIGHT;
+      }
+    };
+  }
 
-	/**
-	 * Описывает действие змейки - поедание змейкой snake[0] хвоста змейки snake[1] 
-	 * @return
-	 * Action
-	 */
-	public static Action getEatTail() {
-		return new Action() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 5108913997649018894L;
+  /**
+   * РћРїРёСЃС‹РІР°РµС‚ РґРµР№СЃС‚РІРёРµ Р·РјРµР№РєРё - РїРѕРµРґР°РЅРёРµ Р·РјРµР№РєРѕР№ snake[0] С…РІРѕСЃС‚Р° Р·РјРµР№РєРё snake[1] 
+   * @return
+   * Action
+   */
+  public static Action getEatTail() {
+    return new Action() {
+      /**
+       * 
+       */
+      private static final long serialVersionUID = 5108913997649018894L;
 
-			@Override
-			public void doAction(Snake... snake) {				
-				/* Рост размеров 0-ой змейки */
-				// Увеличение количества элементов змейки
-				Element el = new Element(PARTS.BODY, null,
-								  snake[0].getElements().get(1).getWidth(),
-								  snake[0].getElements().get(1).getHeight(),
-								  snake[0]);
-				// Явно задаёт необходимые координаты для нового элемента змейки
-				el.setCoord(new Point(snake[0].getElements().get(0).getCoord().x,
-								  	  snake[0].getElements().get(0).getCoord().y));
+      @Override
+      public void doAction(Snake... snake) {				
+        /* Р РѕСЃС‚ СЂР°Р·РјРµСЂРѕРІ 0-РѕР№ Р·РјРµР№РєРё */
+        // РЈРІРµР»РёС‡РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° СЌР»РµРјРµРЅС‚РѕРІ Р·РјРµР№РєРё
+        Element el = new Element(PARTS.BODY, null,
+                  snake[0].getElements().get(1).getWidth(),
+                  snake[0].getElements().get(1).getHeight(),
+                  snake[0]);
+        // РЇРІРЅРѕ Р·Р°РґР°С‘С‚ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ РґР»СЏ РЅРѕРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р° Р·РјРµР№РєРё
+        el.setCoord(new Point(snake[0].getElements().get(0).getCoord().x,
+                  	  snake[0].getElements().get(0).getCoord().y));
 
-				// Задание нового положения головы = хвост поедаемой змейки
-				snake[0].getElements().get(0).setCoord(
-						new Point(snake[1].getElements().get(snake[1].getElements().size() - 1).getCoord().x,
-								  snake[1].getElements().get(snake[1].getElements().size() - 1).getCoord().y));
+        // Р—Р°РґР°РЅРёРµ РЅРѕРІРѕРіРѕ РїРѕР»РѕР¶РµРЅРёСЏ РіРѕР»РѕРІС‹ = С…РІРѕСЃС‚ РїРѕРµРґР°РµРјРѕР№ Р·РјРµР№РєРё
+        snake[0].getElements().get(0).setCoord(
+            new Point(snake[1].getElements().get(snake[1].getElements().size() - 1).getCoord().x,
+                  snake[1].getElements().get(snake[1].getElements().size() - 1).getCoord().y));
 
-				/* Сокращение размеров 1-ой змейки */
-				// Изменение координат хвоста
-				snake[1].getElements().get(snake[1].getElements().size() - 1).setCoord(
-						new Point(snake[1].getElements().get(snake[1].getElements().size() - 2).getCoord().x,
-								  snake[1].getElements().get(snake[1].getElements().size() - 2).getCoord().y));
+        /* РЎРѕРєСЂР°С‰РµРЅРёРµ СЂР°Р·РјРµСЂРѕРІ 1-РѕР№ Р·РјРµР№РєРё */
+        // РР·РјРµРЅРµРЅРёРµ РєРѕРѕСЂРґРёРЅР°С‚ С…РІРѕСЃС‚Р°
+        snake[1].getElements().get(snake[1].getElements().size() - 1).setCoord(
+            new Point(snake[1].getElements().get(snake[1].getElements().size() - 2).getCoord().x,
+                  snake[1].getElements().get(snake[1].getElements().size() - 2).getCoord().y));
 
-				// Уменьшение количества элементов змейки 1
-				snake[1].getElements().remove(snake[1].getElements().size() - 2);
-				// Если остался всего 1 элемент - доъесть полностью
-				if (snake[1].getElements().size() == 1)
-					snake[1].getElements().remove(0);
-				
-				// Добавляет новый элемент в змейку 0
-				snake[0].getElements().add(1, el);
-				}
+        // РЈРјРµРЅСЊС€РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° СЌР»РµРјРµРЅС‚РѕРІ Р·РјРµР№РєРё 1
+        snake[1].getElements().remove(snake[1].getElements().size() - 2);
+        // Р•СЃР»Рё РѕСЃС‚Р°Р»СЃСЏ РІСЃРµРіРѕ 1 СЌР»РµРјРµРЅС‚ - РґРѕСЉРµСЃС‚СЊ РїРѕР»РЅРѕСЃС‚СЊСЋ
+        if (snake[1].getElements().size() == 1)
+          snake[1].getElements().remove(0);
+        
+        // Р”РѕР±Р°РІР»СЏРµС‚ РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ РІ Р·РјРµР№РєСѓ 0
+        snake[0].getElements().add(1, el);
+        }
 
-			@Override
-			public ACTION_TYPE getType() {
-				return ACTION_TYPE.EAT_TAIL;
-			}
-		};
-	}
-	
-	/**
-	 * Описывает действие змейки - простой (ход невозможен) 
-	 * @return
-	 * Action
-	 */
-	public static Action getInDeadlock() {
-		return new Action() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -3369284277823385855L;
+      @Override
+      public ACTION_TYPE getType() {
+        return ACTION_TYPE.EAT_TAIL;
+      }
+    };
+  }
+  
+  /**
+   * РћРїРёСЃС‹РІР°РµС‚ РґРµР№СЃС‚РІРёРµ Р·РјРµР№РєРё - РїСЂРѕСЃС‚РѕР№ (С…РѕРґ РЅРµРІРѕР·РјРѕР¶РµРЅ) 
+   * @return
+   * Action
+   */
+  public static Action getInDeadlock() {
+    return new Action() {
+      /**
+       * 
+       */
+      private static final long serialVersionUID = -3369284277823385855L;
 
-			@Override
-			public void doAction(Snake... snake) {
-			}
+      @Override
+      public void doAction(Snake... snake) {
+      }
 
-			@Override
-			public ACTION_TYPE getType() {
-				return ACTION_TYPE.IN_DEAD_LOCK;
-			}
-		};
-	}
-	
-	/**
-	 * Описывает действие змейки - побег с поля боя
-	 * @return
-	 * Action
-	 */
-	public static Action getLeaveBattle() {
-		return new Action() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -4216255007609930437L;
+      @Override
+      public ACTION_TYPE getType() {
+        return ACTION_TYPE.IN_DEAD_LOCK;
+      }
+    };
+  }
+  
+  /**
+   * РћРїРёСЃС‹РІР°РµС‚ РґРµР№СЃС‚РІРёРµ Р·РјРµР№РєРё - РїРѕР±РµРі СЃ РїРѕР»СЏ Р±РѕСЏ
+   * @return
+   * Action
+   */
+  public static Action getLeaveBattle() {
+    return new Action() {
+      /**
+       * 
+       */
+      private static final long serialVersionUID = -4216255007609930437L;
 
-			@Override
-			public void doAction(Snake... snake) {
-			}
+      @Override
+      public void doAction(Snake... snake) {
+      }
 
-			@Override
-			public ACTION_TYPE getType() {
-				return ACTION_TYPE.LEAVE_BATTLE;
-			}
-		};
-	}
-	
-	/**
-	 * Возвращает действие по введённой команде
-	 * @param command
-	 * @return Action
-	 */
-	public static Action getValue(String command){
-		switch (command) {
-		case "getUp":
-			return getUp();
-		case "getDown":
-			return getDown();
-		case "getLeft":
-			return getLeft();
-		case "getRight":
-			return getRight();
-		case "getEatTail":
-			return getEatTail();
-		case "getInDeadLock":
-			return getInDeadlock();
-		case "getLeaveBattle":
-			return getLeaveBattle();
-		default: return getInDeadlock();
-		}
-	}
+      @Override
+      public ACTION_TYPE getType() {
+        return ACTION_TYPE.LEAVE_BATTLE;
+      }
+    };
+  }
+  
+  /**
+   * Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµР№СЃС‚РІРёРµ РїРѕ РІРІРµРґС‘РЅРЅРѕР№ РєРѕРјР°РЅРґРµ
+   * @param command
+   * @return Action
+   */
+  public static Action getValue(String command){
+    switch (command) {
+    case "getUp":
+      return getUp();
+    case "getDown":
+      return getDown();
+    case "getLeft":
+      return getLeft();
+    case "getRight":
+      return getRight();
+    case "getEatTail":
+      return getEatTail();
+    case "getInDeadLock":
+      return getInDeadlock();
+    case "getLeaveBattle":
+      return getLeaveBattle();
+    default: return getInDeadlock();
+    }
+  }
 }

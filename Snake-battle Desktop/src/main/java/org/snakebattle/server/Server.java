@@ -38,433 +38,433 @@ import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 public class Server {
 
-	public static ServerSocket sServer; // Серверный сокет
-	private static int port = 65535; // Прослушиваемый порт
-	private static Vector<ClientSnake> plsnakes = null;
+  public static ServerSocket sServer; // РЎРµСЂРІРµСЂРЅС‹Р№ СЃРѕРєРµС‚
+  private static int port = 65535; // РџСЂРѕСЃР»СѓС€РёРІР°РµРјС‹Р№ РїРѕСЂС‚
+  private static Vector<ClientSnake> plsnakes = null;
 
-	private static final int MAX_PLAYERS = 4;
+  private static final int MAX_PLAYERS = 4;
 
-	/**
-	 * Проводит инициализацию GUI (Окно игры, меню, непосредственное поле битвы)
-	 * 
-	 * @param mapName
-	 * @throws InterruptedException
-	 * @throws MapAlreadyExistException
-	 * @throws MapNotExistException
-	 * @throws ObjectAlreadyAddedException
-	 */
-	public static void initInterface(String mapName)
-			throws InterruptedException, MapAlreadyExistException,
-			MapNotExistException, ObjectAlreadyAddedException {
-		// Еси графика была выключена - включить
-		if (!Screen.GRAPHICS_ON)
-			Screen.GRAPHICS_ON = true;
+  /**
+   * РџСЂРѕРІРѕРґРёС‚ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ GUI (РћРєРЅРѕ РёРіСЂС‹, РјРµРЅСЋ, РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕРµ РїРѕР»Рµ Р±РёС‚РІС‹)
+   * 
+   * @param mapName
+   * @throws InterruptedException
+   * @throws MapAlreadyExistException
+   * @throws MapNotExistException
+   * @throws ObjectAlreadyAddedException
+   */
+  public static void initInterface(String mapName)
+      throws InterruptedException, MapAlreadyExistException,
+      MapNotExistException, ObjectAlreadyAddedException {
+    // Р•СЃРё РіСЂР°С„РёРєР° Р±С‹Р»Р° РІС‹РєР»СЋС‡РµРЅР° - РІРєР»СЋС‡РёС‚СЊ
+    if (!Screen.GRAPHICS_ON)
+      Screen.GRAPHICS_ON = true;
 
-		// Инициализация и отображение GUI
-		new Screen();
+    // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Рё РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ GUI
+    new Screen();
 
-		// Размеры экрана (для отрисовки границ)
-		int width = Screen.instance.getWidth(), height = Screen.instance
-				.getHeight();
+    // Р Р°Р·РјРµСЂС‹ СЌРєСЂР°РЅР° (РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё РіСЂР°РЅРёС†)
+    int width = Screen.instance.getWidth(), height = Screen.instance
+        .getHeight();
 
-		// Ожидание возможности отрисовки
-		while (!Screen.instance.canDraw())
-			Thread.sleep(100);
+    // РћР¶РёРґР°РЅРёРµ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РѕС‚СЂРёСЃРѕРІРєРё
+    while (!Screen.instance.canDraw())
+      Thread.sleep(100);
 
-		// Регистрация указанной карты и её выбор для битвы
-		BattleMap battleMap = BattleMapUtils.registerMap(new BattleMap(mapName));
-		// battleMap = BattleMapUtils.selectMap(mapName);
-		// Задание границ игровой карты
-		battleMap.setBorder(width, height);
-	}
+    // Р РµРіРёСЃС‚СЂР°С†РёСЏ СѓРєР°Р·Р°РЅРЅРѕР№ РєР°СЂС‚С‹ Рё РµС‘ РІС‹Р±РѕСЂ РґР»СЏ Р±РёС‚РІС‹
+    BattleMap battleMap = BattleMapUtils.registerMap(new BattleMap(mapName));
+    // battleMap = BattleMapUtils.selectMap(mapName);
+    // Р—Р°РґР°РЅРёРµ РіСЂР°РЅРёС† РёРіСЂРѕРІРѕР№ РєР°СЂС‚С‹
+    battleMap.setBorder(width, height);
+  }
 
-	/**
-	 * Описывает действия, необходимые для воспроизведения битвы на клиенте
-	 * 
-	 * @throws ObjectAlreadyAddedException
-	 * @throws MapNotExistException
-	 * @throws MapAlreadyExistException
-	 * @throws InterruptedException
-	 */
-	private static void playBattle(BattleMap battleMap, Snake[] snakes,
-			List<ActionList> actions) throws InterruptedException,
-			MapAlreadyExistException, MapNotExistException,
-			ObjectAlreadyAddedException {
+  /**
+   * РћРїРёСЃС‹РІР°РµС‚ РґРµР№СЃС‚РІРёСЏ, РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ РІРѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёСЏ Р±РёС‚РІС‹ РЅР° РєР»РёРµРЅС‚Рµ
+   * 
+   * @throws ObjectAlreadyAddedException
+   * @throws MapNotExistException
+   * @throws MapAlreadyExistException
+   * @throws InterruptedException
+   */
+  private static void playBattle(BattleMap battleMap, Snake[] snakes,
+      List<ActionList> actions) throws InterruptedException,
+      MapAlreadyExistException, MapNotExistException,
+      ObjectAlreadyAddedException {
 
-		initInterface(battleMap.getName()); // Инициализирует интерфейс
+    initInterface(battleMap.getName()); // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РёРЅС‚РµСЂС„РµР№СЃ
 
-		Battle battle = new Battle();
-		/*
-		 * BattleMapUtils.removeMap(battleMap); BattleMapUtils.registerMap(new
-		 * BattleMap(message.getMap().getName()));
-		 */
-		battle.init(battleMap.getName(), snakes); // Инициализирует битву
+    Battle battle = new Battle();
+    /*
+     * BattleMapUtils.removeMap(battleMap); BattleMapUtils.registerMap(new
+     * BattleMap(message.getMap().getName()));
+     */
+    battle.init(battleMap.getName(), snakes); // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ Р±РёС‚РІСѓ
 
-		// Змейки на поле боя
-		for (int i = 0; i < snakes.length; i++)
-			battleMap.putSnake(snakes[i]);
-		// Змейки уже добавлены в
-		// .BattleInit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// Добавление в BattleInit отменено
+    // Р—РјРµР№РєРё РЅР° РїРѕР»Рµ Р±РѕСЏ
+    for (int i = 0; i < snakes.length; i++)
+      battleMap.putSnake(snakes[i]);
+    // Р—РјРµР№РєРё СѓР¶Рµ РґРѕР±Р°РІР»РµРЅС‹ РІ
+    // .BattleInit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Р”РѕР±Р°РІР»РµРЅРёРµ РІ BattleInit РѕС‚РјРµРЅРµРЅРѕ
 
-		battleMap.drawAll();
+    battleMap.drawAll();
 
-		int waitTime = 50;
-		while (Screen.instance.canDraw())
-			for (ActionList al : actions) {
-				long timeold = System.currentTimeMillis();
-				al.action.doAction(al.param);
-				battleMap.drawAll();
-				long timenow = System.currentTimeMillis() - timeold;
-				if (waitTime - timenow > 0)
-					Thread.sleep(waitTime - timenow);
-			}
-	}
+    int waitTime = 50;
+    while (Screen.instance.canDraw())
+      for (ActionList al : actions) {
+        long timeold = System.currentTimeMillis();
+        al.action.doAction(al.param);
+        battleMap.drawAll();
+        long timenow = System.currentTimeMillis() - timeold;
+        if (waitTime - timenow > 0)
+          Thread.sleep(waitTime - timenow);
+      }
+  }
 
-	public static void main(String[] args) throws IOException {
-		byte connected = 0; // Количество подключенных клиентов
+  public static void main(String[] args) throws IOException {
+    byte connected = 0; // РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРґРєР»СЋС‡РµРЅРЅС‹С… РєР»РёРµРЅС‚РѕРІ
 
-		sServer = new ServerSocket(port);
+    sServer = new ServerSocket(port);
 
-		plsnakes = new Vector<ClientSnake>();
+    plsnakes = new Vector<ClientSnake>();
 
-		System.out.println("Server Started");
-		try {
-			serverSocket: while (!sServer.isClosed()) {
-				Thread.sleep(10);
-				System.out.println("[SERVER]: Waiting for a org.snakebattle.client...");
+    System.out.println("Server Started");
+    try {
+      serverSocket: while (!sServer.isClosed()) {
+        Thread.sleep(10);
+        System.out.println("[SERVER]: Waiting for a org.snakebattle.client...");
 
-				Socket sClient = sServer.accept();
-				System.out.println("[SERVER]: Client connected: "
-						+ sClient.getInetAddress());
-				int id = new Random(System.currentTimeMillis())
-						.nextInt(Integer.MAX_VALUE);
-				ServerOneThread sot = new ServerOneThread(sClient, id);
-				Snake sn = (Snake) sot.getSnake();// .clone();
+        Socket sClient = sServer.accept();
+        System.out.println("[SERVER]: Client connected: "
+            + sClient.getInetAddress());
+        int id = new Random(System.currentTimeMillis())
+            .nextInt(Integer.MAX_VALUE);
+        ServerOneThread sot = new ServerOneThread(sClient, id);
+        Snake sn = (Snake) sot.getSnake();// .clone();
 
-				plsnakes.add(new ClientSnake(id, sn, sot));
+        plsnakes.add(new ClientSnake(id, sn, sot));
 
-				if (plsnakes.size() >= MAX_PLAYERS) {
-					int battleId = new Random(System.currentTimeMillis())
-							.nextInt(Integer.MAX_VALUE);
-					System.out.println("Start battle[" + battleId + "]!");
-					// заполнение арены игроками
-					Vector<ClientSnake> players = new Vector<ClientSnake>();
-					Snake[] snakes = new Snake[MAX_PLAYERS];
-					for (int i = 0; i < MAX_PLAYERS; i++) {
-						if (plsnakes.get(0).sot.sClient.isClosed()) {
-							for (int j = 0; j < players.size(); j++) {
-								plsnakes.add(players.get(j));
-							}
-							continue serverSocket;
-						}
-						players.add(plsnakes.get(0));
-						snakes[i] = plsnakes.get(0).snake;
-						plsnakes.remove(0);
-					}
+        if (plsnakes.size() >= MAX_PLAYERS) {
+          int battleId = new Random(System.currentTimeMillis())
+              .nextInt(Integer.MAX_VALUE);
+          System.out.println("Start battle[" + battleId + "]!");
+          // Р·Р°РїРѕР»РЅРµРЅРёРµ Р°СЂРµРЅС‹ РёРіСЂРѕРєР°РјРё
+          Vector<ClientSnake> players = new Vector<ClientSnake>();
+          Snake[] snakes = new Snake[MAX_PLAYERS];
+          for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (plsnakes.get(0).sot.sClient.isClosed()) {
+              for (int j = 0; j < players.size(); j++) {
+                plsnakes.add(players.get(j));
+              }
+              continue serverSocket;
+            }
+            players.add(plsnakes.get(0));
+            snakes[i] = plsnakes.get(0).snake;
+            plsnakes.remove(0);
+          }
 
-					new Thread() {
-						Snake[] snakes = null;
-						Vector<ClientSnake> players = null;
+          new Thread() {
+            Snake[] snakes = null;
+            Vector<ClientSnake> players = null;
 
-						public void start(Snake[] snakes,
-								Vector<ClientSnake> players) {
-							this.snakes = snakes;
-							this.players = players;
-							super.start();
-						}
+            public void start(Snake[] snakes,
+                Vector<ClientSnake> players) {
+              this.snakes = snakes;
+              this.players = players;
+              super.start();
+            }
 
-						public void run() { // старт битвы
-							// Инициализация
-							Battle battle = new Battle();
-							// Snake[] snakes = battle.snake_fill();
-							try {
-								BattleMap battleMap = null;
-								// Создание экрана, на котором будут происходить
-								// все действия змеек
-								new Screen(new EmptyScreen());
-								/** Блок из тестовой функции */
-								try {
-									// Инициализация карты, змеек
-									battle.init("serverMap", snakes);
-									battleMap = BattleMapUtils.selectMap("serverMap");
-									for (int i = 0; i < snakes.length; i++) {
-										battleMap.putSnake(snakes[i]);
-									}
-									battleMap.setBorder(800, 600);
-								} catch (MapAlreadyExistException
-										| MapNotExistException
-										| ObjectAlreadyAddedException e) {
-									e.printStackTrace();
-								}
-								List<ActionList> al = battle.battleCalc(snakes);
-								System.out.println("[SERVER]: Battle end");
+            public void run() { // СЃС‚Р°СЂС‚ Р±РёС‚РІС‹
+              // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
+              Battle battle = new Battle();
+              // Snake[] snakes = battle.snake_fill();
+              try {
+                BattleMap battleMap = null;
+                // РЎРѕР·РґР°РЅРёРµ СЌРєСЂР°РЅР°, РЅР° РєРѕС‚РѕСЂРѕРј Р±СѓРґСѓС‚ РїСЂРѕРёСЃС…РѕРґРёС‚СЊ
+                // РІСЃРµ РґРµР№СЃС‚РІРёСЏ Р·РјРµРµРє
+                new Screen(new EmptyScreen());
+                /** Р‘Р»РѕРє РёР· С‚РµСЃС‚РѕРІРѕР№ С„СѓРЅРєС†РёРё */
+                try {
+                  // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєР°СЂС‚С‹, Р·РјРµРµРє
+                  battle.init("serverMap", snakes);
+                  battleMap = BattleMapUtils.selectMap("serverMap");
+                  for (int i = 0; i < snakes.length; i++) {
+                    battleMap.putSnake(snakes[i]);
+                  }
+                  battleMap.setBorder(800, 600);
+                } catch (MapAlreadyExistException
+                    | MapNotExistException
+                    | ObjectAlreadyAddedException e) {
+                  e.printStackTrace();
+                }
+                List<ActionList> al = battle.battleCalc(snakes);
+                System.out.println("[SERVER]: Battle end");
 
-								
-								//==================================================
-								//===================ВЫВОД==========================
-								battleMap = new BattleMap("ServerMap");
-								HashSet<Snake> hs = new HashSet<>();
-								for (int i = 0; i < al.size(); i++) {
-									for (int j = 0; j < al.get(i).param.length; j++) {
-										hs.add(al.get(i).param[j]);
-									}
-								}
-								Snake[] snakesDraw = new Snake[hs.size()];
-								Iterator<Snake> it = hs.iterator();
-								int pos = 0;
-								while (it.hasNext()) {
-									snakesDraw[pos] = it.next();
-									pos++;
-								}
+                
+                //==================================================
+                //===================Р’Р«Р’РћР”==========================
+                battleMap = new BattleMap("ServerMap");
+                HashSet<Snake> hs = new HashSet<>();
+                for (int i = 0; i < al.size(); i++) {
+                  for (int j = 0; j < al.get(i).param.length; j++) {
+                    hs.add(al.get(i).param[j]);
+                  }
+                }
+                Snake[] snakesDraw = new Snake[hs.size()];
+                Iterator<Snake> it = hs.iterator();
+                int pos = 0;
+                while (it.hasNext()) {
+                  snakesDraw[pos] = it.next();
+                  pos++;
+                }
 
-								for (int i = 0; i < snakes.length; i++) {
-									snakesDraw[i].setMind(snakes[i].getMind());
-								}
-								Screen.instance = null;
-								new Screen(new SwingScreen());
-								Screen.GRAPHICS_ON = true;
-								// initInterface("ServerMap");
-								while (!Screen.instance.canDraw())
-									Thread.sleep(100);
-								// ===Проиграть битву=== \\
-								playBattle(battleMap, snakesDraw, al);								
+                for (int i = 0; i < snakes.length; i++) {
+                  snakesDraw[i].setMind(snakes[i].getMind());
+                }
+                Screen.instance = null;
+                new Screen(new SwingScreen());
+                Screen.GRAPHICS_ON = true;
+                // initInterface("ServerMap");
+                while (!Screen.instance.canDraw())
+                  Thread.sleep(100);
+                // ===РџСЂРѕРёРіСЂР°С‚СЊ Р±РёС‚РІСѓ=== \\
+                playBattle(battleMap, snakesDraw, al);								
 
-								// Передача битвы на клиент
-								System.out.println("[SERVER]: Sending ActionList");
-								for (int i = 0; i < players.size(); i++) {
-									/*
-									 * players.get(i).sot.sendObject(Commands.actions);
-									 * Message mes = new Message(battleMap, snakes, al);
-									 * players.get(i).sot.sendObject(mes);
-									 */
-								}
-								System.out.println("[SERVER]: Send successful");
-								/*
-								 * ois = new ObjectInputStream(is); //
-								 * Инициализация // входящего // потока объекта
-								 * // oos = new ObjectOutputStream(os); //
-								 * Инициализация // исходящего // потока объекта
-								 * 
-								 * // Инициализация передаваемого сообщения
-								 * message = new Message(battleMap, snakes, al);
-								 * System
-								 * .out.println("[SERVER]: Message created"); //
-								 * Передача сообщения на клиент
-								 * sendObject(sClient, message);
-								 * System.out.println
-								 * ("[SERVER]: Message sended");
-								 * 
-								 * sClient.close();
-								 * System.out.println("[SERVER]: Sockets closed"
-								 * );
-								 */
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						};
-					}.start(snakes, players);
-				}
-			}
-		} catch (IOException | InterruptedException e) {
-			System.out.println("[SERVER]: Can't accept");
-			System.exit(-1);
-		} finally {
-			sServer.close();
-		}
-	}
+                // РџРµСЂРµРґР°С‡Р° Р±РёС‚РІС‹ РЅР° РєР»РёРµРЅС‚
+                System.out.println("[SERVER]: Sending ActionList");
+                for (int i = 0; i < players.size(); i++) {
+                  /*
+                   * players.get(i).sot.sendObject(Commands.actions);
+                   * Message mes = new Message(battleMap, snakes, al);
+                   * players.get(i).sot.sendObject(mes);
+                   */
+                }
+                System.out.println("[SERVER]: Send successful");
+                /*
+                 * ois = new ObjectInputStream(is); //
+                 * РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ // РІС…РѕРґСЏС‰РµРіРѕ // РїРѕС‚РѕРєР° РѕР±СЉРµРєС‚Р°
+                 * // oos = new ObjectOutputStream(os); //
+                 * РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ // РёСЃС…РѕРґСЏС‰РµРіРѕ // РїРѕС‚РѕРєР° РѕР±СЉРµРєС‚Р°
+                 * 
+                 * // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїРµСЂРµРґР°РІР°РµРјРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
+                 * message = new Message(battleMap, snakes, al);
+                 * System
+                 * .out.println("[SERVER]: Message created"); //
+                 * РџРµСЂРµРґР°С‡Р° СЃРѕРѕР±С‰РµРЅРёСЏ РЅР° РєР»РёРµРЅС‚
+                 * sendObject(sClient, message);
+                 * System.out.println
+                 * ("[SERVER]: Message sended");
+                 * 
+                 * sClient.close();
+                 * System.out.println("[SERVER]: Sockets closed"
+                 * );
+                 */
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            };
+          }.start(snakes, players);
+        }
+      }
+    } catch (IOException | InterruptedException e) {
+      System.out.println("[SERVER]: Can't accept");
+      System.exit(-1);
+    } finally {
+      sServer.close();
+    }
+  }
 }
 
 class ClientSnake {
-	public ClientSnake(int id2, Snake sn, ServerOneThread sot) {
-		id = id2;
-		snake = sn;
-		this.sot = sot;
-	}
+  public ClientSnake(int id2, Snake sn, ServerOneThread sot) {
+    id = id2;
+    snake = sn;
+    this.sot = sot;
+  }
 
-	public int id = 0;
-	public Snake snake = null;
-	public ServerOneThread sot = null;
+  public int id = 0;
+  public Snake snake = null;
+  public ServerOneThread sot = null;
 
 }
 
 class ServerOneThread extends Thread {
-	public Socket sClient; // Клиентский сокет
-	public PrintWriter out;
-	public BufferedReader in;
-	// public ObjectInputStream ois; // Объект входящего потока объекта
-	// public ObjectOutputStream oos; // Объект исходящего потока объекта
+  public Socket sClient; // РљР»РёРµРЅС‚СЃРєРёР№ СЃРѕРєРµС‚
+  public PrintWriter out;
+  public BufferedReader in;
+  // public ObjectInputStream ois; // РћР±СЉРµРєС‚ РІС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР° РѕР±СЉРµРєС‚Р°
+  // public ObjectOutputStream oos; // РћР±СЉРµРєС‚ РёСЃС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР° РѕР±СЉРµРєС‚Р°
 
-	private Snake sn = null;
+  private Snake sn = null;
 
-	private Message message = null; // Сообщение, получаемое от сервера
-	private static Battle battle = null; // Объект класса Battle для обсчёта
-											// результата битвы
-	private static Snake[] snakes = null; // Змейки клиентов, учавствующие в
-											// битве
-	private static BattleMap battleMap = null; // Карта, на которой проводится битва
+  private Message message = null; // РЎРѕРѕР±С‰РµРЅРёРµ, РїРѕР»СѓС‡Р°РµРјРѕРµ РѕС‚ СЃРµСЂРІРµСЂР°
+  private static Battle battle = null; // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° Battle РґР»СЏ РѕР±СЃС‡С‘С‚Р°
+                      // СЂРµР·СѓР»СЊС‚Р°С‚Р° Р±РёС‚РІС‹
+  private static Snake[] snakes = null; // Р—РјРµР№РєРё РєР»РёРµРЅС‚РѕРІ, СѓС‡Р°РІСЃС‚РІСѓСЋС‰РёРµ РІ
+                      // Р±РёС‚РІРµ
+  private static BattleMap battleMap = null; // РљР°СЂС‚Р°, РЅР° РєРѕС‚РѕСЂРѕР№ РїСЂРѕРІРѕРґРёС‚СЃСЏ Р±РёС‚РІР°
 
-	public ServerOneThread(Socket client, int id) throws IOException {
-		sClient = client;
-		sn = new Snake();
-		start();
-	}
+  public ServerOneThread(Socket client, int id) throws IOException {
+    sClient = client;
+    sn = new Snake();
+    start();
+  }
 
-	/** Описывает поток сервера */
-	public void run() {
-		try {
-			System.out.println("[SERVER]: init streams");
-			in = new BufferedReader(new InputStreamReader(
-					sClient.getInputStream()));
-			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-					sClient.getOutputStream())), true);
-			// oos = new ObjectOutputStream(os);
+  /** РћРїРёСЃС‹РІР°РµС‚ РїРѕС‚РѕРє СЃРµСЂРІРµСЂР° */
+  public void run() {
+    try {
+      System.out.println("[SERVER]: init streams");
+      in = new BufferedReader(new InputStreamReader(
+          sClient.getInputStream()));
+      out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+          sClient.getOutputStream())), true);
+      // oos = new ObjectOutputStream(os);
 
-			// System.out.println("[SERVER]: send command: [" +
-			// 					   Commands.getSnake + "]");
+      // System.out.println("[SERVER]: send command: [" +
+      // 					   Commands.getSnake + "]");
 
-			// send(Commands.getSnake);
+      // send(Commands.getSnake);
 
-			// System.out.print("[SERVER]: get snake: ");
-			sn = new Snake();
+      // System.out.print("[SERVER]: get snake: ");
+      sn = new Snake();
 
-			String command = "";
-			// get color, name ...
-			// =================
-			// ....some code....
-			// =================
+      String command = "";
+      // get color, name ...
+      // =================
+      // ....some code....
+      // =================
 
-			// get mind
-			// =================
-			command = "";
-			sleep(100);
-			
-			System.out.println("[SERVER]: send command [" + Commands.GET_MIND + "]");
-			send(Commands.GET_MIND);
-			Mind mind = sn.getMind();
+      // get mind
+      // =================
+      command = "";
+      sleep(100);
+      
+      System.out.println("[SERVER]: send command [" + Commands.GET_MIND + "]");
+      send(Commands.GET_MIND);
+      Mind mind = sn.getMind();
 
-			String line = receive(); // line вида "1.2.3.ENEMY.AND.BODY.RED",
-										// где 1 - номер мозга,
-										// 2 и 3 - координаты , AND -
-										// логический модификатор,
-										// BODY - название элемента
-			while (!line.equals(Commands.END_SENDING)) {
-				System.out.println("[SERVER] receive message: " + line);
-				String[] lines = line.split("\\.");
-				MindMap mm1 = mind.getMindMap(Integer.valueOf(lines[0]));
-				MindPolyGraph mpg = new MindPolyGraph(new Point(),
-						Commands.MAX_W, Commands.MAX_W);
-				mpg.setOwner(OWNER_TYPES.valueOf(lines[3]));
-				mpg.setLogic(LOGIC_TYPES.valueOf(lines[4]));
-				Graph gr = null;
-				switch (lines[5]) {
-				case "HEAD":
-					gr = new Element(PARTS.HEAD, new Point(), Commands.MAX_W,
-							Commands.MAX_W, null);
-					break;
-				case "BODY":
-					gr = new Element(PARTS.BODY, new Point(), Commands.MAX_W,
-							Commands.MAX_W, null);
-					break;
-				case "TAIL":
-					gr = new Element(PARTS.TAIL, new Point(), Commands.MAX_W,
-							Commands.MAX_W, null);
-					break;
+      String line = receive(); // line РІРёРґР° "1.2.3.ENEMY.AND.BODY.RED",
+                    // РіРґРµ 1 - РЅРѕРјРµСЂ РјРѕР·РіР°,
+                    // 2 Рё 3 - РєРѕРѕСЂРґРёРЅР°С‚С‹ , AND -
+                    // Р»РѕРіРёС‡РµСЃРєРёР№ РјРѕРґРёС„РёРєР°С‚РѕСЂ,
+                    // BODY - РЅР°Р·РІР°РЅРёРµ СЌР»РµРјРµРЅС‚Р°
+      while (!line.equals(Commands.END_SENDING)) {
+        System.out.println("[SERVER] receive message: " + line);
+        String[] lines = line.split("\\.");
+        MindMap mm1 = mind.getMindMap(Integer.valueOf(lines[0]));
+        MindPolyGraph mpg = new MindPolyGraph(new Point(),
+            Commands.MAX_W, Commands.MAX_W);
+        mpg.setOwner(OWNER_TYPES.valueOf(lines[3]));
+        mpg.setLogic(LOGIC_TYPES.valueOf(lines[4]));
+        Graph gr = null;
+        switch (lines[5]) {
+        case "HEAD":
+          gr = new Element(PARTS.HEAD, new Point(), Commands.MAX_W,
+              Commands.MAX_W, null);
+          break;
+        case "BODY":
+          gr = new Element(PARTS.BODY, new Point(), Commands.MAX_W,
+              Commands.MAX_W, null);
+          break;
+        case "TAIL":
+          gr = new Element(PARTS.TAIL, new Point(), Commands.MAX_W,
+              Commands.MAX_W, null);
+          break;
 
-				default:
-					break;
-				}
-				mpg.setValue(gr);
-				mpg.setFlags(LOGIC_FLAGS.valueOf(lines[6]));
-				mm1.setAt(Integer.valueOf(lines[1]), Integer.valueOf(lines[2]),
-						mpg);
-				line = receive();
-			}
-			// =================
-			
-			// [05.01.2013]
-			// Расчёт битвы и передача на клиенты её действий
-			/*sleep(100);
-			
-			System.out.println("[SERVER]: send command [" + Commands.actions + "]");
-			send(Commands.actions);
-			List<ActionList> al = null;
-			try {
-				battle.init(battleMap.getName(), snakes);
-				al = battle.battleCalc(snakes);
-			} catch (MapAlreadyExistException | MapNotExistException
-					| ObjectAlreadyAddedException e) {
-				e.printStackTrace();
-			}
-			// Формирование отправляемого сообщения
-			String message = "";
-			for(int i = 0; i < al.size(); i++)
-			{
-				// i - id действия
-				// al.get(i).action - тип действия
-				// message += "." + al.get(i).param[j] - действующие змейки
-				message += i + "." + al.get(i).action;
-				// Если действующих змеек больше 1-ой
-				for(int j = 0; j < al.get(i).param.length; j++)
-					message += "." + al.get(i).param[j];
-			}
-			
-			// Отправка сообщения
-			send(message);
-			// Завершение отправки
-			send(Commands.END_SENDING);*/
-			
-			//ActionList Action.param
-			//					{length}
-			//           id.name{.N}.sn1.....snN
-			//ACTION:    id.name.snake[.snake2]
-			// 			 1.ActionUp.1
-			// 			 2.ActionUp.2
-			// 			 3.ActionLeft.1
-			//						snake=sn[Integer.valueOf(lines[2])];
-			//			   a=ActionFactory.valueOf(lines[1]);
-			//ActionList al = new ActionList(a,snake);
-			//			 alList.add(al);
-			// [05.01.2013] \\
-			
-			//setSnake(sn);
-			while (!sClient.isClosed()) {
-				sleep(10);
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		while (!sClient.isClosed()) {
+        default:
+          break;
+        }
+        mpg.setValue(gr);
+        mpg.setFlags(LOGIC_FLAGS.valueOf(lines[6]));
+        mm1.setAt(Integer.valueOf(lines[1]), Integer.valueOf(lines[2]),
+            mpg);
+        line = receive();
+      }
+      // =================
+      
+      // [05.01.2013]
+      // Р Р°СЃС‡С‘С‚ Р±РёС‚РІС‹ Рё РїРµСЂРµРґР°С‡Р° РЅР° РєР»РёРµРЅС‚С‹ РµС‘ РґРµР№СЃС‚РІРёР№
+      /*sleep(100);
+      
+      System.out.println("[SERVER]: send command [" + Commands.actions + "]");
+      send(Commands.actions);
+      List<ActionList> al = null;
+      try {
+        battle.init(battleMap.getName(), snakes);
+        al = battle.battleCalc(snakes);
+      } catch (MapAlreadyExistException | MapNotExistException
+          | ObjectAlreadyAddedException e) {
+        e.printStackTrace();
+      }
+      // Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС‚РїСЂР°РІР»СЏРµРјРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
+      String message = "";
+      for(int i = 0; i < al.size(); i++)
+      {
+        // i - id РґРµР№СЃС‚РІРёСЏ
+        // al.get(i).action - С‚РёРї РґРµР№СЃС‚РІРёСЏ
+        // message += "." + al.get(i).param[j] - РґРµР№СЃС‚РІСѓСЋС‰РёРµ Р·РјРµР№РєРё
+        message += i + "." + al.get(i).action;
+        // Р•СЃР»Рё РґРµР№СЃС‚РІСѓСЋС‰РёС… Р·РјРµРµРє Р±РѕР»СЊС€Рµ 1-РѕР№
+        for(int j = 0; j < al.get(i).param.length; j++)
+          message += "." + al.get(i).param[j];
+      }
+      
+      // РћС‚РїСЂР°РІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ
+      send(message);
+      // Р—Р°РІРµСЂС€РµРЅРёРµ РѕС‚РїСЂР°РІРєРё
+      send(Commands.END_SENDING);*/
+      
+      //ActionList Action.param
+      //					{length}
+      //           id.name{.N}.sn1.....snN
+      //ACTION:    id.name.snake[.snake2]
+      // 			 1.ActionUp.1
+      // 			 2.ActionUp.2
+      // 			 3.ActionLeft.1
+      //						snake=sn[Integer.valueOf(lines[2])];
+      //			   a=ActionFactory.valueOf(lines[1]);
+      //ActionList al = new ActionList(a,snake);
+      //			 alList.add(al);
+      // [05.01.2013] \\
+      
+      //setSnake(sn);
+      while (!sClient.isClosed()) {
+        sleep(10);
+      }
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    while (!sClient.isClosed()) {
 
-		}
-	}
+    }
+  }
 
-	public synchronized String receive() {
-		try {
-			return in.readLine();
-		} catch (Exception ex) {
-			System.out.println("[SERVER]: Exception during send: " + ex);
-			System.exit(0);
-		}
-		return "";
-	}
+  public synchronized String receive() {
+    try {
+      return in.readLine();
+    } catch (Exception ex) {
+      System.out.println("[SERVER]: Exception during send: " + ex);
+      System.exit(0);
+    }
+    return "";
+  }
 
-	public synchronized void send(String message) {
-		try {
-			out.println(message);
-		} catch (Exception ex) {
-			System.out.println("[SERVER]: Exception during send: " + ex);
-			System.exit(0);
-		}
-	}
+  public synchronized void send(String message) {
+    try {
+      out.println(message);
+    } catch (Exception ex) {
+      System.out.println("[SERVER]: Exception during send: " + ex);
+      System.exit(0);
+    }
+  }
 
-	public Snake getSnake() {
-		return sn;
-	}
+  public Snake getSnake() {
+    return sn;
+  }
 
-	public void setSnake(Snake snake) {
-		this.sn = snake;
-	}
+  public void setSnake(Snake snake) {
+    this.sn = snake;
+  }
 }

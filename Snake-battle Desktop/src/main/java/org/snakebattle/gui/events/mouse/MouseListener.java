@@ -5,14 +5,14 @@ import java.awt.Point;
 import org.snakebattle.gui.events.EventListener;
 
 public interface MouseListener extends EventListener{
-	/**
-	 * Передается координата, куда реально было нажатие, т.е. координата на всем экране
-	 * @param p
-	 */
-	void onMouseClick(Point p);
-	
-	void onMouseMove(Point p);
-	
-	void onMouseEnter(Point p);
-	void onMouseLeave(Point p);
+  /**
+   * РџРµСЂРµРґР°РµС‚СЃСЏ РєРѕРѕСЂРґРёРЅР°С‚Р°, РєСѓРґР° СЂРµР°Р»СЊРЅРѕ Р±С‹Р»Рѕ РЅР°Р¶Р°С‚РёРµ, С‚.Рµ. РєРѕРѕСЂРґРёРЅР°С‚Р° РЅР° РІСЃРµРј СЌРєСЂР°РЅРµ
+   * @param p
+   */
+  void onMouseClick(Point p);
+  
+  void onMouseMove(Point p);
+  
+  void onMouseEnter(Point p);
+  void onMouseLeave(Point p);
 }

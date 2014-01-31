@@ -18,219 +18,219 @@ import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
 import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 /**
- * Класс для инициализации битвы и расчёта её исхода
+ * РљР»Р°СЃСЃ РґР»СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё Р±РёС‚РІС‹ Рё СЂР°СЃС‡С‘С‚Р° РµС‘ РёСЃС…РѕРґР°
  * @author RED Developer
  */
 public class Battle implements Serializable{
-	private static final long serialVersionUID = 8068676336496071038L;
-	// Центр экрана !!!!!Размеры экрана (необходимо как-то получать)!!!!!!
-	private int centerX = 400;//Screen.instance.getWidth() / 2;
-	private int centerY = 300;//Screen.instance.getHeight() / 2;
-	// Размер ячейки змеек
-	private final Point snakeSize = new Point (10, 10);
-	// Множитель отступа змеек от центра поля битвы (множится на  размеры 1 элемента змейки)
-	private int deltaX = snakeSize.x;
-	private int deltaY = snakeSize.y;
-	
-	// В битве принимают участие до snakeLimit змеек
-	private final byte snakeLimit = 4;
-	// Выделенное время на битву (при его истечении бой заканчивается по тайм-ауту)
-	private final int timeLimit = 60000;	// 60c
-	// Выделенное количество шагов на битву
-	private final int stepsLimit = 500;
-	// Количество змеек в заявке
-	private byte snakeCount = 0;
-	// Начальная длина каждой змейки (ячеек)
-	private final byte snakeLength = 5;
-	// Начальная координата 0-й змейки (относительно центра)
-	private Point snakeStart = new Point(0, -100);
-	// Множтели поправок для координат змеиных голов
-	private int headX = -1, headY = -1;
-	// Множтели поправок для координат змеиных элементов тела (и хвоста)
-	private int bodyX = 0, bodyY = 0;
-	// Карта, на которой проводится битва
-	private static BattleMap battleMap;
-	
-	/**
-	 * Проводит нормализацию координаты относительно центра экрана
-	 * @param x
-	 * @param y
-	 * @return Point
-	 */
-	private Point normal(int x, int y)
-	{
-		// Координаты центра экрана
-		return new Point(x + centerX, y + centerY);
-	}
-	/**
-	 * Проводит нормализацию координаты относительно центра экрана
-	 * @param coord
-	 * @param screen
-	 * @return Point
-	 */
-	private Point normal(Point coord)
-	{
-		// Координаты центра экрана
-		return new Point(coord.x + centerX, coord.y + centerY);
-	}
-	/**
-	 * Осуществляет поворот координаты на 90 градусов
-	 * @param coord
-	 * @return Point
-	 */
-	private Point coordRotate(Point coord)
-	{
-		if (coord.x != 0) headX *= -1;
-		if (coord.y != 0) headY *= -1;
-		Point p = new Point (coord.x + headX * deltaX * snakeSize.x, coord.y + headY * deltaY * snakeSize.y);
-		
-		return p;
-	}
-	
-	/**
-	 * Инициализирует змейки
-	 * @param mapName - имя карты, на которой будет происходить битва
-	 * @param snakes - змейки, заявленные на бой
-	 * @throws MapAlreadyExistException 
-	 * @throws MapNotExistException 
-	 * @throws ObjectAlreadyAddedException 
-	 */
-	public void init(String mapName, Snake[] snakes) throws MapAlreadyExistException, MapNotExistException, ObjectAlreadyAddedException{	
-		if (mapName == "" || mapName == null || snakes == null) return;
-		
-		// Регистрация указанной карты и её выбор для битвы
-		try{
-			battleMap = BattleMapUtils.registerMap(new BattleMap(mapName));
-		}
-		catch(Exception ex){
-			System.out.println("Карта " + mapName + " уже была создана, вибираем её");
-			battleMap = BattleMapUtils.selectMap(mapName);
-		}
-		
-		// Количество змеек, заявленных на бой 
-		byte snakesCount = (byte) snakes.length;
-		// Реальное количество змеек в заявке
-		for (byte i = 0; i < snakesCount; i++)
-			if (snakes[i] != null) snakeCount++;
-		// Счётчик змеек
-		byte iSnake = 0;
-		// Для создания элементов змеек
-		List<Element> el = new ArrayList<Element>();
-		
-		// Инициализация змеек
-		while (iSnake < snakeLimit && iSnake < snakesCount)
-		{
-			snakeStart = coordRotate(snakeStart);
-			// Если змей 2 - поставить друг напротив друга 
-			if (snakeCount == 2) snakeStart = coordRotate(snakeStart);
-			
-			if (snakes[iSnake] != null) {
-				// Перестраиваем змею, если она была уже готовой
-				snakes[iSnake].getElements().clear();
-				// Новая голова для змейки iSnake. "head? * snakeSize.?" - поправочный коэффициент
-				el.add(new Element(PARTS.HEAD, normal(snakeStart.x,
-						snakeStart.y), snakeSize.x, snakeSize.y, snakes[iSnake]));
+  private static final long serialVersionUID = 8068676336496071038L;
+  // Р¦РµРЅС‚СЂ СЌРєСЂР°РЅР° !!!!!Р Р°Р·РјРµСЂС‹ СЌРєСЂР°РЅР° (РЅРµРѕР±С…РѕРґРёРјРѕ РєР°Рє-С‚Рѕ РїРѕР»СѓС‡Р°С‚СЊ)!!!!!!
+  private int centerX = 400;//Screen.instance.getWidth() / 2;
+  private int centerY = 300;//Screen.instance.getHeight() / 2;
+  // Р Р°Р·РјРµСЂ СЏС‡РµР№РєРё Р·РјРµРµРє
+  private final Point snakeSize = new Point (10, 10);
+  // РњРЅРѕР¶РёС‚РµР»СЊ РѕС‚СЃС‚СѓРїР° Р·РјРµРµРє РѕС‚ С†РµРЅС‚СЂР° РїРѕР»СЏ Р±РёС‚РІС‹ (РјРЅРѕР¶РёС‚СЃСЏ РЅР°  СЂР°Р·РјРµСЂС‹ 1 СЌР»РµРјРµРЅС‚Р° Р·РјРµР№РєРё)
+  private int deltaX = snakeSize.x;
+  private int deltaY = snakeSize.y;
+  
+  // Р’ Р±РёС‚РІРµ РїСЂРёРЅРёРјР°СЋС‚ СѓС‡Р°СЃС‚РёРµ РґРѕ snakeLimit Р·РјРµРµРє
+  private final byte snakeLimit = 4;
+  // Р’С‹РґРµР»РµРЅРЅРѕРµ РІСЂРµРјСЏ РЅР° Р±РёС‚РІСѓ (РїСЂРё РµРіРѕ РёСЃС‚РµС‡РµРЅРёРё Р±РѕР№ Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ РїРѕ С‚Р°Р№Рј-Р°СѓС‚Сѓ)
+  private final int timeLimit = 60000;	// 60c
+  // Р’С‹РґРµР»РµРЅРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С€Р°РіРѕРІ РЅР° Р±РёС‚РІСѓ
+  private final int stepsLimit = 500;
+  // РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РјРµРµРє РІ Р·Р°СЏРІРєРµ
+  private byte snakeCount = 0;
+  // РќР°С‡Р°Р»СЊРЅР°СЏ РґР»РёРЅР° РєР°Р¶РґРѕР№ Р·РјРµР№РєРё (СЏС‡РµРµРє)
+  private final byte snakeLength = 5;
+  // РќР°С‡Р°Р»СЊРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° 0-Р№ Р·РјРµР№РєРё (РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ С†РµРЅС‚СЂР°)
+  private Point snakeStart = new Point(0, -100);
+  // РњРЅРѕР¶С‚РµР»Рё РїРѕРїСЂР°РІРѕРє РґР»СЏ РєРѕРѕСЂРґРёРЅР°С‚ Р·РјРµРёРЅС‹С… РіРѕР»РѕРІ
+  private int headX = -1, headY = -1;
+  // РњРЅРѕР¶С‚РµР»Рё РїРѕРїСЂР°РІРѕРє РґР»СЏ РєРѕРѕСЂРґРёРЅР°С‚ Р·РјРµРёРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ С‚РµР»Р° (Рё С…РІРѕСЃС‚Р°)
+  private int bodyX = 0, bodyY = 0;
+  // РљР°СЂС‚Р°, РЅР° РєРѕС‚РѕСЂРѕР№ РїСЂРѕРІРѕРґРёС‚СЃСЏ Р±РёС‚РІР°
+  private static BattleMap battleMap;
+  
+  /**
+   * РџСЂРѕРІРѕРґРёС‚ РЅРѕСЂРјР°Р»РёР·Р°С†РёСЋ РєРѕРѕСЂРґРёРЅР°С‚С‹ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ С†РµРЅС‚СЂР° СЌРєСЂР°РЅР°
+   * @param x
+   * @param y
+   * @return Point
+   */
+  private Point normal(int x, int y)
+  {
+    // РљРѕРѕСЂРґРёРЅР°С‚С‹ С†РµРЅС‚СЂР° СЌРєСЂР°РЅР°
+    return new Point(x + centerX, y + centerY);
+  }
+  /**
+   * РџСЂРѕРІРѕРґРёС‚ РЅРѕСЂРјР°Р»РёР·Р°С†РёСЋ РєРѕРѕСЂРґРёРЅР°С‚С‹ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ С†РµРЅС‚СЂР° СЌРєСЂР°РЅР°
+   * @param coord
+   * @param screen
+   * @return Point
+   */
+  private Point normal(Point coord)
+  {
+    // РљРѕРѕСЂРґРёРЅР°С‚С‹ С†РµРЅС‚СЂР° СЌРєСЂР°РЅР°
+    return new Point(coord.x + centerX, coord.y + centerY);
+  }
+  /**
+   * РћСЃСѓС‰РµСЃС‚РІР»СЏРµС‚ РїРѕРІРѕСЂРѕС‚ РєРѕРѕСЂРґРёРЅР°С‚С‹ РЅР° 90 РіСЂР°РґСѓСЃРѕРІ
+   * @param coord
+   * @return Point
+   */
+  private Point coordRotate(Point coord)
+  {
+    if (coord.x != 0) headX *= -1;
+    if (coord.y != 0) headY *= -1;
+    Point p = new Point (coord.x + headX * deltaX * snakeSize.x, coord.y + headY * deltaY * snakeSize.y);
+    
+    return p;
+  }
+  
+  /**
+   * РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ Р·РјРµР№РєРё
+   * @param mapName - РёРјСЏ РєР°СЂС‚С‹, РЅР° РєРѕС‚РѕСЂРѕР№ Р±СѓРґРµС‚ РїСЂРѕРёСЃС…РѕРґРёС‚СЊ Р±РёС‚РІР°
+   * @param snakes - Р·РјРµР№РєРё, Р·Р°СЏРІР»РµРЅРЅС‹Рµ РЅР° Р±РѕР№
+   * @throws MapAlreadyExistException 
+   * @throws MapNotExistException 
+   * @throws ObjectAlreadyAddedException 
+   */
+  public void init(String mapName, Snake[] snakes) throws MapAlreadyExistException, MapNotExistException, ObjectAlreadyAddedException{	
+    if (mapName == "" || mapName == null || snakes == null) return;
+    
+    // Р РµРіРёСЃС‚СЂР°С†РёСЏ СѓРєР°Р·Р°РЅРЅРѕР№ РєР°СЂС‚С‹ Рё РµС‘ РІС‹Р±РѕСЂ РґР»СЏ Р±РёС‚РІС‹
+    try{
+      battleMap = BattleMapUtils.registerMap(new BattleMap(mapName));
+    }
+    catch(Exception ex){
+      System.out.println("РљР°СЂС‚Р° " + mapName + " СѓР¶Рµ Р±С‹Р»Р° СЃРѕР·РґР°РЅР°, РІРёР±РёСЂР°РµРј РµС‘");
+      battleMap = BattleMapUtils.selectMap(mapName);
+    }
+    
+    // РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РјРµРµРє, Р·Р°СЏРІР»РµРЅРЅС‹С… РЅР° Р±РѕР№ 
+    byte snakesCount = (byte) snakes.length;
+    // Р РµР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р·РјРµРµРє РІ Р·Р°СЏРІРєРµ
+    for (byte i = 0; i < snakesCount; i++)
+      if (snakes[i] != null) snakeCount++;
+    // РЎС‡С‘С‚С‡РёРє Р·РјРµРµРє
+    byte iSnake = 0;
+    // Р”Р»СЏ СЃРѕР·РґР°РЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ Р·РјРµРµРє
+    List<Element> el = new ArrayList<Element>();
+    
+    // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Р·РјРµРµРє
+    while (iSnake < snakeLimit && iSnake < snakesCount)
+    {
+      snakeStart = coordRotate(snakeStart);
+      // Р•СЃР»Рё Р·РјРµР№ 2 - РїРѕСЃС‚Р°РІРёС‚СЊ РґСЂСѓРі РЅР°РїСЂРѕС‚РёРІ РґСЂСѓРіР° 
+      if (snakeCount == 2) snakeStart = coordRotate(snakeStart);
+      
+      if (snakes[iSnake] != null) {
+        // РџРµСЂРµСЃС‚СЂР°РёРІР°РµРј Р·РјРµСЋ, РµСЃР»Рё РѕРЅР° Р±С‹Р»Р° СѓР¶Рµ РіРѕС‚РѕРІРѕР№
+        snakes[iSnake].getElements().clear();
+        // РќРѕРІР°СЏ РіРѕР»РѕРІР° РґР»СЏ Р·РјРµР№РєРё iSnake. "head? * snakeSize.?" - РїРѕРїСЂР°РІРѕС‡РЅС‹Р№ РєРѕСЌС„С„РёС†РёРµРЅС‚
+        el.add(new Element(PARTS.HEAD, normal(snakeStart.x,
+            snakeStart.y), snakeSize.x, snakeSize.y, snakes[iSnake]));
 
-				// В какую сторону отстраивать тело
-				if (snakeStart.x < 0 && snakeStart.y == 0) {
-					// Влево
-					bodyX = -1;
-					bodyY = 0;
-				} else if (snakeStart.x > 0 && snakeStart.y == 0) {
-					// Вправо
-					bodyX = 1;
-					bodyY = 0;
-				} else if (snakeStart.x == 0 && snakeStart.y < 0) {
-					// Вверх
-					bodyX = 0;
-					bodyY = -1;
-				} else if (snakeStart.x == 0 && snakeStart.y > 0) {
-					// Вниз
-					bodyX = 0;
-					bodyY = 1;
-				}
-				// Строим тело и хвост
-				for (byte i = 1; i < snakeLength - 1; i++) {
-					el.add(new Element(PARTS.BODY, new Point(
-							el.get(i - 1).getCoord().x + snakeSize.x * bodyX, 
-							el.get(i - 1).getCoord().y + snakeSize.y * bodyY), 
-							snakeSize.x, snakeSize.y, snakes[iSnake]));
-				}
-				el.add(new Element(PARTS.TAIL, new Point(
-						el.get(snakeLength - 2).getCoord().x + snakeSize.x * bodyX, 
-						el.get(snakeLength - 2).getCoord().y + snakeSize.y * bodyY), 
-						snakeSize.x, snakeSize.y, snakes[iSnake]));
+        // Р’ РєР°РєСѓСЋ СЃС‚РѕСЂРѕРЅСѓ РѕС‚СЃС‚СЂР°РёРІР°С‚СЊ С‚РµР»Рѕ
+        if (snakeStart.x < 0 && snakeStart.y == 0) {
+          // Р’Р»РµРІРѕ
+          bodyX = -1;
+          bodyY = 0;
+        } else if (snakeStart.x > 0 && snakeStart.y == 0) {
+          // Р’РїСЂР°РІРѕ
+          bodyX = 1;
+          bodyY = 0;
+        } else if (snakeStart.x == 0 && snakeStart.y < 0) {
+          // Р’РІРµСЂС…
+          bodyX = 0;
+          bodyY = -1;
+        } else if (snakeStart.x == 0 && snakeStart.y > 0) {
+          // Р’РЅРёР·
+          bodyX = 0;
+          bodyY = 1;
+        }
+        // РЎС‚СЂРѕРёРј С‚РµР»Рѕ Рё С…РІРѕСЃС‚
+        for (byte i = 1; i < snakeLength - 1; i++) {
+          el.add(new Element(PARTS.BODY, new Point(
+              el.get(i - 1).getCoord().x + snakeSize.x * bodyX, 
+              el.get(i - 1).getCoord().y + snakeSize.y * bodyY), 
+              snakeSize.x, snakeSize.y, snakes[iSnake]));
+        }
+        el.add(new Element(PARTS.TAIL, new Point(
+            el.get(snakeLength - 2).getCoord().x + snakeSize.x * bodyX, 
+            el.get(snakeLength - 2).getCoord().y + snakeSize.y * bodyY), 
+            snakeSize.x, snakeSize.y, snakes[iSnake]));
 
-				// Добавление элементов в змейку
-				snakes[iSnake].setElements(el);
-				// Для новой змейки будет новый список элементов
-				el.clear();
-			}
-			// Добавление змейки на карту
-			//battleMap.putSnake(snakes[iSnake]);
-			// Следующая змея
-			iSnake++;
-		}
-	}
-	
-	/**
-	 * Проверка на признак окончания боя
-	 * @param snake
-	 * @param time
-	 * @param steps
-	 * @return
-	 */
-	private boolean Stop(Snake[] snakes, int time, int steps){
-		if (snakes == null) return true;
-		
-		// Если время ещё есть && Если действий ещё не больше допустимого количества
-		if (time < timeLimit && steps < stepsLimit)
-			// Если всем змейкам есть куда ходить
-			for (int i = 0; i < snakes.length; i++)
-				if (snakes[i].getMind().getAction(battleMap).action.getType() != ACTION_TYPE.IN_DEAD_LOCK)
-					return false;
-		
-		return true;
-	}
-	/**
-	 * Проводит рассчёт битвы и записывает ёё ход
-	 * @param snake
-	 * @return List of Actions
-	 */
-	/*protected*/public List<ActionList> battleCalc(Snake[] snakes){
-		// Лог событий битвы (действия змеек)
-		List<ActionList> actions = new ArrayList<ActionList>();
-		// Сколько времени уже прошло
-		int timeElapsed = 0;
-		// Сколько шагов сделано
-		int stepsPassed = 0;
-		
-		// Пока битва идёт - писать лог действий
-		while(!Stop(snakes, timeElapsed, stepsPassed))
-		{
-			for (ActionList al : BattleMapUtils.doStep(battleMap.getName(), snakes))
-				actions.add(al);
-			// Наращивание счётчика шагов
-			stepsPassed++;
-		}
-		System.out.println("Битва окончена за " + stepsPassed + " шагов");
-		return actions;
-	}
-	
-	//
-	private String generateMap(String prefix){
-		return prefix + "-" + new Random().nextInt();
-	}
-	
-	/**
-	 * Тестовый набор змеек
-	 * @param snakes
-	 */
-	public Snake[] snake_fill(){
-		Snake snake0 = new Snake();
-		Snake snake1 = new Snake();
-		Snake snake2 = new Snake();
-		Snake snake3 = new Snake();
-		return new Snake[] { snake0, snake1, snake2, snake3 };
-	}
+        // Р”РѕР±Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚РѕРІ РІ Р·РјРµР№РєСѓ
+        snakes[iSnake].setElements(el);
+        // Р”Р»СЏ РЅРѕРІРѕР№ Р·РјРµР№РєРё Р±СѓРґРµС‚ РЅРѕРІС‹Р№ СЃРїРёСЃРѕРє СЌР»РµРјРµРЅС‚РѕРІ
+        el.clear();
+      }
+      // Р”РѕР±Р°РІР»РµРЅРёРµ Р·РјРµР№РєРё РЅР° РєР°СЂС‚Сѓ
+      //battleMap.putSnake(snakes[iSnake]);
+      // РЎР»РµРґСѓСЋС‰Р°СЏ Р·РјРµСЏ
+      iSnake++;
+    }
+  }
+  
+  /**
+   * РџСЂРѕРІРµСЂРєР° РЅР° РїСЂРёР·РЅР°Рє РѕРєРѕРЅС‡Р°РЅРёСЏ Р±РѕСЏ
+   * @param snake
+   * @param time
+   * @param steps
+   * @return
+   */
+  private boolean Stop(Snake[] snakes, int time, int steps){
+    if (snakes == null) return true;
+    
+    // Р•СЃР»Рё РІСЂРµРјСЏ РµС‰С‘ РµСЃС‚СЊ && Р•СЃР»Рё РґРµР№СЃС‚РІРёР№ РµС‰С‘ РЅРµ Р±РѕР»СЊС€Рµ РґРѕРїСѓСЃС‚РёРјРѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР°
+    if (time < timeLimit && steps < stepsLimit)
+      // Р•СЃР»Рё РІСЃРµРј Р·РјРµР№РєР°Рј РµСЃС‚СЊ РєСѓРґР° С…РѕРґРёС‚СЊ
+      for (int i = 0; i < snakes.length; i++)
+        if (snakes[i].getMind().getAction(battleMap).action.getType() != ACTION_TYPE.IN_DEAD_LOCK)
+          return false;
+    
+    return true;
+  }
+  /**
+   * РџСЂРѕРІРѕРґРёС‚ СЂР°СЃСЃС‡С‘С‚ Р±РёС‚РІС‹ Рё Р·Р°РїРёСЃС‹РІР°РµС‚ С‘С‘ С…РѕРґ
+   * @param snake
+   * @return List of Actions
+   */
+  /*protected*/public List<ActionList> battleCalc(Snake[] snakes){
+    // Р›РѕРі СЃРѕР±С‹С‚РёР№ Р±РёС‚РІС‹ (РґРµР№СЃС‚РІРёСЏ Р·РјРµРµРє)
+    List<ActionList> actions = new ArrayList<ActionList>();
+    // РЎРєРѕР»СЊРєРѕ РІСЂРµРјРµРЅРё СѓР¶Рµ РїСЂРѕС€Р»Рѕ
+    int timeElapsed = 0;
+    // РЎРєРѕР»СЊРєРѕ С€Р°РіРѕРІ СЃРґРµР»Р°РЅРѕ
+    int stepsPassed = 0;
+    
+    // РџРѕРєР° Р±РёС‚РІР° РёРґС‘С‚ - РїРёСЃР°С‚СЊ Р»РѕРі РґРµР№СЃС‚РІРёР№
+    while(!Stop(snakes, timeElapsed, stepsPassed))
+    {
+      for (ActionList al : BattleMapUtils.doStep(battleMap.getName(), snakes))
+        actions.add(al);
+      // РќР°СЂР°С‰РёРІР°РЅРёРµ СЃС‡С‘С‚С‡РёРєР° С€Р°РіРѕРІ
+      stepsPassed++;
+    }
+    System.out.println("Р‘РёС‚РІР° РѕРєРѕРЅС‡РµРЅР° Р·Р° " + stepsPassed + " С€Р°РіРѕРІ");
+    return actions;
+  }
+  
+  //
+  private String generateMap(String prefix){
+    return prefix + "-" + new Random().nextInt();
+  }
+  
+  /**
+   * РўРµСЃС‚РѕРІС‹Р№ РЅР°Р±РѕСЂ Р·РјРµРµРє
+   * @param snakes
+   */
+  public Snake[] snake_fill(){
+    Snake snake0 = new Snake();
+    Snake snake1 = new Snake();
+    Snake snake2 = new Snake();
+    Snake snake3 = new Snake();
+    return new Snake[] { snake0, snake1, snake2, snake3 };
+  }
 }
