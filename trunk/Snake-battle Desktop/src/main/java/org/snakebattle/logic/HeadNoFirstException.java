@@ -1,7 +1,7 @@
 package org.snakebattle.logic;
 
 /**
- * Если голова не первая
+ * if head doesn't first
  * @author Karimov
  *
  */

@@ -4,28 +4,28 @@ import java.io.Serializable;
 
 
 /**
- *  Класс описывает интерфейс для выполнения какого-либо действия
+ *  РљР»Р°СЃСЃ РѕРїРёСЃС‹РІР°РµС‚ РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РєР°РєРѕРіРѕ-Р»РёР±Рѕ РґРµР№СЃС‚РІРёСЏ
  * @author RED Developer
  */
 public abstract class Action implements Serializable{
-	private static final long serialVersionUID = 8503241747509513740L;
+  private static final long serialVersionUID = 8503241747509513740L;
 
-	/**
-	 * Перечисление типов действий, которые могут происходить со змейкой
-	 * @author RED Developer
-	 */
-	public enum ACTION_TYPE {
-		UP, DOWN, LEFT, RIGHT, EAT_TAIL, LEAVE_BATTLE, IN_DEAD_LOCK;
-	}
-	/**
-	 *  Метод вызывается при каком-либо действии
-	 * @param snake
-	 */
-	public abstract void doAction(Snake... snake);
-	
-	/**
-	 * Возвращает тип действия, вызванного для змейки 
-	 * @return TYPE
-	 */
-	public abstract ACTION_TYPE getType();
+  /**
+   * РџРµСЂРµС‡РёСЃР»РµРЅРёРµ С‚РёРїРѕРІ РґРµР№СЃС‚РІРёР№, РєРѕС‚РѕСЂС‹Рµ РјРѕРіСѓС‚ РїСЂРѕРёСЃС…РѕРґРёС‚СЊ СЃРѕ Р·РјРµР№РєРѕР№
+   * @author RED Developer
+   */
+  public enum ACTION_TYPE {
+    UP, DOWN, LEFT, RIGHT, EAT_TAIL, LEAVE_BATTLE, IN_DEAD_LOCK;
+  }
+  /**
+   *  РњРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РєР°РєРѕРј-Р»РёР±Рѕ РґРµР№СЃС‚РІРёРё
+   * @param snake
+   */
+  public abstract void doAction(Snake... snake);
+  
+  /**
+   * Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РёРї РґРµР№СЃС‚РІРёСЏ, РІС‹Р·РІР°РЅРЅРѕРіРѕ РґР»СЏ Р·РјРµР№РєРё 
+   * @return TYPE
+   */
+  public abstract ACTION_TYPE getType();
 }
