@@ -1,4 +1,4 @@
-package org.snakebattle.client;
+package org.snakebattle.demo;
 
 import java.awt.Point;
 
@@ -16,7 +16,7 @@ import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 public class Demo {
 
 	/**
-	 * просто тестировать интерфейс и юазовые действия
+	 * Just for testing interface and basic actions
 	 * 
 	 * @param args
 	 * @throws ObjectAlreadyAddedException

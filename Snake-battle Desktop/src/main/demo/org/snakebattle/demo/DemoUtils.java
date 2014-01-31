@@ -1,4 +1,4 @@
-package org.snakebattle.client;
+package org.snakebattle.demo;
 
 import java.awt.Point;
 
@@ -19,6 +19,7 @@ import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
 import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 public class DemoUtils {
+	//Create simple mind - mind can hunt on snakes, but not very good
 	public static void createSimpleMind(Mind mind){
 		MindMap[] mm = mind.getMindMap();
 		MindPolyGraph mpg = new MindPolyGraph(new Point(), 10, 10);
@@ -71,6 +72,12 @@ public class DemoUtils {
 		mm1.setAt(3, 0, mpg);
 	}
 	
+	/**
+	 * Put snakes on the battleMap. Also set border.
+	 * @param m
+	 * @param sn
+	 * @throws ObjectAlreadyAddedException
+	 */
 	public static void fillBatleMap(BattleMap m, Snake[] sn) throws ObjectAlreadyAddedException{
 		for (int i = 0; i < sn.length; i++) {
 			m.putSnake(sn[i]);
@@ -80,6 +87,15 @@ public class DemoUtils {
 		m.setBorder(800, 600);
 	}
 	
+	/**
+	 * Create new BattleMap, put snakes on the map and set border.
+	 * @param mapName
+	 * @param sn
+	 * @return
+	 * @throws MapAlreadyExistException
+	 * @throws MapNotExistException
+	 * @throws ObjectAlreadyAddedException
+	 */
 	public static BattleMap createAndInitBattleMap(String mapName, Snake[] sn) throws MapAlreadyExistException, MapNotExistException, ObjectAlreadyAddedException{
 		Battle b = new Battle();
 		b.init(mapName, sn);
@@ -91,6 +107,12 @@ public class DemoUtils {
 		return m;
 	}
 	
+	/**
+	 * Creates 4 empty snakes
+	 * @param m
+	 * @throws SnakeAlreadyInMapException
+	 * @throws ObjectAlreadyAddedException
+	 */
 	public static void createFourSnakes(BattleMap m) throws SnakeAlreadyInMapException, ObjectAlreadyAddedException{
 		int i;
 		
