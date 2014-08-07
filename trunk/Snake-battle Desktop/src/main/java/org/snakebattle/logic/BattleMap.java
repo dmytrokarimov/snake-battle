@@ -10,7 +10,7 @@ import java.util.List;
 import org.snakebattle.gui.Drawable;
 import org.snakebattle.gui.ObjectAlreadyAddedException;
 import org.snakebattle.gui.events.EventListener;
-import org.snakebattle.gui.primitive.Dummy;
+import org.snakebattle.gui.primitive.Border;
 import org.snakebattle.gui.primitive.snake.Element;
 import org.snakebattle.gui.screen.IScreen;
 import org.snakebattle.gui.screen.Screen;
@@ -171,20 +171,20 @@ public class BattleMap implements Iterable<Drawable>, Serializable {
 	 */
 	public void setBorder(int width, int height) {
 		// Dummy
-		Dummy d;
+		Border d;
 
 		try {
 			// Граница слева
-			d = new Dummy(new Point(-10, 0), 100, height);
+			d = new Border(new Point(-10, 0), 100, height);
 			put(d);
 			// Граница справа
-			d = new Dummy(new Point(width, 0), 100, height);
+			d = new Border(new Point(width, 0), 100, height);
 			put(d);
 			// Граница сверху
-			d = new Dummy(new Point(0, -100), width, 100);
+			d = new Border(new Point(0, -100), width, 100);
 			put(d);
 			// Граница снизу
-			d = new Dummy(new Point(10, height), width, 100);
+			d = new Border(new Point(10, height), width, 100);
 			put(d);
 		} catch (ObjectAlreadyAddedException e) {
 			e.printStackTrace();

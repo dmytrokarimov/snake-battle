@@ -69,14 +69,20 @@ public class DemoUtils {
 		mpg.setOwner(OWNER_TYPES.SNAKE);
 		mpg.setValue(new Element(PARTS.HEAD, new Point(), 10, 10,
 				null));
-		mm2.setAt(3, 3, mpg);
+		mm2.setAt(6, 3, mpg);
 
 		for (int i = 0; i < 3; i++) {
 			mpg = new MindPolyGraph(new Point(), 10, 10);
 			mpg.setOwner(OWNER_TYPES.NEUTRAL);
 			mpg.setValue(null);
-			mm2.setAt(3, i, mpg);
+			mm2.setAt(6, i, mpg);
 		}
+		
+		mpg = new MindPolyGraph(new Point(), 10, 10);
+		mpg.setOwner(OWNER_TYPES.NEUTRAL);
+		mpg.setValue(null);
+		mpg.setLogic(LOGIC_TYPES.NOT);
+		mm2.setAt(0, 2, mpg);
 		
 		mpg = new MindPolyGraph(new Point(), 10, 10);
 		mpg.setOwner(OWNER_TYPES.NEUTRAL);
@@ -88,13 +94,13 @@ public class DemoUtils {
 		mpg.setOwner(OWNER_TYPES.SNAKE);
 		mpg.setValue(new Element(PARTS.HEAD, new Point(), 10, 10,
 				null));
-		mm[3].setAt(2, 8, mpg);
+		mm[3].setAt(4, 8, mpg);
 		
 		for (int i = 0; i < 3; i++) {
 			mpg = new MindPolyGraph(new Point(), 10, 10);
 			mpg.setOwner(OWNER_TYPES.NEUTRAL);
 			mpg.setValue(null);
-			mm2.setAt(3, i, mpg);
+			mm[3].setAt(4, i, mpg);
 		}
 	}
 	
