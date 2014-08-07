@@ -7,17 +7,17 @@ import java.util.List;
 
 import org.snakebattle.gui.ObjectAlreadyAddedException;
 import org.snakebattle.gui.primitive.snake.Element;
-import org.snakebattle.gui.primitive.snake.MindPolyGraph;
 import org.snakebattle.gui.primitive.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph;
 import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_TYPES;
 import org.snakebattle.gui.primitive.snake.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.gui.screen.EmptyScreen;
 import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.BattleMap;
-import org.snakebattle.logic.Mind;
-import org.snakebattle.logic.Mind.MindMap;
 import org.snakebattle.logic.Snake;
 import org.snakebattle.logic.SnakeAlreadyInMapException;
+import org.snakebattle.logic.SnakeMind;
+import org.snakebattle.logic.SnakeMind.MindMap;
 import org.snakebattle.server.Battle;
 import org.snakebattle.utils.BattleMapUtils;
 import org.snakebattle.utils.BattleMapUtils.ActionList;
@@ -46,7 +46,7 @@ public class Demo_TestBattle {
 					// Initialization
 					Battle battle = new Battle();
 					Snake[] snakes = battle.snake_fill();
-					Mind mind = snakes[0].getMind();
+					SnakeMind mind = snakes[0].getMind();
 					MindMap[] mm = mind.getMindMap();
 					MindPolyGraph mpg = new MindPolyGraph(new Point(), 10, 10);
 					mpg.setOwner(OWNER_TYPES.SNAKE);

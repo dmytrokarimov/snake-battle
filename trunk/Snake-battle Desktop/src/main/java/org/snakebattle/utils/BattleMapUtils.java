@@ -7,6 +7,7 @@ import java.util.Random;
 
 import org.snakebattle.logic.Action;
 import org.snakebattle.logic.BattleMap;
+import org.snakebattle.logic.Player;
 import org.snakebattle.logic.Snake;
 
 /**
@@ -16,154 +17,154 @@ import org.snakebattle.logic.Snake;
  * 
  */
 public class BattleMapUtils {
-  //public static BattleMap std_map = new BattleMap("Battle_map");
-  private static List<BattleMap> registeredMaps = new ArrayList<BattleMap>();
+	//public static BattleMap std_map = new BattleMap("Battle_map");
+	private static List<BattleMap> registeredMaps = new ArrayList<BattleMap>();
 
-  /**
-   * –í–∫–ª—é—á–∞–µ—Ç (–º–æ–∂–µ—Ç –±—ã—Ç—å –∞–∫—Ç–∏–≤–Ω–∞ —Ç–æ–ª—å–∫–æ –æ–¥–Ω–∞ –∫–∞—Ä—Ç–∞) –∫–∞—Ä—Ç—É —Å –∏–º–µ–Ω–µ–º name
-   * 
-   * @param name
-   *            –∏–º—è –∫–∞—Ä—Ç—ã (–∫–∞—Ä—Ç–∞ –¥–æ–ª–∂–Ω–∞ –±—ã—Ç—å —É–∂–µ –¥–æ–±–∞–≤–ª–µ–Ω–∞)
-   * @return –∫–∞—Ä—Ç—É —Å –∏–º–µ–Ω–µ–º name
-   * @throws MapNotExistException
-   *             –µ—Å–ª–∏ –∫–∞—Ä—Ç—ã –Ω–µ—Ç –≤ —Å–ø–∏—Å–∫–µ –∑–∞—Ä–µ–≥–µ—Å—Ç—Ä–∏—Ä–æ–≤–∞–Ω–Ω—ã—Ö
-   */
-  public synchronized static BattleMap selectMap(String name) throws MapNotExistException {
-    BattleMap std_map = null;
-    for (int i = 0; i < registeredMaps.size(); i++)
-      if (registeredMaps.get(i).getName().equals(name)) {
-        std_map = registeredMaps.get(i);
-        break;
-      }
-    if (std_map == null)
-      throw new MapNotExistException("BattleMap " + name + " no exist");
-    return std_map;
-  }
+	/**
+	 * ¬ÍÎ˛˜‡ÂÚ (ÏÓÊÂÚ ·˚Ú¸ ‡ÍÚË‚Ì‡ ÚÓÎ¸ÍÓ Ó‰Ì‡ Í‡Ú‡) Í‡ÚÛ Ò ËÏÂÌÂÏ name
+	 * 
+	 * @param name
+	 *            ËÏˇ Í‡Ú˚ (Í‡Ú‡ ‰ÓÎÊÌ‡ ·˚Ú¸ ÛÊÂ ‰Ó·‡‚ÎÂÌ‡)
+	 * @return Í‡ÚÛ Ò ËÏÂÌÂÏ name
+	 * @throws MapNotExistException
+	 *             ÂÒÎË Í‡Ú˚ ÌÂÚ ‚ ÒÔËÒÍÂ Á‡Â„ÂÒÚËÓ‚‡ÌÌ˚ı
+	 */
+	public synchronized static BattleMap selectMap(String name) throws MapNotExistException {
+		BattleMap std_map = null;
+		for (int i = 0; i < registeredMaps.size(); i++)
+			if (registeredMaps.get(i).getName().equals(name)) {
+				std_map = registeredMaps.get(i);
+				break;
+			}
+		if (std_map == null)
+			throw new MapNotExistException("BattleMap " + name + " no exist");
+		return std_map;
+	}
 
-  public static class MapAlreadyExistException extends Exception {
-    public MapAlreadyExistException(String string) {
-      super(string);
-    }
+	public static class MapAlreadyExistException extends Exception {
+		public MapAlreadyExistException(String string) {
+			super(string);
+		}
 
-    private static final long serialVersionUID = 4780051374649338074L;
-  }
+		private static final long serialVersionUID = 4780051374649338074L;
+	}
 
-  public static class MapNotExistException extends Exception {
-    public MapNotExistException(String string) {
-      super(string);
-    }
+	public static class MapNotExistException extends Exception {
+		public MapNotExistException(String string) {
+			super(string);
+		}
 
-    private static final long serialVersionUID = 4780051374649338074L;
-  }
+		private static final long serialVersionUID = 4780051374649338074L;
+	}
 
-  /**
-   * Register map in internal map archive
-   * 
-   * @param battleMap
-   *            map
-   * @throws MapAlreadyExistException
-   *             if map exist this exception will be throwen
-   */
-  public synchronized static BattleMap registerMap(BattleMap battleMap) throws MapAlreadyExistException {
-    for (int i = 0; i < registeredMaps.size(); i++)
-      if (registeredMaps.get(i).getName().equals(battleMap.getName())) {
-        throw new MapAlreadyExistException("BattleMap " + battleMap.getName()
-            + " already exist");
-      }
-    registeredMaps.add(battleMap);
-    return battleMap;
-  }
+	/**
+	 * Register map in internal map archive
+	 * 
+	 * @param battleMap
+	 *            map
+	 * @throws MapAlreadyExistException
+	 *             if map exist this exception will be throwen
+	 */
+	public synchronized static BattleMap registerMap(BattleMap battleMap) throws MapAlreadyExistException {
+		for (int i = 0; i < registeredMaps.size(); i++)
+			if (registeredMaps.get(i).getName().equals(battleMap.getName())) {
+				throw new MapAlreadyExistException("BattleMap " + battleMap.getName()
+						+ " already exist");
+			}
+		registeredMaps.add(battleMap);
+		return battleMap;
+	}
 
-  /**
-   * Remvoe map in internal map archive
-   * 
-   * @param battleMap
-   *            registered map
-   * @throws MapNotExistException
-   *             if map not exist this exception will be throwen
-   */
-  public synchronized  static void removeMap(BattleMap battleMap) throws MapNotExistException {
-    removeMap(battleMap.getName());
-  }
+	/**
+	 * Remvoe map in internal map archive
+	 * 
+	 * @param battleMap
+	 *            registered map
+	 * @throws MapNotExistException
+	 *             if map not exist this exception will be throwen
+	 */
+	public synchronized  static void removeMap(BattleMap battleMap) throws MapNotExistException {
+		removeMap(battleMap.getName());
+	}
 
-  /**
-   * Register map in internal map archive
-   * 
-   * @param name
-   *            registered map
-   * @throws MapNotExistException
-   *             if map exist this exception will be throwen
-   */
-  public synchronized static void removeMap(String name) throws MapNotExistException {
-    boolean deleted = false;
-    for (int i = 0; i < registeredMaps.size(); i++)
-      if (registeredMaps.get(i).getName().equals(name)) {
-        registeredMaps.remove(i);
-        deleted = true;
-      }
-    if (!deleted)
-      throw new MapNotExistException("BattleMap " + name + " no exist");
-  }
+	/**
+	 * Register map in internal map archive
+	 * 
+	 * @param name
+	 *            registered map
+	 * @throws MapNotExistException
+	 *             if map exist this exception will be throwen
+	 */
+	public synchronized static void removeMap(String name) throws MapNotExistException {
+		boolean deleted = false;
+		for (int i = 0; i < registeredMaps.size(); i++)
+			if (registeredMaps.get(i).getName().equals(name)) {
+				registeredMaps.remove(i);
+				deleted = true;
+			}
+		if (!deleted)
+			throw new MapNotExistException("BattleMap " + name + " no exist");
+	}
 
-  public static class ActionList implements Serializable{
-    private static final long serialVersionUID = -2908059247897364803L;
-    public final Snake[] param;
-    public final Action action;
-    public ActionList(Action action, Snake... snakes){
-      this.action = action;
-      param = snakes;
-    }
-  }
+	public static class ActionList implements Serializable{
+		private static final long serialVersionUID = -2908059247897364803L;
+		public final Snake[] param;
+		public final Action action;
+		public ActionList(Action action, Snake... snakes){
+			this.action = action;
+			param = snakes;
+		}
+	}
 
-  /**
-   * This method use map
-   * Calc next step and return step result
-   */
-  public synchronized static List<ActionList> doStep(String mapName, Snake... sn) {
-    List<ActionList> al = new ArrayList<ActionList>(); 
-    try {
-      BattleMap m = BattleMapUtils.selectMap(mapName);
-      for (int i = 0; i < sn.length; i++) {
-        if (sn[i].getElements().size() < 2)
-          continue;
-        ActionList a = sn[i].getMind().getAction(m);
-        if (a == null)
-          continue;
-        a.action.doAction(a.param);
-        al.add(a);
-      }
-    } catch (MapNotExistException e) {
-      e.printStackTrace();
-    }
-    return al;
-  }
-  
-  /*public static void doStep(List<ActionList> actions, String mapName, Snake... snakes) { 
-    try {
-      BattleMap m = BattleMapUtils.selectMap(mapName);
-      for (int i = 0; i < snakes.length; i++) {
-        actions.doAction(actions.param);
-      }
-    } catch (MapNotExistException e) {
-      e.printStackTrace();
-    }
-  }*/
+	/**
+	 * This method use map
+	 * Calc next step and return step result
+	 */
+	public synchronized static List<ActionList> doStep(String mapName, Player... sn) {
+		List<ActionList> al = new ArrayList<ActionList>(); 
+		try {
+			BattleMap m = BattleMapUtils.selectMap(mapName);
+			for (int i = 0; i < sn.length; i++) {
+				if (sn[i].isPlayerCanTurn())
+					continue;
+				ActionList a = sn[i].getMind().getAction(m);
+				if (a == null)
+					continue;
+				a.action.doAction(a.param);
+				al.add(a);
+			}
+		} catch (MapNotExistException e) {
+			e.printStackTrace();
+		}
+		return al;
+	}
+	
+	/*public static void doStep(List<ActionList> actions, String mapName, Snake... snakes) { 
+		try {
+			BattleMap m = BattleMapUtils.selectMap(mapName);
+			for (int i = 0; i < snakes.length; i++) {
+				actions.doAction(actions.param);
+			}
+		} catch (MapNotExistException e) {
+			e.printStackTrace();
+		}
+	}*/
 
-  
-  /**
-   * –ü–æ–∑–≤–æ–ª—è–µ—Ç —Å–≥–µ–Ω–µ—Ä–∏—Ä–æ–≤–∞—Ç—å —Å–ª—É—á–∞–π–Ω–æ–µ –∏–º—è –¥–ª—è –∫–∞—Ä—Ç—ã
-   * @param mapName - –û—Å–Ω–æ–≤–Ω–∞—è —á–∞—Å—Ç—å –∏–º–µ–Ω–∏ –∫–∞—Ä—Ç—ã. –ü–æ —É–º–æ–ª—á–∞–Ω–∏—é "battle-"
-   * @return
-   */
-  public static String generateName(String mapName) {
-    String name;
-    Random r = new Random(9999999999L);
-    if (mapName == null || mapName == "") mapName = "battle-";
-    name = mapName + r.nextLong();
-    return name;
-  }
+	
+	/**
+	 * œÓÁ‚ÓÎˇÂÚ Ò„ÂÌÂËÓ‚‡Ú¸ ÒÎÛ˜‡ÈÌÓÂ ËÏˇ ‰Îˇ Í‡Ú˚
+	 * @param mapName - ŒÒÌÓ‚Ì‡ˇ ˜‡ÒÚ¸ ËÏÂÌË Í‡Ú˚. œÓ ÛÏÓÎ˜‡ÌË˛ "battle-"
+	 * @return
+	 */
+	public static String generateName(String mapName) {
+		String name;
+		Random r = new Random(9999999999L);
+		if (mapName == null || mapName == "") mapName = "battle-";
+		name = mapName + r.nextLong();
+		return name;
+	}
 
-  private BattleMapUtils() {
+	private BattleMapUtils() {
 
-  }
+	}
 }

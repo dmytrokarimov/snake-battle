@@ -18,162 +18,162 @@ import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
 import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 public class Server2 {
-  public static ServerSocket sServer; 		// РЎРµСЂРІРµСЂРЅС‹Р№ СЃРѕРєРµС‚
-  private static int port = 65535; 			// РџСЂРѕСЃР»СѓС€РёРІР°РµРјС‹Р№ РїРѕСЂС‚
-  
-  public static void main(String[] args) throws IOException {
-    byte connected = 0; 					// РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРґРєР»СЋС‡С‘РЅРЅС‹С… РєР»РёРµРЅС‚РѕРІ
-    
-    sServer = new ServerSocket(port);
-    System.out.println("Server Started");
-    try {
-      System.out.println("[SERVER]: Waiting for a org.snakebattle.client...");
-      //if (connected < 4) {
-        Socket sClient = sServer.accept();
-        System.out.println("[SERVER]: Client connected");
-        try {
-          System.out.println(connected++);
-          new ServerOneThread2(sClient);
-        } catch (IOException e) {
-          sClient.close();
-        }
-      //}
-    } catch (IOException e) {
-      System.out.println("[SERVER]: Can't accept");
-      System.exit(-1);
-    } finally {
-      sServer.close();
-    }
-  }
+	public static ServerSocket sServer; 		// Серверный сокет
+	private static int port = 65535; 			// Прослушиваемый порт
+	
+	public static void main(String[] args) throws IOException {
+		byte connected = 0; 					// Количество подключённых клиентов
+		
+		sServer = new ServerSocket(port);
+		System.out.println("Server Started");
+		try {
+			System.out.println("[SERVER]: Waiting for a org.snakebattle.client...");
+			//if (connected < 4) {
+				Socket sClient = sServer.accept();
+				System.out.println("[SERVER]: Client connected");
+				try {
+					System.out.println(connected++);
+					new ServerOneThread2(sClient);
+				} catch (IOException e) {
+					sClient.close();
+				}
+			//}
+		} catch (IOException e) {
+			System.out.println("[SERVER]: Can't accept");
+			System.exit(-1);
+		} finally {
+			sServer.close();
+		}
+	}
 }
 
 class ServerOneThread2 extends Thread{
-  public static Socket sClient; 				// РљР»РёРµРЅС‚СЃРєРёР№ СЃРѕРєРµС‚
-  public static InputStream is; 				// РћР±СЉРµРєС‚ РІС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР°
-  public static OutputStream os; 				// РћР±СЉРµРєС‚ РёСЃС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР°
-  public static ObjectInputStream ois; 		// РћР±СЉРµРєС‚ РІС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР° РѕР±СЉРµРєС‚Р°
-  public static ObjectOutputStream oos; 		// РћР±СЉРµРєС‚ РёСЃС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР° РѕР±СЉРµРєС‚Р°
-  
-  private Message message = null;				// РЎРѕРѕР±С‰РµРЅРёРµ, РїРѕР»СѓС‡Р°РµРјРѕРµ РѕС‚ СЃРµСЂРІРµСЂР°
-  private static Battle battle = null; 		// РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° Battle РґР»СЏ РѕР±СЃС‡С‘С‚Р° СЂРµР·СѓР»СЊС‚Р°С‚Р° Р±РёС‚РІС‹
-  private static Snake[] snakes = null;		// Р—РјРµР№РєРё РєР»РёРµРЅС‚РѕРІ, СѓС‡Р°РІСЃС‚РІСѓСЋС‰РёРµ РІ Р±РёС‚РІРµ
-  private static BattleMap battleMap = null;				// РљР°СЂС‚Р°, РЅР° РєРѕС‚РѕСЂРѕР№ РїСЂРѕРІРѕРґРёС‚СЃСЏ Р±РёС‚РІР°
-  
-  public ServerOneThread2(Socket client) throws IOException
-  {
-    sClient = client;
-    is = sClient.getInputStream(); 			// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР°
-    os = sClient.getOutputStream(); 		// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РёСЃС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР°
-    start();
-  }
-  
-  /** РћРїРёСЃС‹РІР°РµС‚ РїРѕС‚РѕРє СЃРµСЂРІРµСЂР° */
-  public void run(){
-    // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР° РѕР±СЉРµРєС‚Р°
-    while(!sClient.isClosed()){
-      try {
-        if (ois == null) ois = new ObjectInputStream(is);
-        Snake clientSnake = (Snake)receiveObject(ois);
-        snakes = new Snake[]{clientSnake, new Snake(), new Snake(), new Snake()};
-        
-        // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
-        battle = new Battle();
-        //snakes = battle.snake_fill();
-        
-        // РЎРѕР·РґР°РЅРёРµ СЌРєСЂР°РЅР°, РЅР° РєРѕС‚РѕСЂРѕРј Р±СѓРґСѓС‚ РїСЂРѕРёСЃС…РѕРґРёС‚ РІСЃРµ РґРµР№СЃС‚РІРёСЏ Р·РјРµРµРє
-        new Screen();
-        
-        /** Р‘Р»РѕРє РёР· С‚РµСЃС‚РѕРІРѕР№ С„СѓРЅРєС†РёРё */
-        try {
-          // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєР°СЂС‚С‹, Р·РјРµРµРє
-          battle.init("serverMap", snakes);
-          battleMap = BattleMapUtils.selectMap("serverMap");
-          //battleMap.setBorder(800, 600);
-        } catch (MapAlreadyExistException | MapNotExistException | ObjectAlreadyAddedException e) {
-          e.printStackTrace();
-        }
-        List<ActionList> al = battle.battleCalc(snakes);
-        System.out.println("[SERVER]: Battle ended");
-        
-        // РџРµСЂРµРґР°С‡Р° Р±РёС‚РІС‹ РЅР° РєР»РёРµРЅС‚
-        /*ois = new ObjectInputStream(is); 	// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР° РѕР±СЉРµРєС‚Р°
-        Snake clientSnake = (Snake)receiveObject(ois);*/
-        //oos = new ObjectOutputStream(os); 	// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РёСЃС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР° РѕР±СЉРµРєС‚Р°
-        
-        // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїРµСЂРµРґР°РІР°РµРјРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
-        message = new Message(battleMap, snakes, al);
-        System.out.println("[SERVER]: Message created");
-        // РџРµСЂРµРґР°С‡Р° СЃРѕРѕР±С‰РµРЅРёСЏ РЅР° РєР»РёРµРЅС‚
-        sendObject(sClient, message);
-        System.out.println("[SERVER]: Message sended");
-        
-        sClient.close();
-        System.out.println("[SERVER]: Sockets closed");
-      } catch (IOException e) {}
-    }
-  }
-  
-  /**
-   * РџРѕР»СѓС‡Р°РµС‚ РѕР±СЉРµРєС‚ РёР· СѓРєР°Р·Р°РЅРЅРѕРіРѕ РІС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР°
-   * @param ois - РІС…РѕРґСЏС‰РёР№ РїРѕС‚РѕРє
-   * @return
-   * @throws IOException
-   */
-  private synchronized Object receiveObject(ObjectInputStream ois) throws IOException {
-    Object receivedObject = null;							// РћР±РµРєС‚ "РїРѕР»СѓС‡РµРЅРЅС‹Р№ РѕР±СЉРµРєС‚" 
-    try {
-      // Р§С‚РµРЅРёРµ РѕР±СЉРµРєС‚Р° РёР· РІС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР°
-      receivedObject = ois.readObject();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-    //ois.close();
-    return receivedObject;
-  }
-  
-  /**
-   * РџРµСЂРµРґР°С‘С‚ СѓРєР°Р·Р°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ РІ СѓРєР°Р·Р°РЅРЅС‹Р№ РёСЃС…РѕРґСЏС‰Р№ РїРѕС‚РѕРє 
-   * @param oos - РёСЃС…РѕРґСЏС‰РёР№ РїРѕС‚РѕРє
-   * @param sendingObject - РїРµСЂРµСЃС‹Р»Р°РµРјС‹Р№ РѕР±СЉРµРєС‚
-   */
-  private synchronized void sendObject(ObjectOutputStream oos, Object sendingObject) {
-    // РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ СЂР°СЃСЃС‡РёС‚Р°РЅРЅС‹С… РґР°РЅРЅС‹С…
-    try {
-      // РџРѕР»СѓС‡РµРЅРёРµ РёСЃС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР° socket'Р°
-      oos = new ObjectOutputStream(sClient.getOutputStream());
-      // Р—Р°РїРёСЃСЊ РѕР±СЉРµРєС‚Р° РІ РёСЃС…РѕРґСЏС‰РёР№ РїРѕС‚РѕРє
-      oos.writeObject(sendingObject);
-      // ??? ??? ???
-      oos.flush();
-      // Р—Р°РєСЂС‹С‚РёРµ РёСЃС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР°
-      oos.close();
-    } catch (Exception ex) {
-      System.out.println("[SERVER]: Exception during serialization: " + ex);
-      System.exit(0);
-    }
-  }
-  
-  /**
-   * РџРѕР·РІРѕР»СЏРµС‚ РѕС‚РїСЂР°РІРёС‚СЊ РѕР±СЉРµРєС‚ РІ РёСЃС…РѕРґСЏС‰РёР№ РїРѕС‚РѕРє socket'Р°, РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕ СЃРµСЂРёР°Р»РёР·РѕРІР°РІ РµРіРѕ
-   * @param socket
-   * @param object
-   */
-  private void sendObject(Socket socket, Object object){
-    // РСЃС…РѕРґСЏС‰РёР№ РїРѕС‚РѕРє
-    ObjectOutputStream oos = null;
-    // РЎРµСЂРёР°Р»РёР·Р°С†РёСЏ СЂР°СЃСЃС‡РёС‚Р°РЅРЅС‹С… РґР°РЅРЅС‹С…
-    try {
-      // РџРѕР»СѓС‡РµРЅРёРµ РёСЃС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР° socket'Р°
-      oos = new ObjectOutputStream(socket.getOutputStream());
-      // Р—Р°РїРёСЃСЊ РѕР±СЉРµРєС‚Р° РІ РёСЃС…РѕРґСЏС‰РёР№ РїРѕС‚РѕРє
-      oos.writeObject(object);
-      // ??? ??? ???
-      oos.flush();
-      // Р—Р°РєСЂС‹С‚РёРµ РёСЃС…РѕРґСЏС‰РµРіРѕ РїРѕС‚РѕРєР°
-      oos.close();
-    } catch (Exception ex) {
-      System.out.println("[SERVER]: Exception during serialization: " + ex);
-      System.exit(0);
-    }
-  }
+	public static Socket sClient; 				// Клиентский сокет
+	public static InputStream is; 				// Объект входящего потока
+	public static OutputStream os; 				// Объект исходящего потока
+	public static ObjectInputStream ois; 		// Объект входящего потока объекта
+	public static ObjectOutputStream oos; 		// Объект исходящего потока объекта
+	
+	private Message message = null;				// Сообщение, получаемое от сервера
+	private static Battle battle = null; 		// Объект класса Battle для обсчёта результата битвы
+	private static Snake[] snakes = null;		// Змейки клиентов, учавствующие в битве
+	private static BattleMap battleMap = null;				// Карта, на которой проводится битва
+	
+	public ServerOneThread2(Socket client) throws IOException
+	{
+		sClient = client;
+		is = sClient.getInputStream(); 			// Инициализация входящего потока
+		os = sClient.getOutputStream(); 		// Инициализация исходящего потока
+		start();
+	}
+	
+	/** Описывает поток сервера */
+	public void run(){
+		// Инициализация входящего потока объекта
+		while(!sClient.isClosed()){
+			try {
+				if (ois == null) ois = new ObjectInputStream(is);
+				Snake clientSnake = (Snake)receiveObject(ois);
+				snakes = new Snake[]{clientSnake, new Snake(), new Snake(), new Snake()};
+				
+				// Инициализация
+				battle = new Battle();
+				//snakes = battle.snake_fill();
+				
+				// Создание экрана, на котором будут происходит все действия змеек
+				new Screen();
+				
+				/** Блок из тестовой функции */
+				try {
+					// Инициализация карты, змеек
+					battle.init("serverMap", snakes);
+					battleMap = BattleMapUtils.selectMap("serverMap");
+					//battleMap.setBorder(800, 600);
+				} catch (MapAlreadyExistException | MapNotExistException | ObjectAlreadyAddedException e) {
+					e.printStackTrace();
+				}
+				List<ActionList> al = battle.battleCalc(snakes);
+				System.out.println("[SERVER]: Battle ended");
+				
+				// Передача битвы на клиент
+				/*ois = new ObjectInputStream(is); 	// Инициализация входящего потока объекта
+				Snake clientSnake = (Snake)receiveObject(ois);*/
+				//oos = new ObjectOutputStream(os); 	// Инициализация исходящего потока объекта
+				
+				// Инициализация передаваемого сообщения
+				message = new Message(battleMap, snakes, al);
+				System.out.println("[SERVER]: Message created");
+				// Передача сообщения на клиент
+				sendObject(sClient, message);
+				System.out.println("[SERVER]: Message sended");
+				
+				sClient.close();
+				System.out.println("[SERVER]: Sockets closed");
+			} catch (IOException e) {}
+		}
+	}
+	
+	/**
+	 * Получает объект из указанного входящего потока
+	 * @param ois - входящий поток
+	 * @return
+	 * @throws IOException
+	 */
+	private synchronized Object receiveObject(ObjectInputStream ois) throws IOException {
+		Object receivedObject = null;							// Обект "полученный объект" 
+		try {
+			// Чтение объекта из входящего потока
+			receivedObject = ois.readObject();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		//ois.close();
+		return receivedObject;
+	}
+	
+	/**
+	 * Передаёт указанный объект в указанный исходящй поток 
+	 * @param oos - исходящий поток
+	 * @param sendingObject - пересылаемый объект
+	 */
+	private synchronized void sendObject(ObjectOutputStream oos, Object sendingObject) {
+		// Сериализация рассчитанных данных
+		try {
+			// Получение исходящего потока socket'а
+			oos = new ObjectOutputStream(sClient.getOutputStream());
+			// Запись объекта в исходящий поток
+			oos.writeObject(sendingObject);
+			// ??? ??? ???
+			oos.flush();
+			// Закрытие исходящего потока
+			oos.close();
+		} catch (Exception ex) {
+			System.out.println("[SERVER]: Exception during serialization: " + ex);
+			System.exit(0);
+		}
+	}
+	
+	/**
+	 * Позволяет отправить объект в исходящий поток socket'а, предварительно сериализовав его
+	 * @param socket
+	 * @param object
+	 */
+	private void sendObject(Socket socket, Object object){
+		// Исходящий поток
+		ObjectOutputStream oos = null;
+		// Сериализация рассчитанных данных
+		try {
+			// Получение исходящего потока socket'а
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			// Запись объекта в исходящий поток
+			oos.writeObject(object);
+			// ??? ??? ???
+			oos.flush();
+			// Закрытие исходящего потока
+			oos.close();
+		} catch (Exception ex) {
+			System.out.println("[SERVER]: Exception during serialization: " + ex);
+			System.exit(0);
+		}
+	}
 }
