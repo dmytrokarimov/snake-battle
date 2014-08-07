@@ -1,12 +1,16 @@
 package org.snakebattle.logic;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.snakebattle.gui.ObjectAlreadyAddedException;
 import org.snakebattle.gui.primitive.snake.Element;
+import org.snakebattle.gui.primitive.snake.Element.PARTS;
 import org.snakebattle.utils.BattleMapUtils;
 import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
@@ -19,6 +23,8 @@ import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 public class Snake implements Player, Serializable, Cloneable{
 	private static final long serialVersionUID = 1L;
 
+	private Map<PARTS, Color> colorTheme;
+	
 	public class ArrayList extends java.util.ArrayList<Element> {
 		private static final long serialVersionUID = 2365497221591029860L;
 
@@ -118,6 +124,10 @@ public class Snake implements Player, Serializable, Cloneable{
 	public Snake() {
 		elements = new ArrayList();
 		mind = new SnakeMind(this);
+		colorTheme = new HashMap<>();
+		colorTheme.put(PARTS.BODY, Color.GRAY);
+		colorTheme.put(PARTS.HEAD, Color.red);
+		colorTheme.put(PARTS.TAIL, Color.DARK_GRAY);
 	}
 
 	/**
@@ -263,5 +273,13 @@ public class Snake implements Player, Serializable, Cloneable{
 	@Override
 	public boolean isPlayerCanTurn() {
 		return getElements().size() < 2;
+	}
+
+	public Map<PARTS, Color> getColorTheme() {
+		return colorTheme;
+	}
+
+	public void setColorTheme(Map<PARTS, Color> colorTheme) {
+		this.colorTheme = colorTheme;
 	}
 }

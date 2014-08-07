@@ -1,9 +1,11 @@
 package org.snakebattle.demo;
 
+import java.awt.Color;
 import java.awt.Point;
 
 import org.snakebattle.gui.ObjectAlreadyAddedException;
 import org.snakebattle.gui.controls.NiceButton;
+import org.snakebattle.gui.primitive.snake.Element.PARTS;
 import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.BattleMap;
 import org.snakebattle.logic.Snake;
@@ -16,6 +18,7 @@ import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 public class DemoButtons {
 	static Snake[] sn = { new Snake(), new Snake(),
 			new Snake(), new Snake() };
+	
 	static String mapName = "battle";
 	static BattleMap m;
 	static volatile boolean enableBattle = false;
@@ -58,6 +61,8 @@ public class DemoButtons {
 				System.exit(0);
 			}
 		};
+		sn[0].getColorTheme().put(PARTS.HEAD, Color.green);
+		
 		Battle b = new Battle();
 		b.init(mapName, sn);
 

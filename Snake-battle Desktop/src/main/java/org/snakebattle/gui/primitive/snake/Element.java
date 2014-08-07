@@ -1,6 +1,5 @@
 package org.snakebattle.gui.primitive.snake;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -8,13 +7,13 @@ import org.snakebattle.gui.Graph;
 import org.snakebattle.gui.screen.Screen;
 import org.snakebattle.logic.Snake;
 
-public class Element extends Graph implements Cloneable{
+public class Element extends Graph implements Cloneable {
 	private static final long serialVersionUID = -6533857847490344497L;
 
 	public enum PARTS {
 		BODY, HEAD, TAIL, THIS_IS_BAD_IDEA;
 	}
-	
+
 	private PARTS part;
 	private Snake snake;
 
@@ -29,8 +28,7 @@ public class Element extends Graph implements Cloneable{
 		return snake;
 	}
 
-	public Element(PARTS part, Point coord, int width,
-			int height, Snake snake) {
+	public Element(PARTS part, Point coord, int width, int height, Snake snake) {
 		super(coord, width, height);
 		this.part = part;
 		this.snake = snake;
@@ -40,24 +38,10 @@ public class Element extends Graph implements Cloneable{
 		if (!graph_on)
 			return;
 		Screen sc = Screen.instance;
-		switch (part) {
-		case BODY:
-			sc.draw(new Rectangle(getCoord().x, getCoord().y, width, height),
-					Color.GRAY);
-			break;
-		case HEAD:
-			sc.draw(new Rectangle(getCoord().x, getCoord().y, width, height),
-					Color.red);
-			break;
-		case TAIL:
-			sc.draw(new Rectangle(getCoord().x, getCoord().y, width, height),
-					Color.DARK_GRAY);
-			break;
-		default:
-			break;
-		}
-	}
 
+		sc.draw(new Rectangle(getCoord().x, getCoord().y, width, height), snake
+				.getColorTheme().get(part));
+	}
 
 	public boolean onCollision(Graph obj) {
 		return false;
@@ -112,7 +96,7 @@ public class Element extends Graph implements Cloneable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((part == null) ? 0 : part.hashCode());
-		//result = prime * result + ((snake == null) ? 0 : snake.hashCode());
+		// result = prime * result + ((snake == null) ? 0 : snake.hashCode());
 		return result;
 	}
 
@@ -131,16 +115,16 @@ public class Element extends Graph implements Cloneable{
 		if (part != other.part) {
 			return false;
 		}
-		//if (snake == null) {
-		//	if (other.snake != null) {
-		//		return false;
-		//	}
-		//} else if (!snake.equals(other.snake)) {
-		//	return false;
-		//}
+		// if (snake == null) {
+		// if (other.snake != null) {
+		// return false;
+		// }
+		// } else if (!snake.equals(other.snake)) {
+		// return false;
+		// }
 		return super.equals(obj);
 	}
-	
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Element el = new Element(part, coord, width, height, snake);
