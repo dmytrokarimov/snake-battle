@@ -5,133 +5,133 @@ import java.awt.Point;
 import org.snakebattle.gui.screen.Screen;
 
 /**
- * РћСЃРЅРѕРІРЅРѕР№ РєР»Р°СЃСЃ РґР»СЏ РІС‹РІРѕРґР° РіСЂР°С„РёРєРё
+ * Основной класс для вывода графики
  * 
  * @author Karimov
  */
 public abstract class Graph implements Drawable {
-  private static final long serialVersionUID = -8393895271849405329L;
-  
-  protected Point coord;
-  protected int width;
-  protected int height;
-  /**
-   * If graph_on = false this object haven't drawing into screen
-   */
-  public boolean graph_on = true;
+	private static final long serialVersionUID = -8393895271849405329L;
+	
+	protected Point coord;
+	protected int width;
+	protected int height;
+	/**
+	 * If graph_on = false this object haven't drawing into screen
+	 */
+	public boolean graph_on = true;
 
-  /**
-   * РџРѕРєР° Р±СѓРґСѓС‚ С‚РѕР»СЊРєРѕ РєРІР°РґСЂР°С‚РЅС‹Рµ РјРѕРґРµР»Рё
-   * 
-   * @param coord
-   *            РІРµСЂС…РЅСЏСЏ Р»РµРІР°СЏ С‚РѕС‡РєР°
-   * @param width
-   *            С€РёСЂРёРЅР°
-   * @param height
-   *            РІС‹СЃРѕС‚Р°
-   */
-  public Graph(Point coord, int width, int height) {
-    if (coord == null)
-      coord = new Point(0, 0);
-    this.coord = coord;
-    this.width = width;
-    this.height = height;
-  }
+	/**
+	 * Пока будут только квадратные модели
+	 * 
+	 * @param coord
+	 *            верхняя левая точка
+	 * @param width
+	 *            ширина
+	 * @param height
+	 *            высота
+	 */
+	public Graph(Point coord, int width, int height) {
+		if (coord == null)
+			coord = new Point(0, 0);
+		this.coord = coord;
+		this.width = width;
+		this.height = height;
+	}
 
-  /**
-   * РїСЂРѕРІРµСЂРєР° РЅР° С‚Рѕ, РЅР°С…РѕРґРёС‚СЃСЏ Р»Рё С‚РѕС‡РєРё РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°
-   * 
-   * @param p
-   *            - С‚РѕС‡РєР°, РїРѕ РєРѕС‚РѕСЂРѕР№ РёС‰РµС‚СЃСЏ РѕР±СЉРµРєС‚
-   * @return <b>true</b> РµСЃР»Рё РµСЃС‚СЊ РѕР±СЉРµРєС‚
-   */
-  public boolean pointAt(Point p) {
-    return (p.x > coord.x && p.x < coord.x + width)
-        && (p.y > coord.y && p.y < coord.y + height);
-  }
+	/**
+	 * проверка на то, находится ли точки внутри объекта
+	 * 
+	 * @param p
+	 *            - точка, по которой ищется объект
+	 * @return <b>true</b> если есть объект
+	 */
+	public boolean pointAt(Point p) {
+		return (p.x > coord.x && p.x < coord.x + width)
+				&& (p.y > coord.y && p.y < coord.y + height);
+	}
 
-  /**
-   * РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РєРѕР»Р»РёР·РёРё СЃ РґСЂ. РѕР±СЉРµРєС‚РѕРј
-   * 
-   * @param obj
-   *            СЃ РєР°РєРёРј РѕР±СЉРµРєС‚РѕРј РїСЂРѕРёР·РѕС€Р»Р° РєРѕР»Р»РёР·РёСЏ
-   * @return РІРѕР·РІСЂР°С‰Р°РµС‚ true РµСЃР»Рё РґРІРёР¶РµРЅРёРµ СЂР°Р·СЂРµС€РµРЅРѕ, false РµСЃР»Рё РЅРµ СЂР°Р·СЂРµС€РµРЅРѕ,
-   *         Р° С‚Р°РєР¶Рµ РµСЃР»Рё Р·Р°РїСЂРµС‰РµРЅРѕ СЃС‚РѕР»РєРЅРѕРІРµРЅРёРµ СЃ РґР°РЅРЅС‹Рј РѕР±СЉРµРєС‚РѕРј
-   */
-  public abstract boolean onCollision(Graph obj);
+	/**
+	 * вызывается при коллизии с др. объектом
+	 * 
+	 * @param obj
+	 *            с каким объектом произошла коллизия
+	 * @return возвращает true если движение разрешено, false если не разрешено,
+	 *         а также если запрещено столкновение с данным объектом
+	 */
+	public abstract boolean onCollision(Graph obj);
 
-  /**
-   * РўРѕС‡РєР°, РІ РєРѕС‚РѕСЂРѕР№ РґР°РЅРЅС‹Р№ СЌР»РµРјРµРЅС‚ РЅР°С…РѕРґРёС‚СЃСЏ
-   */
-  public Point getCoord() {
-    return coord;
-  }
+	/**
+	 * Точка, в которой данный элемент находится
+	 */
+	public Point getCoord() {
+		return coord;
+	}
 
-  public void setCoord(Point coord) {
-    if (coord == null)
-      return;
-    if (graph_on)
-      Screen.instance.clear(getCoord(), getWidth(), getHeight());
-    this.coord = coord;
-    // draw();
-  }
+	public void setCoord(Point coord) {
+		if (coord == null)
+			return;
+		if (graph_on)
+			Screen.instance.clear(getCoord(), getWidth(), getHeight());
+		this.coord = coord;
+		// draw();
+	}
 
-  public int getWidth() {
-    return width;
-  }
+	public int getWidth() {
+		return width;
+	}
 
-  public void setWidth(int width) {
-    if (graph_on)
-      Screen.instance.clear(getCoord(), getWidth(), getHeight());
-    this.width = width;
-  }
+	public void setWidth(int width) {
+		if (graph_on)
+			Screen.instance.clear(getCoord(), getWidth(), getHeight());
+		this.width = width;
+	}
 
-  public int getHeight() {
-    return height;
-  }
+	public int getHeight() {
+		return height;
+	}
 
-  public void setHeight(int height) {
-    if (graph_on)
-      Screen.instance.clear(getCoord(), getWidth(), getHeight());
-    this.height = height;
-  }
+	public void setHeight(int height) {
+		if (graph_on)
+			Screen.instance.clear(getCoord(), getWidth(), getHeight());
+		this.height = height;
+	}
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((coord == null) ? 0 : coord.hashCode());
-    result = prime * result + height;
-    result = prime * result + width;
-    return result;
-  }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((coord == null) ? 0 : coord.hashCode());
+		result = prime * result + height;
+		result = prime * result + width;
+		return result;
+	}
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (!(obj instanceof Graph)) {
-      return false;
-    }
-    Graph other = (Graph) obj;
-    if (coord == null) {
-      if (other.coord != null) {
-        return false;
-      }
-    } else if (!coord.equals(other.coord)) {
-      return false;
-    }
-    if (height != other.height) {
-      return false;
-    }
-    if (width != other.width) {
-      return false;
-    }
-    return true;
-  }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Graph)) {
+			return false;
+		}
+		Graph other = (Graph) obj;
+		if (coord == null) {
+			if (other.coord != null) {
+				return false;
+			}
+		} else if (!coord.equals(other.coord)) {
+			return false;
+		}
+		if (height != other.height) {
+			return false;
+		}
+		if (width != other.width) {
+			return false;
+		}
+		return true;
+	}
 
 }

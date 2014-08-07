@@ -4,15 +4,15 @@ import java.awt.Point;
 
 import org.snakebattle.gui.ObjectAlreadyAddedException;
 import org.snakebattle.gui.primitive.snake.Element;
-import org.snakebattle.gui.primitive.snake.MindPolyGraph;
 import org.snakebattle.gui.primitive.snake.Element.PARTS;
+import org.snakebattle.gui.primitive.snake.MindPolyGraph;
 import org.snakebattle.gui.primitive.snake.MindPolyGraph.LOGIC_TYPES;
 import org.snakebattle.gui.primitive.snake.MindPolyGraph.OWNER_TYPES;
 import org.snakebattle.logic.BattleMap;
-import org.snakebattle.logic.Mind;
 import org.snakebattle.logic.Snake;
 import org.snakebattle.logic.SnakeAlreadyInMapException;
-import org.snakebattle.logic.Mind.MindMap;
+import org.snakebattle.logic.SnakeMind;
+import org.snakebattle.logic.SnakeMind.MindMap;
 import org.snakebattle.server.Battle;
 import org.snakebattle.utils.BattleMapUtils;
 import org.snakebattle.utils.BattleMapUtils.MapAlreadyExistException;
@@ -20,7 +20,7 @@ import org.snakebattle.utils.BattleMapUtils.MapNotExistException;
 
 public class DemoUtils {
 	//Create simple mind - mind can hunt on snakes, but not very good
-	public static void createSimpleMind(Mind mind){
+	public static void createSimpleMind(SnakeMind mind){
 		MindMap[] mm = mind.getMindMap();
 		MindPolyGraph mpg = new MindPolyGraph(new Point(), 10, 10);
 		mpg.setOwner(OWNER_TYPES.SNAKE);
@@ -41,6 +41,21 @@ public class DemoUtils {
 		mpg.setValue(new Element(PARTS.TAIL, new Point(), 10, 10,
 				null));
 		mm[0].setAt(2, 0, mpg);
+		
+		mpg = new MindPolyGraph(new Point(), 10, 10);
+		mpg.setOwner(OWNER_TYPES.SNAKE);
+		mpg.setValue(new Element(PARTS.HEAD, new Point(), 10, 10,
+				null));
+		mm[1].setAt(2, 8, mpg);
+		
+		for (int i = 0; i < 8; i++) {
+			mpg = new MindPolyGraph(new Point(), 10, 10);
+			mpg.setOwner(OWNER_TYPES.ENEMY);
+			mpg.setLogic(LOGIC_TYPES.OR);
+			mpg.setValue(new Element(PARTS.TAIL, new Point(), 10, 10,
+					null));
+			mm[1].setAt(2, i, mpg);
+		}
 
 		/*
 		 * mpg = new MindPolyGraph(new Point(), 10, 10);
@@ -49,27 +64,38 @@ public class DemoUtils {
 		 * mm[0].setAt(2, 0, mpg);
 		 */
 
-		MindMap mm1 = mind.getMindMap(1);
+		MindMap mm2 = mind.getMindMap(2);
 		mpg = new MindPolyGraph(new Point(), 10, 10);
 		mpg.setOwner(OWNER_TYPES.SNAKE);
 		mpg.setValue(new Element(PARTS.HEAD, new Point(), 10, 10,
 				null));
-		mm1.setAt(3, 3, mpg);
+		mm2.setAt(3, 3, mpg);
 
+		for (int i = 0; i < 3; i++) {
+			mpg = new MindPolyGraph(new Point(), 10, 10);
+			mpg.setOwner(OWNER_TYPES.NEUTRAL);
+			mpg.setValue(null);
+			mm2.setAt(3, i, mpg);
+		}
+		
 		mpg = new MindPolyGraph(new Point(), 10, 10);
 		mpg.setOwner(OWNER_TYPES.NEUTRAL);
 		mpg.setValue(null);
-		mm1.setAt(3, 2, mpg);
+		mpg.setLogic(LOGIC_TYPES.NOT);
+		mm2.setAt(0, 3, mpg);
 
 		mpg = new MindPolyGraph(new Point(), 10, 10);
-		mpg.setOwner(OWNER_TYPES.NEUTRAL);
-		mpg.setValue(null);
-		mm1.setAt(3, 1, mpg);
-
-		mpg = new MindPolyGraph(new Point(), 10, 10);
-		mpg.setOwner(OWNER_TYPES.NEUTRAL);
-		mpg.setValue(null);
-		mm1.setAt(3, 0, mpg);
+		mpg.setOwner(OWNER_TYPES.SNAKE);
+		mpg.setValue(new Element(PARTS.HEAD, new Point(), 10, 10,
+				null));
+		mm[3].setAt(2, 8, mpg);
+		
+		for (int i = 0; i < 3; i++) {
+			mpg = new MindPolyGraph(new Point(), 10, 10);
+			mpg.setOwner(OWNER_TYPES.NEUTRAL);
+			mpg.setValue(null);
+			mm2.setAt(3, i, mpg);
+		}
 	}
 	
 	/**

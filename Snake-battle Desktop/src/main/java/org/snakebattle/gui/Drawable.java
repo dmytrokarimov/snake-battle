@@ -4,39 +4,39 @@ import java.awt.Point;
 import java.io.Serializable;
 
 /**
- * Р‘Р°Р·РѕРІС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РіСЂР°С„РёС‡РµСЃРєРёС… СЌР»РµРјРµРЅС‚РѕРІ
+ * Базовый интерфейс для графических элементов
  * @author Karimov
  *
  */
 public interface Drawable extends Serializable{
-  /**
-   *  РІС‹РІРѕРґ СЌР»РµРјРµРЅС‚Р° РЅР° СЌРєСЂР°РЅ
-   * @return 
-   */
-  public abstract void draw();
-  
-  /**
-   * РїСЂРѕРІРµСЂРєР° РЅР° С‚Рѕ, РЅР°С…РѕРґРёС‚СЃСЏ Р»Рё С‚РѕС‡РєРё РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°
-   * @param p - С‚РѕС‡РєР°, РїРѕ РєРѕС‚РѕСЂРѕР№ РёС‰РµС‚СЃСЏ РѕР±СЉРµРєС‚
-   * @return <b>true</b> РµСЃР»Рё РµСЃС‚СЊ РѕР±СЉРµРєС‚ 
-   */
-  public boolean pointAt(Point p);
-  
-  /**
-   * РўРѕС‡РєР°, РІ РєРѕС‚РѕСЂРѕР№ РґР°РЅРЅС‹Р№ СЌР»РµРјРµРЅС‚ РЅР°С…РѕРґРёС‚СЃСЏ
-   */
-  public void setCoord(Point p);
-  
-  /**
-   * РўРѕС‡РєР°, РІ РєРѕС‚РѕСЂРѕР№ РґР°РЅРЅС‹Р№ СЌР»РµРјРµРЅС‚ РЅР°С…РѕРґРёС‚СЃСЏ
-   */
-  public Point getCoord();
-  
-  public int getWidth();
+	/**
+	 *  вывод элемента на экран
+	 * @return 
+	 */
+	public abstract void draw();
+	
+	/**
+	 * проверка на то, находится ли точки внутри объекта
+	 * @param p - точка, по которой ищется объект
+	 * @return <b>true</b> если есть объект 
+	 */
+	public boolean pointAt(Point p);
+	
+	/**
+	 * Точка, в которой данный элемент находится
+	 */
+	public void setCoord(Point p);
+	
+	/**
+	 * Точка, в которой данный элемент находится
+	 */
+	public Point getCoord();
+	
+	public int getWidth();
 
-  public void setWidth(int width);
+	public void setWidth(int width);
 
-  public int getHeight();
+	public int getHeight();
 
-  public void setHeight(int height);
+	public void setHeight(int height);
 }
